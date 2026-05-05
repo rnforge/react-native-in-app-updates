@@ -19,6 +19,10 @@ namespace margelo::nitro::rnforge_inappupdates { struct AndroidDetailsNative; }
 namespace margelo::nitro::rnforge_inappupdates { struct PlayCoreDetailsNative; }
 // Forward declaration of `IosDetailsNative` to properly resolve imports.
 namespace margelo::nitro::rnforge_inappupdates { struct IosDetailsNative; }
+// Forward declaration of `GetUpdateStatusOptionsNative` to properly resolve imports.
+namespace margelo::nitro::rnforge_inappupdates { struct GetUpdateStatusOptionsNative; }
+// Forward declaration of `IosGetUpdateStatusOptionsNative` to properly resolve imports.
+namespace margelo::nitro::rnforge_inappupdates { struct IosGetUpdateStatusOptionsNative; }
 // Forward declaration of `InstallStateEventNative` to properly resolve imports.
 namespace margelo::nitro::rnforge_inappupdates { struct InstallStateEventNative; }
 
@@ -43,6 +47,10 @@ namespace margelo::nitro::rnforge_inappupdates { struct InstallStateEventNative;
 #include "JPlayCoreDetailsNative.hpp"
 #include "IosDetailsNative.hpp"
 #include "JIosDetailsNative.hpp"
+#include "GetUpdateStatusOptionsNative.hpp"
+#include "JGetUpdateStatusOptionsNative.hpp"
+#include "IosGetUpdateStatusOptionsNative.hpp"
+#include "JIosGetUpdateStatusOptionsNative.hpp"
 #include "InstallStateEventNative.hpp"
 #include <functional>
 #include "JFunc_void_InstallStateEventNative.hpp"
@@ -82,9 +90,9 @@ namespace margelo::nitro::rnforge_inappupdates {
   
 
   // Methods
-  std::shared_ptr<Promise<UpdateStatusNative>> JHybridInAppUpdatesSpec::getUpdateStatus() {
-    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>()>("getUpdateStatus");
-    auto __result = method(_javaPart);
+  std::shared_ptr<Promise<UpdateStatusNative>> JHybridInAppUpdatesSpec::getUpdateStatus(const std::optional<GetUpdateStatusOptionsNative>& options) {
+    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>(jni::alias_ref<JGetUpdateStatusOptionsNative> /* options */)>("getUpdateStatus");
+    auto __result = method(_javaPart, options.has_value() ? JGetUpdateStatusOptionsNative::fromCpp(options.value()) : nullptr);
     return [&]() {
       auto __promise = Promise<UpdateStatusNative>::create();
       __result->cthis()->addOnResolvedListener([=](const jni::alias_ref<jni::JObject>& __boxedResult) {

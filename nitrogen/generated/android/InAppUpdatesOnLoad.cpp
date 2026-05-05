@@ -28,7 +28,7 @@ int initialize(JavaVM* vm) {
 }
 
 struct JHybridInAppUpdatesSpecImpl: public jni::JavaClass<JHybridInAppUpdatesSpecImpl, JHybridInAppUpdatesSpec::JavaPart> {
-  static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/rnforge_inappupdates/HybridInAppUpdates;";
+  static constexpr auto kJavaDescriptor = "Lcom/rnforge_inappupdates/HybridInAppUpdates;";
   static std::shared_ptr<JHybridInAppUpdatesSpec> create() {
     static const auto constructorFn = javaClassStatic()->getConstructor<JHybridInAppUpdatesSpecImpl::javaobject()>();
     jni::local_ref<JHybridInAppUpdatesSpec::JavaPart> javaPart = javaClassStatic()->newObject(constructorFn);

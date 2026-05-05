@@ -24,6 +24,10 @@ namespace margelo::nitro::rnforge_inappupdates { struct AndroidDetailsNative; }
 namespace margelo::nitro::rnforge_inappupdates { struct PlayCoreDetailsNative; }
 // Forward declaration of `IosDetailsNative` to properly resolve imports.
 namespace margelo::nitro::rnforge_inappupdates { struct IosDetailsNative; }
+// Forward declaration of `GetUpdateStatusOptionsNative` to properly resolve imports.
+namespace margelo::nitro::rnforge_inappupdates { struct GetUpdateStatusOptionsNative; }
+// Forward declaration of `IosGetUpdateStatusOptionsNative` to properly resolve imports.
+namespace margelo::nitro::rnforge_inappupdates { struct IosGetUpdateStatusOptionsNative; }
 // Forward declaration of `InstallStateEventNative` to properly resolve imports.
 namespace margelo::nitro::rnforge_inappupdates { struct InstallStateEventNative; }
 
@@ -38,6 +42,8 @@ namespace margelo::nitro::rnforge_inappupdates { struct InstallStateEventNative;
 #include "AndroidDetailsNative.hpp"
 #include "PlayCoreDetailsNative.hpp"
 #include "IosDetailsNative.hpp"
+#include "GetUpdateStatusOptionsNative.hpp"
+#include "IosGetUpdateStatusOptionsNative.hpp"
 #include "InstallStateEventNative.hpp"
 #include <functional>
 
@@ -91,8 +97,8 @@ namespace margelo::nitro::rnforge_inappupdates {
 
   public:
     // Methods
-    inline std::shared_ptr<Promise<UpdateStatusNative>> getUpdateStatus() override {
-      auto __result = _swiftPart.getUpdateStatus();
+    inline std::shared_ptr<Promise<UpdateStatusNative>> getUpdateStatus(const std::optional<GetUpdateStatusOptionsNative>& options) override {
+      auto __result = _swiftPart.getUpdateStatus(options);
       if (__result.hasError()) [[unlikely]] {
         std::rethrow_exception(__result.error());
       }

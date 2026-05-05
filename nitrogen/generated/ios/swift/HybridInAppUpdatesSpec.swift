@@ -13,7 +13,7 @@ public protocol HybridInAppUpdatesSpec_protocol: HybridObject {
   
 
   // Methods
-  func getUpdateStatus() throws -> Promise<UpdateStatusNative>
+  func getUpdateStatus(options: GetUpdateStatusOptionsNative?) throws -> Promise<UpdateStatusNative>
   func startImmediateUpdate() throws -> Promise<UpdateStatusNative>
   func startFlexibleUpdate() throws -> Promise<UpdateStatusNative>
   func completeFlexibleUpdate() throws -> Promise<UpdateStatusNative>

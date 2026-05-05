@@ -36,6 +36,14 @@ export interface IosDetailsNative {
   storeUrl?: string
 }
 
+export interface IosGetUpdateStatusOptionsNative {
+  appStoreId?: string
+}
+
+export interface GetUpdateStatusOptionsNative {
+  ios?: IosGetUpdateStatusOptionsNative
+}
+
 export interface UpdateStatusNative {
   platform: string
   supported: boolean
@@ -66,7 +74,7 @@ export interface InstallStateEventNative {
 }
 
 export interface InAppUpdates extends HybridObject<{ ios: 'swift', android: 'kotlin' }> {
-  getUpdateStatus(): Promise<UpdateStatusNative>
+  getUpdateStatus(options?: GetUpdateStatusOptionsNative): Promise<UpdateStatusNative>
   startImmediateUpdate(): Promise<UpdateStatusNative>
   startFlexibleUpdate(): Promise<UpdateStatusNative>
   completeFlexibleUpdate(): Promise<UpdateStatusNative>

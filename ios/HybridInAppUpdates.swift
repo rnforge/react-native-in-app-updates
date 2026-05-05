@@ -9,9 +9,55 @@ import Foundation
 import NitroModules
 
 class HybridInAppUpdates: HybridInAppUpdatesSpec {
-    func getUpdateStatus() throws -> Promise<UpdateStatusNative> {
-        // Placeholder: Issue 0002 full implementation deferred
-        return Promise { _ in throw NSError(domain: "InAppUpdates", code: 1, userInfo: [NSLocalizedDescriptionKey: "getUpdateStatus not yet implemented"]) }
+    func getUpdateStatus(options: GetUpdateStatusOptionsNative?) throws -> Promise<UpdateStatusNative> {
+        return Promise { resolve, reject in
+            let appStoreId = options?.ios?.appStoreId
+            
+            if appStoreId == nil {
+                let status = UpdateStatusNative(
+                    platform: "ios",
+                    supported: false,
+                    updateAvailable: .first(NullType.null),
+                    capabilities: CapabilitiesNative(
+                        immediate: false,
+                        flexible: false,
+                        storePage: false,
+                        latestVersionLookup: false,
+                        installStateListener: false
+                    ),
+                    allowed: AllowedFlowsNative(
+                        immediate: false,
+                        flexible: false
+                    ),
+                    reason: "missing-app-store-id"
+                )
+                resolve(status)
+            } else {
+                let status = UpdateStatusNative(
+                    platform: "ios",
+                    supported: false,
+                    updateAvailable: .first(NullType.null),
+                    capabilities: CapabilitiesNative(
+                        immediate: false,
+                        flexible: false,
+                        storePage: false,
+                        latestVersionLookup: false,
+                        installStateListener: false
+                    ),
+                    allowed: AllowedFlowsNative(
+                        immediate: false,
+                        flexible: false
+                    ),
+                    reason: "store-lookup-unavailable",
+                    ios: IosDetailsNative(
+                        bundleIdentifier: Bundle.main.bundleIdentifier,
+                        appStoreId: appStoreId,
+                        storeUrl: nil
+                    )
+                )
+                resolve(status)
+            }
+        }
     }
 
     func startImmediateUpdate() throws -> Promise<UpdateStatusNative> {

@@ -2,6 +2,7 @@ package com.rnforge.inappupdates
 
 import com.margelo.nitro.rnforge_inappupdates.HybridInAppUpdatesSpec
 import com.margelo.nitro.core.Promise
+import com.margelo.nitro.rnforge_inappupdates.GetUpdateStatusOptionsNative
 import com.margelo.nitro.rnforge_inappupdates.InstallStateEventNative
 import com.margelo.nitro.rnforge_inappupdates.UpdateStatusNative
 
@@ -9,11 +10,10 @@ class HybridInAppUpdates: HybridInAppUpdatesSpec() {
     private val immediateUpdateService = PlayCoreImmediateUpdateService()
     private val flexibleUpdateService = PlayCoreFlexibleUpdateService()
     private val installStateListenerService = PlayCoreInstallStateListenerService()
+    private val statusService = PlayCoreStatusService()
 
-    override fun getUpdateStatus(): Promise<UpdateStatusNative> {
-        val promise = Promise<UpdateStatusNative>()
-        promise.reject(Exception("getUpdateStatus not yet implemented"))
-        return promise
+    override fun getUpdateStatus(options: GetUpdateStatusOptionsNative?): Promise<UpdateStatusNative> {
+        return statusService.getUpdateStatus(options)
     }
 
     override fun startImmediateUpdate(): Promise<UpdateStatusNative> {

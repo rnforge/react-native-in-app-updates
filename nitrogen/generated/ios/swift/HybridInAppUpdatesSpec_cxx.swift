@@ -125,9 +125,9 @@ open class HybridInAppUpdatesSpec_cxx {
 
   // Methods
   @inline(__always)
-  public final func getUpdateStatus() -> bridge.Result_std__shared_ptr_Promise_UpdateStatusNative___ {
+  public final func getUpdateStatus(options: bridge.std__optional_GetUpdateStatusOptionsNative_) -> bridge.Result_std__shared_ptr_Promise_UpdateStatusNative___ {
     do {
-      let __result = try self.__implementation.getUpdateStatus()
+      let __result = try self.__implementation.getUpdateStatus(options: options.value)
       let __resultCpp = { () -> bridge.std__shared_ptr_Promise_UpdateStatusNative__ in
         let __promise = bridge.create_std__shared_ptr_Promise_UpdateStatusNative__()
         let __promiseHolder = bridge.wrap_std__shared_ptr_Promise_UpdateStatusNative__(__promise)

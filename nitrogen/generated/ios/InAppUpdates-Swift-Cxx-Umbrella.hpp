@@ -14,12 +14,16 @@ namespace margelo::nitro::rnforge_inappupdates { struct AllowedFlowsNative; }
 namespace margelo::nitro::rnforge_inappupdates { struct AndroidDetailsNative; }
 // Forward declaration of `CapabilitiesNative` to properly resolve imports.
 namespace margelo::nitro::rnforge_inappupdates { struct CapabilitiesNative; }
+// Forward declaration of `GetUpdateStatusOptionsNative` to properly resolve imports.
+namespace margelo::nitro::rnforge_inappupdates { struct GetUpdateStatusOptionsNative; }
 // Forward declaration of `HybridInAppUpdatesSpec` to properly resolve imports.
 namespace margelo::nitro::rnforge_inappupdates { class HybridInAppUpdatesSpec; }
 // Forward declaration of `InstallStateEventNative` to properly resolve imports.
 namespace margelo::nitro::rnforge_inappupdates { struct InstallStateEventNative; }
 // Forward declaration of `IosDetailsNative` to properly resolve imports.
 namespace margelo::nitro::rnforge_inappupdates { struct IosDetailsNative; }
+// Forward declaration of `IosGetUpdateStatusOptionsNative` to properly resolve imports.
+namespace margelo::nitro::rnforge_inappupdates { struct IosGetUpdateStatusOptionsNative; }
 // Forward declaration of `PlayCoreDetailsNative` to properly resolve imports.
 namespace margelo::nitro::rnforge_inappupdates { struct PlayCoreDetailsNative; }
 // Forward declaration of `UpdateStatusNative` to properly resolve imports.
@@ -29,9 +33,11 @@ namespace margelo::nitro::rnforge_inappupdates { struct UpdateStatusNative; }
 #include "AllowedFlowsNative.hpp"
 #include "AndroidDetailsNative.hpp"
 #include "CapabilitiesNative.hpp"
+#include "GetUpdateStatusOptionsNative.hpp"
 #include "HybridInAppUpdatesSpec.hpp"
 #include "InstallStateEventNative.hpp"
 #include "IosDetailsNative.hpp"
+#include "IosGetUpdateStatusOptionsNative.hpp"
 #include "PlayCoreDetailsNative.hpp"
 #include "UpdateStatusNative.hpp"
 #include <NitroModules/Null.hpp>

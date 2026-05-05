@@ -14,12 +14,16 @@ namespace margelo::nitro::rnforge_inappupdates { struct AllowedFlowsNative; }
 namespace margelo::nitro::rnforge_inappupdates { struct AndroidDetailsNative; }
 // Forward declaration of `CapabilitiesNative` to properly resolve imports.
 namespace margelo::nitro::rnforge_inappupdates { struct CapabilitiesNative; }
+// Forward declaration of `GetUpdateStatusOptionsNative` to properly resolve imports.
+namespace margelo::nitro::rnforge_inappupdates { struct GetUpdateStatusOptionsNative; }
 // Forward declaration of `HybridInAppUpdatesSpec` to properly resolve imports.
 namespace margelo::nitro::rnforge_inappupdates { class HybridInAppUpdatesSpec; }
 // Forward declaration of `InstallStateEventNative` to properly resolve imports.
 namespace margelo::nitro::rnforge_inappupdates { struct InstallStateEventNative; }
 // Forward declaration of `IosDetailsNative` to properly resolve imports.
 namespace margelo::nitro::rnforge_inappupdates { struct IosDetailsNative; }
+// Forward declaration of `IosGetUpdateStatusOptionsNative` to properly resolve imports.
+namespace margelo::nitro::rnforge_inappupdates { struct IosGetUpdateStatusOptionsNative; }
 // Forward declaration of `PlayCoreDetailsNative` to properly resolve imports.
 namespace margelo::nitro::rnforge_inappupdates { struct PlayCoreDetailsNative; }
 // Forward declaration of `UpdateStatusNative` to properly resolve imports.
@@ -33,9 +37,11 @@ namespace InAppUpdates { class HybridInAppUpdatesSpec_cxx; }
 #include "AllowedFlowsNative.hpp"
 #include "AndroidDetailsNative.hpp"
 #include "CapabilitiesNative.hpp"
+#include "GetUpdateStatusOptionsNative.hpp"
 #include "HybridInAppUpdatesSpec.hpp"
 #include "InstallStateEventNative.hpp"
 #include "IosDetailsNative.hpp"
+#include "IosGetUpdateStatusOptionsNative.hpp"
 #include "PlayCoreDetailsNative.hpp"
 #include "UpdateStatusNative.hpp"
 #include <NitroModules/Null.hpp>
@@ -287,6 +293,36 @@ namespace margelo::nitro::rnforge_inappupdates::bridge::swift {
   Func_void_std__exception_ptr create_Func_void_std__exception_ptr(void* NON_NULL swiftClosureWrapper) noexcept;
   inline Func_void_std__exception_ptr_Wrapper wrap_Func_void_std__exception_ptr(Func_void_std__exception_ptr value) noexcept {
     return Func_void_std__exception_ptr_Wrapper(std::move(value));
+  }
+  
+  // pragma MARK: std::optional<IosGetUpdateStatusOptionsNative>
+  /**
+   * Specialized version of `std::optional<IosGetUpdateStatusOptionsNative>`.
+   */
+  using std__optional_IosGetUpdateStatusOptionsNative_ = std::optional<IosGetUpdateStatusOptionsNative>;
+  inline std::optional<IosGetUpdateStatusOptionsNative> create_std__optional_IosGetUpdateStatusOptionsNative_(const IosGetUpdateStatusOptionsNative& value) noexcept {
+    return std::optional<IosGetUpdateStatusOptionsNative>(value);
+  }
+  inline bool has_value_std__optional_IosGetUpdateStatusOptionsNative_(const std::optional<IosGetUpdateStatusOptionsNative>& optional) noexcept {
+    return optional.has_value();
+  }
+  inline IosGetUpdateStatusOptionsNative get_std__optional_IosGetUpdateStatusOptionsNative_(const std::optional<IosGetUpdateStatusOptionsNative>& optional) noexcept {
+    return optional.value();
+  }
+  
+  // pragma MARK: std::optional<GetUpdateStatusOptionsNative>
+  /**
+   * Specialized version of `std::optional<GetUpdateStatusOptionsNative>`.
+   */
+  using std__optional_GetUpdateStatusOptionsNative_ = std::optional<GetUpdateStatusOptionsNative>;
+  inline std::optional<GetUpdateStatusOptionsNative> create_std__optional_GetUpdateStatusOptionsNative_(const GetUpdateStatusOptionsNative& value) noexcept {
+    return std::optional<GetUpdateStatusOptionsNative>(value);
+  }
+  inline bool has_value_std__optional_GetUpdateStatusOptionsNative_(const std::optional<GetUpdateStatusOptionsNative>& optional) noexcept {
+    return optional.has_value();
+  }
+  inline GetUpdateStatusOptionsNative get_std__optional_GetUpdateStatusOptionsNative_(const std::optional<GetUpdateStatusOptionsNative>& optional) noexcept {
+    return optional.value();
   }
   
   // pragma MARK: std::function<void(const InstallStateEventNative& /* event */)>

@@ -31,7 +31,7 @@ abstract class HybridInAppUpdatesSpec: HybridObject() {
   // Methods
   @DoNotStrip
   @Keep
-  abstract fun getUpdateStatus(): Promise<UpdateStatusNative>
+  abstract fun getUpdateStatus(options: GetUpdateStatusOptionsNative?): Promise<UpdateStatusNative>
   
   @DoNotStrip
   @Keep
