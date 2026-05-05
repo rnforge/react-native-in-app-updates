@@ -1,0 +1,12 @@
+{
+  "name": "rnforge-in-app-updates-example",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Minimal example source scaffold for @rnforge/react-native-in-app-updates. This is NOT a fully generated React Native app — it lacks native Android and iOS project files. Use it as a reference for integrating the API into your own app.",
+  "dependencies": {
+    "@rnforge/react-native-in-app-updates": "file:..",
+    "react": "19.2.3",
+    "react-native": "0.84.1",
+    "react-native-nitro-modules": "0.35.6"
+  }
+}

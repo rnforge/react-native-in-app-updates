@@ -229,6 +229,83 @@ describe('getUpdateStatus', () => {
     expect(result.ios?.appStoreId).toBe('1234567890')
   })
 
+  it('returns developer-triggered-update-in-progress as supported with updateAvailable true', async () => {
+    mockObject.getUpdateStatus.mockResolvedValue({
+      platform: 'android',
+      supported: true,
+      updateAvailable: true,
+      capabilities: {
+        immediate: true,
+        flexible: true,
+        storePage: false,
+        latestVersionLookup: false,
+        installStateListener: true,
+      },
+      allowed: {
+        immediate: false,
+        flexible: false,
+      },
+      reason: 'developer-triggered-update-in-progress',
+      installStatus: 'installing',
+      android: {
+        packageName: 'com.example.app',
+        playCore: {
+          updateAvailability: 'DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS',
+          installStatus: 'installing',
+          immediateAllowed: false,
+          flexibleAllowed: false,
+        },
+      },
+    })
+
+    const result = await getUpdateStatus()
+
+    expect(result.supported).toBe(true)
+    expect(result.updateAvailable).toBe(true)
+    expect(result.reason).toBe('developer-triggered-update-in-progress')
+    expect(result.installStatus).toBe('installing')
+    expect(result.allowed.immediate).toBe(false)
+    expect(result.allowed.flexible).toBe(false)
+  })
+
+  it('returns update-not-allowed when Play Core disallows both flows', async () => {
+    mockObject.getUpdateStatus.mockResolvedValue({
+      platform: 'android',
+      supported: true,
+      updateAvailable: true,
+      capabilities: {
+        immediate: true,
+        flexible: true,
+        storePage: false,
+        latestVersionLookup: false,
+        installStateListener: true,
+      },
+      allowed: {
+        immediate: false,
+        flexible: false,
+      },
+      reason: 'update-not-allowed',
+      installStatus: 'unknown',
+      android: {
+        packageName: 'com.example.app',
+        playCore: {
+          updateAvailability: 'UPDATE_AVAILABLE',
+          installStatus: 'unknown',
+          immediateAllowed: false,
+          flexibleAllowed: false,
+        },
+      },
+    })
+
+    const result = await getUpdateStatus()
+
+    expect(result.supported).toBe(true)
+    expect(result.updateAvailable).toBe(true)
+    expect(result.reason).toBe('update-not-allowed')
+    expect(result.allowed.immediate).toBe(false)
+    expect(result.allowed.flexible).toBe(false)
+  })
+
   it('throws InAppUpdatesError for native bridge failures', async () => {
     mockObject.getUpdateStatus.mockRejectedValue(new Error('Native bridge failure'))
 
