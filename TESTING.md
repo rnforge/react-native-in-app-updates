@@ -39,7 +39,7 @@ Runs `bun run typecheck && bob build`, producing `lib/commonjs/`, `lib/module/`,
 
 The `example/` directory contains a **minimal example source scaffold** — not a fully generated React Native app. It lacks native Android and iOS project files (`android/`, `ios/`, Pods, Gradle, etc.). Use `example/App.tsx` as a reference for integrating the v1 API into your own application.
 
-> Note: `example/App.tsx` is **not included in the package `tsconfig.json`** (which only covers `src/**/*` and `nitrogen/**/*.json`). It is not typechecked by `bun run typecheck` and should be treated as illustrative source, not as a compiled package target.
+> Note: The `example/` source is **not included in the root package `tsconfig.json`** (which only covers `src/**/*` and `nitrogen/**/*.json`). It is typechecked separately via `bun run typecheck:example` and should be treated as illustrative source, not as a compiled package target.
 
 ## Android native / Gradle tests
 
