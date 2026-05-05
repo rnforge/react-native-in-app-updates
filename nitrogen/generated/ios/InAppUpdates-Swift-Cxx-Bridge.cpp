@@ -30,6 +30,14 @@ namespace margelo::nitro::rnforge_inappupdates::bridge::swift {
     };
   }
   
+  // pragma MARK: std::function<void()>
+  Func_void create_Func_void(void* NON_NULL swiftClosureWrapper) noexcept {
+    auto swiftClosure = InAppUpdates::Func_void::fromUnsafe(swiftClosureWrapper);
+    return [swiftClosure = std::move(swiftClosure)]() mutable -> void {
+      swiftClosure.call();
+    };
+  }
+  
   // pragma MARK: std::function<void(const InstallStateEventNative& /* event */)>
   Func_void_InstallStateEventNative create_Func_void_InstallStateEventNative(void* NON_NULL swiftClosureWrapper) noexcept {
     auto swiftClosure = InAppUpdates::Func_void_InstallStateEventNative::fromUnsafe(swiftClosureWrapper);

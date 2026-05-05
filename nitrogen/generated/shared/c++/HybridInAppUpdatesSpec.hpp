@@ -17,6 +17,8 @@
 namespace margelo::nitro::rnforge_inappupdates { struct UpdateStatusNative; }
 // Forward declaration of `GetUpdateStatusOptionsNative` to properly resolve imports.
 namespace margelo::nitro::rnforge_inappupdates { struct GetUpdateStatusOptionsNative; }
+// Forward declaration of `OpenStorePageOptionsNative` to properly resolve imports.
+namespace margelo::nitro::rnforge_inappupdates { struct OpenStorePageOptionsNative; }
 // Forward declaration of `InstallStateEventNative` to properly resolve imports.
 namespace margelo::nitro::rnforge_inappupdates { struct InstallStateEventNative; }
 
@@ -24,6 +26,7 @@ namespace margelo::nitro::rnforge_inappupdates { struct InstallStateEventNative;
 #include <NitroModules/Promise.hpp>
 #include "GetUpdateStatusOptionsNative.hpp"
 #include <optional>
+#include "OpenStorePageOptionsNative.hpp"
 #include <string>
 #include "InstallStateEventNative.hpp"
 #include <functional>
@@ -63,6 +66,7 @@ namespace margelo::nitro::rnforge_inappupdates {
       virtual std::shared_ptr<Promise<UpdateStatusNative>> startImmediateUpdate() = 0;
       virtual std::shared_ptr<Promise<UpdateStatusNative>> startFlexibleUpdate() = 0;
       virtual std::shared_ptr<Promise<UpdateStatusNative>> completeFlexibleUpdate() = 0;
+      virtual std::shared_ptr<Promise<void>> openStorePage(const std::optional<OpenStorePageOptionsNative>& options) = 0;
       virtual std::string addInstallStateListener(const std::function<void(const InstallStateEventNative& /* event */)>& listener) = 0;
       virtual void removeInstallStateListener(const std::string& listenerId) = 0;
 

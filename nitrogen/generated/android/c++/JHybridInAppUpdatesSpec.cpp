@@ -23,6 +23,10 @@ namespace margelo::nitro::rnforge_inappupdates { struct IosDetailsNative; }
 namespace margelo::nitro::rnforge_inappupdates { struct GetUpdateStatusOptionsNative; }
 // Forward declaration of `IosGetUpdateStatusOptionsNative` to properly resolve imports.
 namespace margelo::nitro::rnforge_inappupdates { struct IosGetUpdateStatusOptionsNative; }
+// Forward declaration of `OpenStorePageOptionsNative` to properly resolve imports.
+namespace margelo::nitro::rnforge_inappupdates { struct OpenStorePageOptionsNative; }
+// Forward declaration of `IosOpenStorePageOptionsNative` to properly resolve imports.
+namespace margelo::nitro::rnforge_inappupdates { struct IosOpenStorePageOptionsNative; }
 // Forward declaration of `InstallStateEventNative` to properly resolve imports.
 namespace margelo::nitro::rnforge_inappupdates { struct InstallStateEventNative; }
 
@@ -47,10 +51,15 @@ namespace margelo::nitro::rnforge_inappupdates { struct InstallStateEventNative;
 #include "JPlayCoreDetailsNative.hpp"
 #include "IosDetailsNative.hpp"
 #include "JIosDetailsNative.hpp"
+#include <NitroModules/JUnit.hpp>
 #include "GetUpdateStatusOptionsNative.hpp"
 #include "JGetUpdateStatusOptionsNative.hpp"
 #include "IosGetUpdateStatusOptionsNative.hpp"
 #include "JIosGetUpdateStatusOptionsNative.hpp"
+#include "OpenStorePageOptionsNative.hpp"
+#include "JOpenStorePageOptionsNative.hpp"
+#include "IosOpenStorePageOptionsNative.hpp"
+#include "JIosOpenStorePageOptionsNative.hpp"
 #include "InstallStateEventNative.hpp"
 #include <functional>
 #include "JFunc_void_InstallStateEventNative.hpp"
@@ -146,6 +155,21 @@ namespace margelo::nitro::rnforge_inappupdates {
       __result->cthis()->addOnResolvedListener([=](const jni::alias_ref<jni::JObject>& __boxedResult) {
         auto __result = jni::static_ref_cast<JUpdateStatusNative>(__boxedResult);
         __promise->resolve(__result->toCpp());
+      });
+      __result->cthis()->addOnRejectedListener([=](const jni::alias_ref<jni::JThrowable>& __throwable) {
+        jni::JniException __jniError(__throwable);
+        __promise->reject(std::make_exception_ptr(__jniError));
+      });
+      return __promise;
+    }();
+  }
+  std::shared_ptr<Promise<void>> JHybridInAppUpdatesSpec::openStorePage(const std::optional<OpenStorePageOptionsNative>& options) {
+    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>(jni::alias_ref<JOpenStorePageOptionsNative> /* options */)>("openStorePage");
+    auto __result = method(_javaPart, options.has_value() ? JOpenStorePageOptionsNative::fromCpp(options.value()) : nullptr);
+    return [&]() {
+      auto __promise = Promise<void>::create();
+      __result->cthis()->addOnResolvedListener([=](const jni::alias_ref<jni::JObject>& /* unit */) {
+        __promise->resolve();
       });
       __result->cthis()->addOnRejectedListener([=](const jni::alias_ref<jni::JThrowable>& __throwable) {
         jni::JniException __jniError(__throwable);

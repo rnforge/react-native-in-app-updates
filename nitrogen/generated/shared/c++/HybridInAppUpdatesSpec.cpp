@@ -18,6 +18,7 @@ namespace margelo::nitro::rnforge_inappupdates {
       prototype.registerHybridMethod("startImmediateUpdate", &HybridInAppUpdatesSpec::startImmediateUpdate);
       prototype.registerHybridMethod("startFlexibleUpdate", &HybridInAppUpdatesSpec::startFlexibleUpdate);
       prototype.registerHybridMethod("completeFlexibleUpdate", &HybridInAppUpdatesSpec::completeFlexibleUpdate);
+      prototype.registerHybridMethod("openStorePage", &HybridInAppUpdatesSpec::openStorePage);
       prototype.registerHybridMethod("addInstallStateListener", &HybridInAppUpdatesSpec::addInstallStateListener);
       prototype.registerHybridMethod("removeInstallStateListener", &HybridInAppUpdatesSpec::removeInstallStateListener);
     });

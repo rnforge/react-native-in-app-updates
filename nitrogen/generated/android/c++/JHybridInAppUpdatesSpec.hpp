@@ -58,6 +58,7 @@ namespace margelo::nitro::rnforge_inappupdates {
     std::shared_ptr<Promise<UpdateStatusNative>> startImmediateUpdate() override;
     std::shared_ptr<Promise<UpdateStatusNative>> startFlexibleUpdate() override;
     std::shared_ptr<Promise<UpdateStatusNative>> completeFlexibleUpdate() override;
+    std::shared_ptr<Promise<void>> openStorePage(const std::optional<OpenStorePageOptionsNative>& options) override;
     std::string addInstallStateListener(const std::function<void(const InstallStateEventNative& /* event */)>& listener) override;
     void removeInstallStateListener(const std::string& listenerId) override;
 

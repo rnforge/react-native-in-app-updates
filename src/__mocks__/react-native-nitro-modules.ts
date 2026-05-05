@@ -3,6 +3,7 @@ const mockObject = {
   startFlexibleUpdate: jest.fn(),
   completeFlexibleUpdate: jest.fn(),
   getUpdateStatus: jest.fn(),
+  openStorePage: jest.fn(),
   addInstallStateListener: jest.fn(),
   removeInstallStateListener: jest.fn(),
 }
@@ -16,6 +17,7 @@ export function resetMockObject() {
   mockObject.startFlexibleUpdate.mockReset()
   mockObject.completeFlexibleUpdate.mockReset()
   mockObject.getUpdateStatus.mockReset()
+  mockObject.openStorePage.mockReset()
   mockObject.addInstallStateListener.mockReset()
   mockObject.removeInstallStateListener.mockReset()
 }

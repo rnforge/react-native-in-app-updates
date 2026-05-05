@@ -106,6 +106,12 @@ export type GetUpdateStatusOptions = {
   }
 }
 
+export type OpenStorePageOptions = {
+  ios?: {
+    appStoreId: string
+  }
+}
+
 export type InAppUpdatesErrorCode =
   | 'invalid-input'
   | 'bridge-error'

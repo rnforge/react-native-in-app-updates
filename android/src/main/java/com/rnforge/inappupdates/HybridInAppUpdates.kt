@@ -4,6 +4,7 @@ import com.margelo.nitro.rnforge_inappupdates.HybridInAppUpdatesSpec
 import com.margelo.nitro.core.Promise
 import com.margelo.nitro.rnforge_inappupdates.GetUpdateStatusOptionsNative
 import com.margelo.nitro.rnforge_inappupdates.InstallStateEventNative
+import com.margelo.nitro.rnforge_inappupdates.OpenStorePageOptionsNative
 import com.margelo.nitro.rnforge_inappupdates.UpdateStatusNative
 
 class HybridInAppUpdates: HybridInAppUpdatesSpec() {
@@ -11,6 +12,7 @@ class HybridInAppUpdates: HybridInAppUpdatesSpec() {
     private val flexibleUpdateService = PlayCoreFlexibleUpdateService()
     private val installStateListenerService = PlayCoreInstallStateListenerService()
     private val statusService = PlayCoreStatusService()
+    private val storeService = PlayCoreStoreService()
 
     override fun getUpdateStatus(options: GetUpdateStatusOptionsNative?): Promise<UpdateStatusNative> {
         return statusService.getUpdateStatus(options)
@@ -26,6 +28,10 @@ class HybridInAppUpdates: HybridInAppUpdatesSpec() {
 
     override fun completeFlexibleUpdate(): Promise<UpdateStatusNative> {
         return flexibleUpdateService.completeFlexibleUpdate()
+    }
+
+    override fun openStorePage(options: OpenStorePageOptionsNative?): Promise<Unit> {
+        return storeService.openStorePage(options)
     }
 
     override fun addInstallStateListener(listener: (event: InstallStateEventNative) -> Unit): String {

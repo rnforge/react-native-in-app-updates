@@ -45,6 +45,10 @@ abstract class HybridInAppUpdatesSpec: HybridObject() {
   @Keep
   abstract fun completeFlexibleUpdate(): Promise<UpdateStatusNative>
   
+  @DoNotStrip
+  @Keep
+  abstract fun openStorePage(options: OpenStorePageOptionsNative?): Promise<Unit>
+  
   abstract fun addInstallStateListener(listener: (event: InstallStateEventNative) -> Unit): String
   
   @DoNotStrip

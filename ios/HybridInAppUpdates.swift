@@ -129,6 +129,31 @@ class HybridInAppUpdates: HybridInAppUpdatesSpec {
         }
     }
 
+    func openStorePage(options: OpenStorePageOptionsNative?) throws -> Promise<Void> {
+        return Promise { resolve, reject in
+            guard let appStoreId = options?.ios?.appStoreId else {
+                reject(NSError(domain: "InAppUpdates", code: 2, userInfo: [NSLocalizedDescriptionKey: "Missing ios.appStoreId for openStorePage()"]))
+                return
+            }
+
+            let urlString = "https://apps.apple.com/app/id\(appStoreId)"
+            guard let url = URL(string: urlString) else {
+                reject(NSError(domain: "InAppUpdates", code: 3, userInfo: [NSLocalizedDescriptionKey: "Invalid appStoreId"]))
+                return
+            }
+
+            DispatchQueue.main.async {
+                UIApplication.shared.open(url, options: [:]) { success in
+                    if success {
+                        resolve()
+                    } else {
+                        reject(NSError(domain: "InAppUpdates", code: 4, userInfo: [NSLocalizedDescriptionKey: "Failed to open App Store"]))
+                    }
+                }
+            }
+        }
+    }
+
     func addInstallStateListener(listener: @escaping (_ event: InstallStateEventNative) -> Void) throws -> String {
         let listenerId = UUID().uuidString
         let event = InstallStateEventNative(

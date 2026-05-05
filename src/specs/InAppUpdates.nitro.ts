@@ -44,6 +44,14 @@ export interface GetUpdateStatusOptionsNative {
   ios?: IosGetUpdateStatusOptionsNative
 }
 
+export interface IosOpenStorePageOptionsNative {
+  appStoreId: string
+}
+
+export interface OpenStorePageOptionsNative {
+  ios?: IosOpenStorePageOptionsNative
+}
+
 export interface UpdateStatusNative {
   platform: string
   supported: boolean
@@ -78,6 +86,7 @@ export interface InAppUpdates extends HybridObject<{ ios: 'swift', android: 'kot
   startImmediateUpdate(): Promise<UpdateStatusNative>
   startFlexibleUpdate(): Promise<UpdateStatusNative>
   completeFlexibleUpdate(): Promise<UpdateStatusNative>
+  openStorePage(options?: OpenStorePageOptionsNative): Promise<void>
   addInstallStateListener(listener: (event: InstallStateEventNative) => void): string
   removeInstallStateListener(listenerId: string): void
 }

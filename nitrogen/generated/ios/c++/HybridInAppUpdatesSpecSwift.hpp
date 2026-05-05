@@ -28,6 +28,10 @@ namespace margelo::nitro::rnforge_inappupdates { struct IosDetailsNative; }
 namespace margelo::nitro::rnforge_inappupdates { struct GetUpdateStatusOptionsNative; }
 // Forward declaration of `IosGetUpdateStatusOptionsNative` to properly resolve imports.
 namespace margelo::nitro::rnforge_inappupdates { struct IosGetUpdateStatusOptionsNative; }
+// Forward declaration of `OpenStorePageOptionsNative` to properly resolve imports.
+namespace margelo::nitro::rnforge_inappupdates { struct OpenStorePageOptionsNative; }
+// Forward declaration of `IosOpenStorePageOptionsNative` to properly resolve imports.
+namespace margelo::nitro::rnforge_inappupdates { struct IosOpenStorePageOptionsNative; }
 // Forward declaration of `InstallStateEventNative` to properly resolve imports.
 namespace margelo::nitro::rnforge_inappupdates { struct InstallStateEventNative; }
 
@@ -44,6 +48,8 @@ namespace margelo::nitro::rnforge_inappupdates { struct InstallStateEventNative;
 #include "IosDetailsNative.hpp"
 #include "GetUpdateStatusOptionsNative.hpp"
 #include "IosGetUpdateStatusOptionsNative.hpp"
+#include "OpenStorePageOptionsNative.hpp"
+#include "IosOpenStorePageOptionsNative.hpp"
 #include "InstallStateEventNative.hpp"
 #include <functional>
 
@@ -123,6 +129,14 @@ namespace margelo::nitro::rnforge_inappupdates {
     }
     inline std::shared_ptr<Promise<UpdateStatusNative>> completeFlexibleUpdate() override {
       auto __result = _swiftPart.completeFlexibleUpdate();
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+      auto __value = std::move(__result.value());
+      return __value;
+    }
+    inline std::shared_ptr<Promise<void>> openStorePage(const std::optional<OpenStorePageOptionsNative>& options) override {
+      auto __result = _swiftPart.openStorePage(options);
       if (__result.hasError()) [[unlikely]] {
         std::rethrow_exception(__result.error());
       }

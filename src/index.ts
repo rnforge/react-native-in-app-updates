@@ -4,6 +4,7 @@ export { getUpdateStatus } from './getUpdateStatus'
 export { startImmediateUpdate } from './startImmediateUpdate'
 export { startFlexibleUpdate } from './startFlexibleUpdate'
 export { completeFlexibleUpdate } from './completeFlexibleUpdate'
+export { openStorePage } from './openStorePage'
 export {
   addInstallStateListener,
   type InstallStateListener,
