@@ -55,3 +55,5 @@ Android native unit tests are **not yet available** in this repository. Future n
 ## Play Console validation
 
 Real Play in-app update flow verification (immediate and flexible) requires a Google Play-distributed app, internal test track, and a physical device. This is tracked as **Issue 0007**.
+
+See [`docs/manual-play-validation.md`](./docs/manual-play-validation.md) for the full release gate checklist.
