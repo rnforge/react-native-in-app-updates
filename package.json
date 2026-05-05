@@ -23,10 +23,8 @@
   ],
   "files": [
     "src",
-    "react-native.config.js",
     "lib",
     "nitrogen",
-    "cpp",
     "nitro.json",
     "android/build.gradle",
     "android/fix-prefab.gradle",
@@ -38,9 +36,10 @@
     "ios/**/*.mm",
     "ios/**/*.cpp",
     "ios/**/*.swift",
-    "app.plugin.js",
     "*.podspec",
-    "README.md"
+    "README.md",
+    "docs",
+    "TESTING.md"
   ],
   "repository": "https://github.com/rnforge/react-native-in-app-updates.git",
   "author": "RNForge",
