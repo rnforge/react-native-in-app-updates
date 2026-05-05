@@ -16,6 +16,8 @@ namespace margelo::nitro::rnforge_inappupdates { struct AndroidDetailsNative; }
 namespace margelo::nitro::rnforge_inappupdates { struct CapabilitiesNative; }
 // Forward declaration of `HybridInAppUpdatesSpec` to properly resolve imports.
 namespace margelo::nitro::rnforge_inappupdates { class HybridInAppUpdatesSpec; }
+// Forward declaration of `InstallStateEventNative` to properly resolve imports.
+namespace margelo::nitro::rnforge_inappupdates { struct InstallStateEventNative; }
 // Forward declaration of `IosDetailsNative` to properly resolve imports.
 namespace margelo::nitro::rnforge_inappupdates { struct IosDetailsNative; }
 // Forward declaration of `PlayCoreDetailsNative` to properly resolve imports.
@@ -28,6 +30,7 @@ namespace margelo::nitro::rnforge_inappupdates { struct UpdateStatusNative; }
 #include "AndroidDetailsNative.hpp"
 #include "CapabilitiesNative.hpp"
 #include "HybridInAppUpdatesSpec.hpp"
+#include "InstallStateEventNative.hpp"
 #include "IosDetailsNative.hpp"
 #include "PlayCoreDetailsNative.hpp"
 #include "UpdateStatusNative.hpp"
@@ -35,6 +38,7 @@ namespace margelo::nitro::rnforge_inappupdates { struct UpdateStatusNative; }
 #include <NitroModules/Promise.hpp>
 #include <NitroModules/Result.hpp>
 #include <exception>
+#include <functional>
 #include <memory>
 #include <optional>
 #include <string>

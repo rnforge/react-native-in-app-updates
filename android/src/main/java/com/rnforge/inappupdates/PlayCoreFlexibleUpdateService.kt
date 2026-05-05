@@ -7,9 +7,9 @@ import android.os.Build
 import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.play.core.appupdate.AppUpdateManager
-import com.google.android.play.core.appupdate.AppUpdateManagerFactory
 import com.google.android.play.core.appupdate.AppUpdateOptions
 import com.google.android.play.core.install.model.AppUpdateType
+import com.google.android.play.core.install.model.InstallStatus
 import com.google.android.play.core.install.model.UpdateAvailability
 import com.margelo.nitro.core.NullType
 import com.margelo.nitro.core.Promise
@@ -19,19 +19,16 @@ import com.margelo.nitro.rnforge_inappupdates.UpdateStatusNative
 import com.margelo.nitro.rnforge_inappupdates.Variant_NullType_Boolean
 
 /**
- * Handles Play Core immediate update flow.
- * Requests fresh AppUpdateInfo for every start attempt.
+ * Handles Play Core flexible update flow.
+ * Requests fresh AppUpdateInfo for every start and complete attempt.
  */
-class PlayCoreImmediateUpdateService {
+class PlayCoreFlexibleUpdateService {
 
-    fun startImmediateUpdate(): Promise<UpdateStatusNative> {
+    fun startFlexibleUpdate(): Promise<UpdateStatusNative> {
         val promise = Promise<UpdateStatusNative>()
         val context = InAppUpdatesActivityProvider.applicationContext
 
         if (context == null) {
-            // NitroModules context not yet available — return typed unavailable,
-            // not a thrown exception. This can happen if startImmediateUpdate()
-            // is called extremely early in app startup before TurboModule init.
             promise.resolve(createStatus(
                 supported = true,
                 updateAvailable = null,
@@ -40,22 +37,19 @@ class PlayCoreImmediateUpdateService {
             return promise
         }
 
-        // Check install source
         val installSource = getInstallSource(context)
         if (installSource != "com.android.vending") {
             promise.resolve(createUnsupportedStatus("unsupported-install-source"))
             return promise
         }
 
-        // Check Google Play Services availability
         val playServicesResult = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(context)
         if (playServicesResult != ConnectionResult.SUCCESS) {
             promise.resolve(createUnsupportedStatus("play-core-unavailable"))
             return promise
         }
 
-        // Request fresh AppUpdateInfo
-        val appUpdateManager = AppUpdateManagerFactory.create(context)
+        val appUpdateManager = PlayCoreAppUpdateManager.getInstance(context)
         appUpdateManager.appUpdateInfo
             .addOnSuccessListener { appUpdateInfo ->
                 when (appUpdateInfo.updateAvailability()) {
@@ -67,12 +61,12 @@ class PlayCoreImmediateUpdateService {
                         ))
                     }
                     UpdateAvailability.UPDATE_AVAILABLE -> {
-                        val immediateAllowed = appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE)
                         val flexibleAllowed = appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.FLEXIBLE)
-                        if (immediateAllowed) {
+                        val immediateAllowed = appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE)
+                        if (flexibleAllowed) {
                             val activity = InAppUpdatesActivityProvider.currentActivity
                             if (activity != null) {
-                                startUpdateFlow(appUpdateManager, appUpdateInfo, activity, promise, flexibleAllowed)
+                                startUpdateFlow(appUpdateManager, appUpdateInfo, activity, promise, immediateAllowed)
                             } else {
                                 promise.resolve(createStatus(
                                     supported = true,
@@ -87,8 +81,8 @@ class PlayCoreImmediateUpdateService {
                                 supported = true,
                                 updateAvailable = true,
                                 reason = "update-not-allowed",
-                                immediateAllowed = false,
-                                flexibleAllowed = flexibleAllowed
+                                immediateAllowed = immediateAllowed,
+                                flexibleAllowed = false
                             ))
                         }
                     }
@@ -111,28 +105,89 @@ class PlayCoreImmediateUpdateService {
         return promise
     }
 
+    fun completeFlexibleUpdate(): Promise<UpdateStatusNative> {
+        val promise = Promise<UpdateStatusNative>()
+        val context = InAppUpdatesActivityProvider.applicationContext
+
+        if (context == null) {
+            promise.resolve(createStatus(
+                supported = true,
+                updateAvailable = null,
+                reason = "update-not-allowed"
+            ))
+            return promise
+        }
+
+        val installSource = getInstallSource(context)
+        if (installSource != "com.android.vending") {
+            promise.resolve(createUnsupportedStatus("unsupported-install-source"))
+            return promise
+        }
+
+        val playServicesResult = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(context)
+        if (playServicesResult != ConnectionResult.SUCCESS) {
+            promise.resolve(createUnsupportedStatus("play-core-unavailable"))
+            return promise
+        }
+
+        val appUpdateManager = PlayCoreAppUpdateManager.getInstance(context)
+        appUpdateManager.appUpdateInfo
+            .addOnSuccessListener { appUpdateInfo ->
+                val immediateAllowed = appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE)
+                if (appUpdateInfo.installStatus() == InstallStatus.DOWNLOADED) {
+                    appUpdateManager.completeUpdate()
+                        .addOnCompleteListener { task ->
+                            if (task.isSuccessful) {
+                                promise.resolve(createStatus(
+                                    supported = true,
+                                    updateAvailable = true,
+                                    reason = "flexible-update-downloaded",
+                                    immediateAllowed = immediateAllowed,
+                                    flexibleAllowed = true
+                                ))
+                            } else {
+                                promise.reject(task.exception ?: Exception("completeUpdate failed"))
+                            }
+                        }
+                } else {
+                    promise.resolve(createStatus(
+                        supported = true,
+                        updateAvailable = true,
+                        reason = "update-not-allowed",
+                        immediateAllowed = immediateAllowed,
+                        flexibleAllowed = appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.FLEXIBLE)
+                    ))
+                }
+            }
+            .addOnFailureListener { error ->
+                promise.reject(error)
+            }
+
+        return promise
+    }
+
     private fun startUpdateFlow(
         appUpdateManager: AppUpdateManager,
         appUpdateInfo: com.google.android.play.core.appupdate.AppUpdateInfo,
         activity: Activity,
         promise: Promise<UpdateStatusNative>,
-        flexibleAllowed: Boolean
+        immediateAllowed: Boolean
     ) {
         appUpdateManager.startUpdateFlow(
             appUpdateInfo,
             activity,
-            AppUpdateOptions.defaultOptions(AppUpdateType.IMMEDIATE)
+            AppUpdateOptions.defaultOptions(AppUpdateType.FLEXIBLE)
         ).addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 promise.resolve(createStatus(
                     supported = true,
                     updateAvailable = true,
                     reason = "update-available",
-                    immediateAllowed = true,
-                    flexibleAllowed = flexibleAllowed
+                    immediateAllowed = immediateAllowed,
+                    flexibleAllowed = true
                 ))
             } else {
-                promise.reject(task.exception ?: Exception("Immediate update flow failed"))
+                promise.reject(task.exception ?: Exception("Flexible update flow failed"))
             }
         }
     }

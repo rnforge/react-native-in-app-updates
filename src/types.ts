@@ -26,6 +26,14 @@ export type InstallStatus =
   | 'installed'
   | 'failed'
   | 'canceled'
+  | 'unsupported'
+
+export type InstallStateEventReason =
+  | UnsupportedReason
+  | 'download-progress'
+  | 'install-state-changed'
+  | 'flexible-update-downloaded'
+  | 'unknown'
 
 export type Capabilities = {
   immediate: boolean
@@ -77,6 +85,19 @@ export type UpdateStatus = {
   installStatus?: InstallStatus
   android?: AndroidDetails
   ios?: IosDetails
+}
+
+export type InstallStateEvent = {
+  platform: Platform
+  supported: boolean
+  installStatus: InstallStatus
+  reason: InstallStateEventReason
+  bytesDownloaded?: number
+  totalBytesToDownload?: number
+  progress?: number
+  errorCode?: string
+  message?: string
+  android?: AndroidDetails
 }
 
 export type GetUpdateStatusOptions = {

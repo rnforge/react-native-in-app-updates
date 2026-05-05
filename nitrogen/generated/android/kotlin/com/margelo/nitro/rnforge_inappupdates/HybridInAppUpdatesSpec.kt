@@ -36,6 +36,27 @@ abstract class HybridInAppUpdatesSpec: HybridObject() {
   @DoNotStrip
   @Keep
   abstract fun startImmediateUpdate(): Promise<UpdateStatusNative>
+  
+  @DoNotStrip
+  @Keep
+  abstract fun startFlexibleUpdate(): Promise<UpdateStatusNative>
+  
+  @DoNotStrip
+  @Keep
+  abstract fun completeFlexibleUpdate(): Promise<UpdateStatusNative>
+  
+  abstract fun addInstallStateListener(listener: (event: InstallStateEventNative) -> Unit): String
+  
+  @DoNotStrip
+  @Keep
+  private fun addInstallStateListener_cxx(listener: Func_void_InstallStateEventNative): String {
+    val __result = addInstallStateListener(listener)
+    return __result
+  }
+  
+  @DoNotStrip
+  @Keep
+  abstract fun removeInstallStateListener(listenerId: String): Unit
 
   // Default implementation of `HybridObject.toString()`
   override fun toString(): String {

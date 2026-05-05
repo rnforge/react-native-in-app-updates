@@ -161,4 +161,70 @@ open class HybridInAppUpdatesSpec_cxx {
       return bridge.create_Result_std__shared_ptr_Promise_UpdateStatusNative___(__exceptionPtr)
     }
   }
+  
+  @inline(__always)
+  public final func startFlexibleUpdate() -> bridge.Result_std__shared_ptr_Promise_UpdateStatusNative___ {
+    do {
+      let __result = try self.__implementation.startFlexibleUpdate()
+      let __resultCpp = { () -> bridge.std__shared_ptr_Promise_UpdateStatusNative__ in
+        let __promise = bridge.create_std__shared_ptr_Promise_UpdateStatusNative__()
+        let __promiseHolder = bridge.wrap_std__shared_ptr_Promise_UpdateStatusNative__(__promise)
+        __result
+          .then({ __result in __promiseHolder.resolve(__result) })
+          .catch({ __error in __promiseHolder.reject(__error.toCpp()) })
+        return __promise
+      }()
+      return bridge.create_Result_std__shared_ptr_Promise_UpdateStatusNative___(__resultCpp)
+    } catch (let __error) {
+      let __exceptionPtr = __error.toCpp()
+      return bridge.create_Result_std__shared_ptr_Promise_UpdateStatusNative___(__exceptionPtr)
+    }
+  }
+  
+  @inline(__always)
+  public final func completeFlexibleUpdate() -> bridge.Result_std__shared_ptr_Promise_UpdateStatusNative___ {
+    do {
+      let __result = try self.__implementation.completeFlexibleUpdate()
+      let __resultCpp = { () -> bridge.std__shared_ptr_Promise_UpdateStatusNative__ in
+        let __promise = bridge.create_std__shared_ptr_Promise_UpdateStatusNative__()
+        let __promiseHolder = bridge.wrap_std__shared_ptr_Promise_UpdateStatusNative__(__promise)
+        __result
+          .then({ __result in __promiseHolder.resolve(__result) })
+          .catch({ __error in __promiseHolder.reject(__error.toCpp()) })
+        return __promise
+      }()
+      return bridge.create_Result_std__shared_ptr_Promise_UpdateStatusNative___(__resultCpp)
+    } catch (let __error) {
+      let __exceptionPtr = __error.toCpp()
+      return bridge.create_Result_std__shared_ptr_Promise_UpdateStatusNative___(__exceptionPtr)
+    }
+  }
+  
+  @inline(__always)
+  public final func addInstallStateListener(listener: bridge.Func_void_InstallStateEventNative) -> bridge.Result_std__string_ {
+    do {
+      let __result = try self.__implementation.addInstallStateListener(listener: { () -> (InstallStateEventNative) -> Void in
+        let __wrappedFunction = bridge.wrap_Func_void_InstallStateEventNative(listener)
+        return { (__event: InstallStateEventNative) -> Void in
+          __wrappedFunction.call(__event)
+        }
+      }())
+      let __resultCpp = std.string(__result)
+      return bridge.create_Result_std__string_(__resultCpp)
+    } catch (let __error) {
+      let __exceptionPtr = __error.toCpp()
+      return bridge.create_Result_std__string_(__exceptionPtr)
+    }
+  }
+  
+  @inline(__always)
+  public final func removeInstallStateListener(listenerId: std.string) -> bridge.Result_void_ {
+    do {
+      try self.__implementation.removeInstallStateListener(listenerId: String(listenerId))
+      return bridge.create_Result_void_()
+    } catch (let __error) {
+      let __exceptionPtr = __error.toCpp()
+      return bridge.create_Result_void_(__exceptionPtr)
+    }
+  }
 }

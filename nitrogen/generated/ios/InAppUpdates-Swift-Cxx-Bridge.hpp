@@ -16,6 +16,8 @@ namespace margelo::nitro::rnforge_inappupdates { struct AndroidDetailsNative; }
 namespace margelo::nitro::rnforge_inappupdates { struct CapabilitiesNative; }
 // Forward declaration of `HybridInAppUpdatesSpec` to properly resolve imports.
 namespace margelo::nitro::rnforge_inappupdates { class HybridInAppUpdatesSpec; }
+// Forward declaration of `InstallStateEventNative` to properly resolve imports.
+namespace margelo::nitro::rnforge_inappupdates { struct InstallStateEventNative; }
 // Forward declaration of `IosDetailsNative` to properly resolve imports.
 namespace margelo::nitro::rnforge_inappupdates { struct IosDetailsNative; }
 // Forward declaration of `PlayCoreDetailsNative` to properly resolve imports.
@@ -32,6 +34,7 @@ namespace InAppUpdates { class HybridInAppUpdatesSpec_cxx; }
 #include "AndroidDetailsNative.hpp"
 #include "CapabilitiesNative.hpp"
 #include "HybridInAppUpdatesSpec.hpp"
+#include "InstallStateEventNative.hpp"
 #include "IosDetailsNative.hpp"
 #include "PlayCoreDetailsNative.hpp"
 #include "UpdateStatusNative.hpp"
@@ -286,6 +289,28 @@ namespace margelo::nitro::rnforge_inappupdates::bridge::swift {
     return Func_void_std__exception_ptr_Wrapper(std::move(value));
   }
   
+  // pragma MARK: std::function<void(const InstallStateEventNative& /* event */)>
+  /**
+   * Specialized version of `std::function<void(const InstallStateEventNative&)>`.
+   */
+  using Func_void_InstallStateEventNative = std::function<void(const InstallStateEventNative& /* event */)>;
+  /**
+   * Wrapper class for a `std::function<void(const InstallStateEventNative& / * event * /)>`, this can be used from Swift.
+   */
+  class Func_void_InstallStateEventNative_Wrapper final {
+  public:
+    explicit Func_void_InstallStateEventNative_Wrapper(std::function<void(const InstallStateEventNative& /* event */)>&& func): _function(std::make_unique<std::function<void(const InstallStateEventNative& /* event */)>>(std::move(func))) {}
+    inline void call(InstallStateEventNative event) const noexcept {
+      _function->operator()(event);
+    }
+  private:
+    std::unique_ptr<std::function<void(const InstallStateEventNative& /* event */)>> _function;
+  } SWIFT_NONCOPYABLE;
+  Func_void_InstallStateEventNative create_Func_void_InstallStateEventNative(void* NON_NULL swiftClosureWrapper) noexcept;
+  inline Func_void_InstallStateEventNative_Wrapper wrap_Func_void_InstallStateEventNative(Func_void_InstallStateEventNative value) noexcept {
+    return Func_void_InstallStateEventNative_Wrapper(std::move(value));
+  }
+  
   // pragma MARK: std::shared_ptr<HybridInAppUpdatesSpec>
   /**
    * Specialized version of `std::shared_ptr<HybridInAppUpdatesSpec>`.
@@ -305,6 +330,24 @@ namespace margelo::nitro::rnforge_inappupdates::bridge::swift {
   }
   inline Result_std__shared_ptr_Promise_UpdateStatusNative___ create_Result_std__shared_ptr_Promise_UpdateStatusNative___(const std::exception_ptr& error) noexcept {
     return Result<std::shared_ptr<Promise<UpdateStatusNative>>>::withError(error);
+  }
+  
+  // pragma MARK: Result<std::string>
+  using Result_std__string_ = Result<std::string>;
+  inline Result_std__string_ create_Result_std__string_(const std::string& value) noexcept {
+    return Result<std::string>::withValue(value);
+  }
+  inline Result_std__string_ create_Result_std__string_(const std::exception_ptr& error) noexcept {
+    return Result<std::string>::withError(error);
+  }
+  
+  // pragma MARK: Result<void>
+  using Result_void_ = Result<void>;
+  inline Result_void_ create_Result_void_() noexcept {
+    return Result<void>::withValue();
+  }
+  inline Result_void_ create_Result_void_(const std::exception_ptr& error) noexcept {
+    return Result<void>::withError(error);
   }
 
 } // namespace margelo::nitro::rnforge_inappupdates::bridge::swift

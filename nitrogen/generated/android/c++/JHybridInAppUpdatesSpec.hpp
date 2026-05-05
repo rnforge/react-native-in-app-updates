@@ -56,6 +56,10 @@ namespace margelo::nitro::rnforge_inappupdates {
     // Methods
     std::shared_ptr<Promise<UpdateStatusNative>> getUpdateStatus() override;
     std::shared_ptr<Promise<UpdateStatusNative>> startImmediateUpdate() override;
+    std::shared_ptr<Promise<UpdateStatusNative>> startFlexibleUpdate() override;
+    std::shared_ptr<Promise<UpdateStatusNative>> completeFlexibleUpdate() override;
+    std::string addInstallStateListener(const std::function<void(const InstallStateEventNative& /* event */)>& listener) override;
+    void removeInstallStateListener(const std::string& listenerId) override;
 
   private:
     jni::global_ref<JHybridInAppUpdatesSpec::JavaPart> _javaPart;

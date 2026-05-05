@@ -19,6 +19,8 @@ namespace margelo::nitro::rnforge_inappupdates { struct AndroidDetailsNative; }
 namespace margelo::nitro::rnforge_inappupdates { struct PlayCoreDetailsNative; }
 // Forward declaration of `IosDetailsNative` to properly resolve imports.
 namespace margelo::nitro::rnforge_inappupdates { struct IosDetailsNative; }
+// Forward declaration of `InstallStateEventNative` to properly resolve imports.
+namespace margelo::nitro::rnforge_inappupdates { struct InstallStateEventNative; }
 
 #include "UpdateStatusNative.hpp"
 #include <NitroModules/Promise.hpp>
@@ -41,6 +43,11 @@ namespace margelo::nitro::rnforge_inappupdates { struct IosDetailsNative; }
 #include "JPlayCoreDetailsNative.hpp"
 #include "IosDetailsNative.hpp"
 #include "JIosDetailsNative.hpp"
+#include "InstallStateEventNative.hpp"
+#include <functional>
+#include "JFunc_void_InstallStateEventNative.hpp"
+#include <NitroModules/JNICallable.hpp>
+#include "JInstallStateEventNative.hpp"
 
 namespace margelo::nitro::rnforge_inappupdates {
 
@@ -106,6 +113,47 @@ namespace margelo::nitro::rnforge_inappupdates {
       });
       return __promise;
     }();
+  }
+  std::shared_ptr<Promise<UpdateStatusNative>> JHybridInAppUpdatesSpec::startFlexibleUpdate() {
+    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>()>("startFlexibleUpdate");
+    auto __result = method(_javaPart);
+    return [&]() {
+      auto __promise = Promise<UpdateStatusNative>::create();
+      __result->cthis()->addOnResolvedListener([=](const jni::alias_ref<jni::JObject>& __boxedResult) {
+        auto __result = jni::static_ref_cast<JUpdateStatusNative>(__boxedResult);
+        __promise->resolve(__result->toCpp());
+      });
+      __result->cthis()->addOnRejectedListener([=](const jni::alias_ref<jni::JThrowable>& __throwable) {
+        jni::JniException __jniError(__throwable);
+        __promise->reject(std::make_exception_ptr(__jniError));
+      });
+      return __promise;
+    }();
+  }
+  std::shared_ptr<Promise<UpdateStatusNative>> JHybridInAppUpdatesSpec::completeFlexibleUpdate() {
+    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>()>("completeFlexibleUpdate");
+    auto __result = method(_javaPart);
+    return [&]() {
+      auto __promise = Promise<UpdateStatusNative>::create();
+      __result->cthis()->addOnResolvedListener([=](const jni::alias_ref<jni::JObject>& __boxedResult) {
+        auto __result = jni::static_ref_cast<JUpdateStatusNative>(__boxedResult);
+        __promise->resolve(__result->toCpp());
+      });
+      __result->cthis()->addOnRejectedListener([=](const jni::alias_ref<jni::JThrowable>& __throwable) {
+        jni::JniException __jniError(__throwable);
+        __promise->reject(std::make_exception_ptr(__jniError));
+      });
+      return __promise;
+    }();
+  }
+  std::string JHybridInAppUpdatesSpec::addInstallStateListener(const std::function<void(const InstallStateEventNative& /* event */)>& listener) {
+    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<jni::JString>(jni::alias_ref<JFunc_void_InstallStateEventNative::javaobject> /* listener */)>("addInstallStateListener_cxx");
+    auto __result = method(_javaPart, JFunc_void_InstallStateEventNative_cxx::fromCpp(listener));
+    return __result->toStdString();
+  }
+  void JHybridInAppUpdatesSpec::removeInstallStateListener(const std::string& listenerId) {
+    static const auto method = _javaPart->javaClassStatic()->getMethod<void(jni::alias_ref<jni::JString> /* listenerId */)>("removeInstallStateListener");
+    method(_javaPart, jni::make_jstring(listenerId));
   }
 
 } // namespace margelo::nitro::rnforge_inappupdates

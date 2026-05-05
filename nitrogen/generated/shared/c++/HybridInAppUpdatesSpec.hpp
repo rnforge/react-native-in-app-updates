@@ -15,9 +15,14 @@
 
 // Forward declaration of `UpdateStatusNative` to properly resolve imports.
 namespace margelo::nitro::rnforge_inappupdates { struct UpdateStatusNative; }
+// Forward declaration of `InstallStateEventNative` to properly resolve imports.
+namespace margelo::nitro::rnforge_inappupdates { struct InstallStateEventNative; }
 
 #include "UpdateStatusNative.hpp"
 #include <NitroModules/Promise.hpp>
+#include <string>
+#include "InstallStateEventNative.hpp"
+#include <functional>
 
 namespace margelo::nitro::rnforge_inappupdates {
 
@@ -52,6 +57,10 @@ namespace margelo::nitro::rnforge_inappupdates {
       // Methods
       virtual std::shared_ptr<Promise<UpdateStatusNative>> getUpdateStatus() = 0;
       virtual std::shared_ptr<Promise<UpdateStatusNative>> startImmediateUpdate() = 0;
+      virtual std::shared_ptr<Promise<UpdateStatusNative>> startFlexibleUpdate() = 0;
+      virtual std::shared_ptr<Promise<UpdateStatusNative>> completeFlexibleUpdate() = 0;
+      virtual std::string addInstallStateListener(const std::function<void(const InstallStateEventNative& /* event */)>& listener) = 0;
+      virtual void removeInstallStateListener(const std::string& listenerId) = 0;
 
     protected:
       // Hybrid Setup

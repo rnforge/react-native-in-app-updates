@@ -24,6 +24,8 @@ namespace margelo::nitro::rnforge_inappupdates { struct AndroidDetailsNative; }
 namespace margelo::nitro::rnforge_inappupdates { struct PlayCoreDetailsNative; }
 // Forward declaration of `IosDetailsNative` to properly resolve imports.
 namespace margelo::nitro::rnforge_inappupdates { struct IosDetailsNative; }
+// Forward declaration of `InstallStateEventNative` to properly resolve imports.
+namespace margelo::nitro::rnforge_inappupdates { struct InstallStateEventNative; }
 
 #include "UpdateStatusNative.hpp"
 #include <NitroModules/Promise.hpp>
@@ -36,6 +38,8 @@ namespace margelo::nitro::rnforge_inappupdates { struct IosDetailsNative; }
 #include "AndroidDetailsNative.hpp"
 #include "PlayCoreDetailsNative.hpp"
 #include "IosDetailsNative.hpp"
+#include "InstallStateEventNative.hpp"
+#include <functional>
 
 #include "InAppUpdates-Swift-Cxx-Umbrella.hpp"
 
@@ -102,6 +106,36 @@ namespace margelo::nitro::rnforge_inappupdates {
       }
       auto __value = std::move(__result.value());
       return __value;
+    }
+    inline std::shared_ptr<Promise<UpdateStatusNative>> startFlexibleUpdate() override {
+      auto __result = _swiftPart.startFlexibleUpdate();
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+      auto __value = std::move(__result.value());
+      return __value;
+    }
+    inline std::shared_ptr<Promise<UpdateStatusNative>> completeFlexibleUpdate() override {
+      auto __result = _swiftPart.completeFlexibleUpdate();
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+      auto __value = std::move(__result.value());
+      return __value;
+    }
+    inline std::string addInstallStateListener(const std::function<void(const InstallStateEventNative& /* event */)>& listener) override {
+      auto __result = _swiftPart.addInstallStateListener(listener);
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+      auto __value = std::move(__result.value());
+      return __value;
+    }
+    inline void removeInstallStateListener(const std::string& listenerId) override {
+      auto __result = _swiftPart.removeInstallStateListener(listenerId);
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
     }
 
   private:

@@ -52,7 +52,24 @@ export interface UpdateStatusNative {
   ios?: IosDetailsNative
 }
 
+export interface InstallStateEventNative {
+  platform: string
+  supported: boolean
+  installStatus: string
+  reason: string
+  bytesDownloaded?: number
+  totalBytesToDownload?: number
+  progress?: number
+  errorCode?: string
+  message?: string
+  android?: AndroidDetailsNative
+}
+
 export interface InAppUpdates extends HybridObject<{ ios: 'swift', android: 'kotlin' }> {
   getUpdateStatus(): Promise<UpdateStatusNative>
   startImmediateUpdate(): Promise<UpdateStatusNative>
+  startFlexibleUpdate(): Promise<UpdateStatusNative>
+  completeFlexibleUpdate(): Promise<UpdateStatusNative>
+  addInstallStateListener(listener: (event: InstallStateEventNative) => void): string
+  removeInstallStateListener(listenerId: string): void
 }

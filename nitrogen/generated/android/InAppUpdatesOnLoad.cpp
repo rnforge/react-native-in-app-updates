@@ -16,6 +16,7 @@
 #include <NitroModules/HybridObjectRegistry.hpp>
 
 #include "JHybridInAppUpdatesSpec.hpp"
+#include "JFunc_void_InstallStateEventNative.hpp"
 #include <NitroModules/DefaultConstructableObject.hpp>
 
 namespace margelo::nitro::rnforge_inappupdates {
@@ -27,7 +28,7 @@ int initialize(JavaVM* vm) {
 }
 
 struct JHybridInAppUpdatesSpecImpl: public jni::JavaClass<JHybridInAppUpdatesSpecImpl, JHybridInAppUpdatesSpec::JavaPart> {
-  static constexpr auto kJavaDescriptor = "Lcom/rnforge_inappupdates/HybridInAppUpdates;";
+  static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/rnforge_inappupdates/HybridInAppUpdates;";
   static std::shared_ptr<JHybridInAppUpdatesSpec> create() {
     static const auto constructorFn = javaClassStatic()->getConstructor<JHybridInAppUpdatesSpecImpl::javaobject()>();
     jni::local_ref<JHybridInAppUpdatesSpec::JavaPart> javaPart = javaClassStatic()->newObject(constructorFn);
@@ -41,6 +42,7 @@ void registerAllNatives() {
 
   // Register native JNI methods
   margelo::nitro::rnforge_inappupdates::JHybridInAppUpdatesSpec::CxxPart::registerNatives();
+  margelo::nitro::rnforge_inappupdates::JFunc_void_InstallStateEventNative_cxx::registerNatives();
 
   // Register Nitro Hybrid Objects
   HybridObjectRegistry::registerHybridObjectConstructor(
