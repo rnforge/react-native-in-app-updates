@@ -2,8 +2,6 @@ package com.rnforge.inappupdates
 
 import android.app.Activity
 import android.content.Context
-import android.content.pm.PackageManager
-import android.os.Build
 import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.play.core.appupdate.AppUpdateManager
@@ -11,12 +9,8 @@ import com.google.android.play.core.appupdate.AppUpdateOptions
 import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.install.model.InstallStatus
 import com.google.android.play.core.install.model.UpdateAvailability
-import com.margelo.nitro.core.NullType
 import com.margelo.nitro.core.Promise
-import com.margelo.nitro.rnforge_inappupdates.AllowedFlowsNative
-import com.margelo.nitro.rnforge_inappupdates.CapabilitiesNative
 import com.margelo.nitro.rnforge_inappupdates.UpdateStatusNative
-import com.margelo.nitro.rnforge_inappupdates.Variant_NullType_Boolean
 
 /**
  * Handles Play Core flexible update flow.
@@ -190,65 +184,5 @@ class PlayCoreFlexibleUpdateService {
                 promise.reject(task.exception ?: Exception("Flexible update flow failed"))
             }
         }
-    }
-
-    private fun getInstallSource(context: Context): String? {
-        return try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                context.packageManager.getInstallSourceInfo(context.packageName).installingPackageName
-            } else {
-                @Suppress("DEPRECATION")
-                context.packageManager.getInstallerPackageName(context.packageName)
-            }
-        } catch (e: Exception) {
-            null
-        }
-    }
-
-    private fun createUnsupportedStatus(reason: String): UpdateStatusNative {
-        return UpdateStatusNative(
-            platform = "android",
-            supported = false,
-            updateAvailable = Variant_NullType_Boolean.create(NullType.null),
-            capabilities = CapabilitiesNative(
-                immediate = false,
-                flexible = false,
-                storePage = false,
-                latestVersionLookup = false,
-                installStateListener = false
-            ),
-            allowed = AllowedFlowsNative(
-                immediate = false,
-                flexible = false
-            ),
-            reason = reason
-        )
-    }
-
-    private fun createStatus(
-        supported: Boolean,
-        updateAvailable: Boolean?,
-        reason: String,
-        immediateAllowed: Boolean? = null,
-        flexibleAllowed: Boolean? = null
-    ): UpdateStatusNative {
-        return UpdateStatusNative(
-            platform = "android",
-            supported = supported,
-            updateAvailable = updateAvailable?.let { Variant_NullType_Boolean.create(it) }
-                ?: Variant_NullType_Boolean.create(NullType.null),
-            capabilities = CapabilitiesNative(
-                immediate = true,
-                flexible = true,
-                storePage = false,
-                latestVersionLookup = false,
-                installStateListener = true
-            ),
-            allowed = AllowedFlowsNative(
-                immediate = immediateAllowed ?: false,
-                flexible = flexibleAllowed ?: false
-            ),
-            reason = reason
-        )
     }
 }

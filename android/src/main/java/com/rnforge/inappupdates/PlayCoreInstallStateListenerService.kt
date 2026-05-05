@@ -71,20 +71,6 @@ class PlayCoreInstallStateListenerService {
         }
     }
 
-    private fun mapInstallStatus(status: Int): String {
-        return when (status) {
-            InstallStatus.UNKNOWN -> "unknown"
-            InstallStatus.PENDING -> "pending"
-            InstallStatus.DOWNLOADING -> "downloading"
-            InstallStatus.DOWNLOADED -> "downloaded"
-            InstallStatus.INSTALLING -> "installing"
-            InstallStatus.INSTALLED -> "installed"
-            InstallStatus.FAILED -> "failed"
-            InstallStatus.CANCELED -> "canceled"
-            else -> "unknown"
-        }
-    }
-
     private fun mapReason(status: Int): String {
         return when (status) {
             InstallStatus.DOWNLOADING -> "download-progress"

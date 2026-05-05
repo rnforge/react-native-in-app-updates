@@ -1,23 +1,15 @@
 package com.rnforge.inappupdates
 
 import android.content.Context
-import android.content.pm.PackageManager
-import android.os.Build
 import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.play.core.appupdate.AppUpdateManager
 import com.google.android.play.core.install.model.AppUpdateType
-import com.google.android.play.core.install.model.InstallStatus
 import com.google.android.play.core.install.model.UpdateAvailability
-import com.margelo.nitro.core.NullType
 import com.margelo.nitro.core.Promise
-import com.margelo.nitro.rnforge_inappupdates.AllowedFlowsNative
-import com.margelo.nitro.rnforge_inappupdates.AndroidDetailsNative
-import com.margelo.nitro.rnforge_inappupdates.CapabilitiesNative
 import com.margelo.nitro.rnforge_inappupdates.GetUpdateStatusOptionsNative
 import com.margelo.nitro.rnforge_inappupdates.PlayCoreDetailsNative
 import com.margelo.nitro.rnforge_inappupdates.UpdateStatusNative
-import com.margelo.nitro.rnforge_inappupdates.Variant_NullType_Boolean
 
 /**
  * Handles Play Core status snapshot for getUpdateStatus().
@@ -60,7 +52,7 @@ class PlayCoreStatusService {
 
                 when (appUpdateInfo.updateAvailability()) {
                     UpdateAvailability.UPDATE_NOT_AVAILABLE -> {
-                        promise.resolve(createStatus(
+                        promise.resolve(createDetailedStatus(
                             supported = true,
                             updateAvailable = false,
                             reason = "no-update-available",
@@ -72,7 +64,7 @@ class PlayCoreStatusService {
                         ))
                     }
                     UpdateAvailability.UPDATE_AVAILABLE -> {
-                        promise.resolve(createStatus(
+                        promise.resolve(createDetailedStatus(
                             supported = true,
                             updateAvailable = true,
                             reason = "update-available",
@@ -84,7 +76,7 @@ class PlayCoreStatusService {
                         ))
                     }
                     UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS -> {
-                        promise.resolve(createStatus(
+                        promise.resolve(createDetailedStatus(
                             supported = true,
                             updateAvailable = true,
                             reason = "developer-triggered-update-in-progress",
@@ -107,54 +99,7 @@ class PlayCoreStatusService {
         return promise
     }
 
-    private fun getInstallSource(context: Context): String? {
-        return try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                context.packageManager.getInstallSourceInfo(context.packageName).installingPackageName
-            } else {
-                @Suppress("DEPRECATION")
-                context.packageManager.getInstallerPackageName(context.packageName)
-            }
-        } catch (e: Exception) {
-            null
-        }
-    }
-
-    private fun mapInstallStatus(status: Int): String {
-        return when (status) {
-            InstallStatus.UNKNOWN -> "unknown"
-            InstallStatus.PENDING -> "pending"
-            InstallStatus.DOWNLOADING -> "downloading"
-            InstallStatus.DOWNLOADED -> "downloaded"
-            InstallStatus.INSTALLING -> "installing"
-            InstallStatus.INSTALLED -> "installed"
-            InstallStatus.FAILED -> "failed"
-            InstallStatus.CANCELED -> "canceled"
-            else -> "unknown"
-        }
-    }
-
-    private fun createUnsupportedStatus(reason: String): UpdateStatusNative {
-        return UpdateStatusNative(
-            platform = "android",
-            supported = false,
-            updateAvailable = Variant_NullType_Boolean.create(NullType.null),
-            capabilities = CapabilitiesNative(
-                immediate = false,
-                flexible = false,
-                storePage = false,
-                latestVersionLookup = false,
-                installStateListener = false
-            ),
-            allowed = AllowedFlowsNative(
-                immediate = false,
-                flexible = false
-            ),
-            reason = reason
-        )
-    }
-
-    private fun createStatus(
+    private fun createDetailedStatus(
         supported: Boolean,
         updateAvailable: Boolean?,
         reason: String,
@@ -183,25 +128,14 @@ class PlayCoreStatusService {
             )
         } else null
 
-        return UpdateStatusNative(
-            platform = "android",
+        return createStatus(
             supported = supported,
-            updateAvailable = updateAvailable?.let { Variant_NullType_Boolean.create(it) }
-                ?: Variant_NullType_Boolean.create(NullType.null),
-            capabilities = CapabilitiesNative(
-                immediate = true,
-                flexible = true,
-                storePage = false,
-                latestVersionLookup = false,
-                installStateListener = true
-            ),
-            allowed = AllowedFlowsNative(
-                immediate = immediateAllowed ?: false,
-                flexible = flexibleAllowed ?: false
-            ),
+            updateAvailable = updateAvailable,
             reason = reason,
+            immediateAllowed = immediateAllowed,
+            flexibleAllowed = flexibleAllowed,
             installStatus = installStatus,
-            android = if (context != null) AndroidDetailsNative(
+            android = if (context != null) com.margelo.nitro.rnforge_inappupdates.AndroidDetailsNative(
                 packageName = context.packageName,
                 playCore = playCoreDetails
             ) else null
