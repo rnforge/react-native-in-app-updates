@@ -1,29 +1,27 @@
-name: Release
-
-on:
-  workflow_dispatch:
+name: CI
 
 permissions:
   contents: read
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  release:
-    name: Release
+  verify:
+    name: Verify
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      issues: write
-      pull-requests: write
-      id-token: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
       - name: Setup Bun.js
         uses: oven-sh/setup-bun@v2
@@ -56,14 +54,3 @@ jobs:
 
       - name: Dry-run npm pack
         run: npm pack --dry-run
-
-      - name: Release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          NPM_CONFIG_PROVENANCE: true
-          GIT_AUTHOR_NAME: ${{ github.actor }}
-          GIT_AUTHOR_EMAIL: '${{ github.actor }}@users.noreply.github.com'
-          GIT_COMMITTER_NAME: ${{ github.actor }}
-          GIT_COMMITTER_EMAIL: '${{ github.actor }}@users.noreply.github.com'
-        run: bun release

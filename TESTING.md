@@ -35,6 +35,18 @@ bun run build
 
 Runs `bun run typecheck && bob build`, producing `lib/commonjs/`, `lib/module/`, and `lib/typescript/`.
 
+## CI verification
+
+The `.github/workflows/ci.yml` workflow runs on every push to `main` and every pull request. It covers:
+
+- `bun run typecheck` — TypeScript type checking (src + specs)
+- `bun run typecheck:example` — TypeScript type checking (example/)
+- `bunx jest` — Unit tests (Jest, mocked native layer)
+- `bun run build` — Build verification (bob)
+- `npm pack --dry-run` — Package content sanity check
+
+Native Android/iOS example builds are **not in CI** because `example/` is a source-only scaffold without `android/` or `ios/` project files. Manual Play Console validation remains a separate release gate tracked as Issue 0007.
+
 ## Example app
 
 The `example/` directory contains a **minimal example source scaffold** — not a fully generated React Native app. It lacks native Android and iOS project files (`android/`, `ios/`, Pods, Gradle, etc.). Use `example/App.tsx` as a reference for integrating the v1 API into your own application.
