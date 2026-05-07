@@ -43,7 +43,7 @@ describe('startImmediateUpdate', () => {
       capabilities: {
         immediate: true,
         flexible: true,
-        storePage: false,
+        storePage: true,
         latestVersionLookup: false,
         installStateListener: true,
       },
@@ -70,6 +70,7 @@ describe('startImmediateUpdate', () => {
     expect(result.platform).toBe('android')
     expect(result.reason).toBe('update-available')
     expect(result.capabilities.immediate).toBe(true)
+    expect(result.capabilities.storePage).toBe(true)
     expect(result.allowed.immediate).toBe(true)
     expect(result.android?.packageName).toBe('com.example.app')
   })
@@ -108,7 +109,7 @@ describe('startImmediateUpdate', () => {
       capabilities: {
         immediate: true,
         flexible: true,
-        storePage: false,
+        storePage: true,
         latestVersionLookup: false,
         installStateListener: true,
       },
@@ -123,6 +124,7 @@ describe('startImmediateUpdate', () => {
 
     expect(result.supported).toBe(true)
     expect(result.reason).toBe('update-not-allowed')
+    expect(result.capabilities.storePage).toBe(true)
     expect(result.allowed.immediate).toBe(false)
   })
 

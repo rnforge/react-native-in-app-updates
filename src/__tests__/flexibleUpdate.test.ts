@@ -18,7 +18,7 @@ describe('startFlexibleUpdate', () => {
       capabilities: {
         immediate: true,
         flexible: true,
-        storePage: false,
+        storePage: true,
         latestVersionLookup: false,
         installStateListener: true,
       },
@@ -45,6 +45,7 @@ describe('startFlexibleUpdate', () => {
     expect(result.platform).toBe('android')
     expect(result.reason).toBe('update-available')
     expect(result.capabilities.flexible).toBe(true)
+    expect(result.capabilities.storePage).toBe(true)
     expect(result.allowed.flexible).toBe(true)
     expect(result.android?.packageName).toBe('com.example.app')
   })
@@ -90,7 +91,7 @@ describe('completeFlexibleUpdate', () => {
       capabilities: {
         immediate: true,
         flexible: true,
-        storePage: false,
+        storePage: true,
         latestVersionLookup: false,
         installStateListener: true,
       },
@@ -117,7 +118,7 @@ describe('completeFlexibleUpdate', () => {
       capabilities: {
         immediate: true,
         flexible: true,
-        storePage: false,
+        storePage: true,
         latestVersionLookup: false,
         installStateListener: true,
       },

@@ -16,7 +16,7 @@ describe('getUpdateStatus', () => {
       capabilities: {
         immediate: true,
         flexible: true,
-        storePage: false,
+        storePage: true,
         latestVersionLookup: false,
         installStateListener: true,
       },
@@ -50,6 +50,7 @@ describe('getUpdateStatus', () => {
     expect(result.reason).toBe('update-available')
     expect(result.updateAvailable).toBe(true)
     expect(result.capabilities.immediate).toBe(true)
+    expect(result.capabilities.storePage).toBe(true)
     expect(result.allowed.immediate).toBe(true)
     expect(result.android?.packageName).toBe('com.example.app')
     expect(result.android?.playCore?.availableVersionCode).toBe(2)
@@ -63,7 +64,7 @@ describe('getUpdateStatus', () => {
       capabilities: {
         immediate: true,
         flexible: true,
-        storePage: false,
+        storePage: true,
         latestVersionLookup: false,
         installStateListener: true,
       },
@@ -89,6 +90,7 @@ describe('getUpdateStatus', () => {
     expect(result.supported).toBe(true)
     expect(result.updateAvailable).toBe(false)
     expect(result.reason).toBe('no-update-available')
+    expect(result.capabilities.storePage).toBe(true)
     expect(result.android?.packageName).toBe('com.example.app')
     expect(result.android?.playCore?.updateAvailability).toBe('UPDATE_NOT_AVAILABLE')
   })
@@ -101,7 +103,7 @@ describe('getUpdateStatus', () => {
       capabilities: {
         immediate: false,
         flexible: false,
-        storePage: false,
+        storePage: true,
         latestVersionLookup: false,
         installStateListener: false,
       },
@@ -127,7 +129,7 @@ describe('getUpdateStatus', () => {
       capabilities: {
         immediate: false,
         flexible: false,
-        storePage: false,
+        storePage: true,
         latestVersionLookup: false,
         installStateListener: false,
       },
@@ -152,7 +154,7 @@ describe('getUpdateStatus', () => {
       capabilities: {
         immediate: true,
         flexible: true,
-        storePage: false,
+        storePage: true,
         latestVersionLookup: false,
         installStateListener: true,
       },
@@ -180,7 +182,7 @@ describe('getUpdateStatus', () => {
       capabilities: {
         immediate: false,
         flexible: false,
-        storePage: false,
+        storePage: true,
         latestVersionLookup: false,
         installStateListener: false,
       },
@@ -207,7 +209,7 @@ describe('getUpdateStatus', () => {
       capabilities: {
         immediate: false,
         flexible: false,
-        storePage: false,
+        storePage: true,
         latestVersionLookup: false,
         installStateListener: false,
       },
@@ -226,6 +228,7 @@ describe('getUpdateStatus', () => {
 
     expect(result.supported).toBe(false)
     expect(result.reason).toBe('store-lookup-unavailable')
+    expect(result.capabilities.storePage).toBe(true)
     expect(result.ios?.appStoreId).toBe('1234567890')
   })
 
@@ -237,7 +240,7 @@ describe('getUpdateStatus', () => {
       capabilities: {
         immediate: true,
         flexible: true,
-        storePage: false,
+        storePage: true,
         latestVersionLookup: false,
         installStateListener: true,
       },
@@ -276,7 +279,7 @@ describe('getUpdateStatus', () => {
       capabilities: {
         immediate: true,
         flexible: true,
-        storePage: false,
+        storePage: true,
         latestVersionLookup: false,
         installStateListener: true,
       },

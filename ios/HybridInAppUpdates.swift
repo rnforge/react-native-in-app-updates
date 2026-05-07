@@ -6,126 +6,44 @@
 //
 
 import Foundation
+import UIKit
 import NitroModules
 
 class HybridInAppUpdates: HybridInAppUpdatesSpec {
     func getUpdateStatus(options: GetUpdateStatusOptionsNative?) throws -> Promise<UpdateStatusNative> {
-        return Promise { resolve, reject in
+        return Promise { resolve, _ in
             let appStoreId = options?.ios?.appStoreId
-            
-            if appStoreId == nil {
-                let status = UpdateStatusNative(
-                    platform: "ios",
-                    supported: false,
-                    updateAvailable: .first(NullType.null),
-                    capabilities: CapabilitiesNative(
-                        immediate: false,
-                        flexible: false,
-                        storePage: false,
-                        latestVersionLookup: false,
-                        installStateListener: false
-                    ),
-                    allowed: AllowedFlowsNative(
-                        immediate: false,
-                        flexible: false
-                    ),
-                    reason: "missing-app-store-id"
-                )
-                resolve(status)
-            } else {
-                let status = UpdateStatusNative(
-                    platform: "ios",
-                    supported: false,
-                    updateAvailable: .first(NullType.null),
-                    capabilities: CapabilitiesNative(
-                        immediate: false,
-                        flexible: false,
-                        storePage: false,
-                        latestVersionLookup: false,
-                        installStateListener: false
-                    ),
-                    allowed: AllowedFlowsNative(
-                        immediate: false,
-                        flexible: false
-                    ),
+
+            if let appStoreId {
+                resolve(makeStatus(
                     reason: "store-lookup-unavailable",
-                    ios: IosDetailsNative(
-                        bundleIdentifier: Bundle.main.bundleIdentifier,
-                        appStoreId: appStoreId,
-                        storeUrl: nil
-                    )
-                )
-                resolve(status)
+                    appStoreId: appStoreId,
+                    storePage: true
+                ))
+            } else {
+                resolve(makeStatus(
+                    reason: "missing-app-store-id",
+                    storePage: false
+                ))
             }
         }
     }
 
     func startImmediateUpdate() throws -> Promise<UpdateStatusNative> {
-        return Promise { resolve, reject in
-            let status = UpdateStatusNative(
-                platform: "ios",
-                supported: false,
-                updateAvailable: .first(NullType.null),
-                capabilities: CapabilitiesNative(
-                    immediate: false,
-                    flexible: false,
-                    storePage: false,
-                    latestVersionLookup: false,
-                    installStateListener: false
-                ),
-                allowed: AllowedFlowsNative(
-                    immediate: false,
-                    flexible: false
-                ),
-                reason: "unsupported-platform"
-            )
-            resolve(status)
+        return Promise { resolve, _ in
+            resolve(makeStatus(reason: "unsupported-platform", storePage: false))
         }
     }
 
     func startFlexibleUpdate() throws -> Promise<UpdateStatusNative> {
-        return Promise { resolve, reject in
-            let status = UpdateStatusNative(
-                platform: "ios",
-                supported: false,
-                updateAvailable: .first(NullType.null),
-                capabilities: CapabilitiesNative(
-                    immediate: false,
-                    flexible: false,
-                    storePage: false,
-                    latestVersionLookup: false,
-                    installStateListener: false
-                ),
-                allowed: AllowedFlowsNative(
-                    immediate: false,
-                    flexible: false
-                ),
-                reason: "unsupported-platform"
-            )
-            resolve(status)
+        return Promise { resolve, _ in
+            resolve(makeStatus(reason: "unsupported-platform", storePage: false))
         }
     }
 
     func completeFlexibleUpdate() throws -> Promise<UpdateStatusNative> {
-        return Promise { resolve, reject in
-            let status = UpdateStatusNative(
-                platform: "ios",
-                supported: false,
-                updateAvailable: .first(NullType.null),
-                capabilities: CapabilitiesNative(
-                    immediate: false,
-                    flexible: false,
-                    storePage: false,
-                    latestVersionLookup: false,
-                    installStateListener: false
-                ),
-                allowed: AllowedFlowsNative(
-                    immediate: false,
-                    flexible: false
-                ),
-                reason: "unsupported-platform"
-            )
-            resolve(status)
+        return Promise { resolve, _ in
+            resolve(makeStatus(reason: "unsupported-platform", storePage: false))
         }
     }
 
@@ -174,5 +92,38 @@ class HybridInAppUpdates: HybridInAppUpdatesSpec {
 
     func removeInstallStateListener(listenerId: String) throws {
         // No-op: iOS does not support install state listeners.
+    }
+
+    private func makeStatus(
+        reason: String,
+        appStoreId: String? = nil,
+        storePage: Bool
+    ) -> UpdateStatusNative {
+        let iosDetails = appStoreId.map {
+            IosDetailsNative(
+                bundleIdentifier: Bundle.main.bundleIdentifier,
+                appStoreId: $0,
+                storeUrl: nil
+            )
+        }
+
+        return UpdateStatusNative(
+            platform: "ios",
+            supported: false,
+            updateAvailable: .first(NullType.null),
+            capabilities: CapabilitiesNative(
+                immediate: false,
+                flexible: false,
+                storePage: storePage,
+                latestVersionLookup: false,
+                installStateListener: false
+            ),
+            allowed: AllowedFlowsNative(
+                immediate: false,
+                flexible: false
+            ),
+            reason: reason,
+            ios: iosDetails
+        )
     }
 }

@@ -1,0 +1,8 @@
+src/__tests__/
+src/__mocks__/
+src/**/*.test.*
+src/**/*.spec.*
+lib/typescript/src/__tests__/
+lib/typescript/src/__mocks__/
+lib/typescript/src/**/*.test.*
+lib/typescript/src/**/*.spec.*

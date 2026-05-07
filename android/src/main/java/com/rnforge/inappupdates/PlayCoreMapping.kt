@@ -75,7 +75,7 @@ fun createStatus(
         capabilities = CapabilitiesNative(
             immediate = true,
             flexible = true,
-            storePage = false,
+            storePage = true,
             latestVersionLookup = false,
             installStateListener = true
         ),

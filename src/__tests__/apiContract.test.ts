@@ -35,7 +35,7 @@ describe('UpdateStatus contract', () => {
       capabilities: {
         immediate: true,
         flexible: true,
-        storePage: false,
+        storePage: true,
         latestVersionLookup: false,
         installStateListener: true,
       },
@@ -51,6 +51,7 @@ describe('UpdateStatus contract', () => {
     expect(status.updateAvailable).toBe(true)
     expect(status.capabilities).toBeDefined()
     expect(status.allowed).toBeDefined()
+    expect(status.capabilities.storePage).toBe(true)
     expect(status.reason).toBe('update-available')
   })
 
@@ -62,7 +63,7 @@ describe('UpdateStatus contract', () => {
       capabilities: {
         immediate: false,
         flexible: false,
-        storePage: false,
+        storePage: true,
         latestVersionLookup: false,
         installStateListener: false,
       },
@@ -90,7 +91,7 @@ describe('UpdateStatus contract', () => {
       capabilities: {
         immediate: false,
         flexible: false,
-        storePage: false,
+        storePage: true,
         latestVersionLookup: false,
         installStateListener: false,
       },
@@ -120,6 +121,32 @@ describe('UpdateStatus contract', () => {
 
     expect(android.platform).toBe('android')
     expect(ios.platform).toBe('ios')
+  })
+
+  it('allows storePage capability on iOS when appStoreId is present', () => {
+    const status: api.UpdateStatus = {
+      platform: 'ios',
+      supported: false,
+      updateAvailable: null,
+      capabilities: {
+        immediate: false,
+        flexible: false,
+        storePage: true,
+        latestVersionLookup: false,
+        installStateListener: false,
+      },
+      allowed: {
+        immediate: false,
+        flexible: false,
+      },
+      reason: 'store-lookup-unavailable',
+      ios: {
+        appStoreId: '1234567890',
+      },
+    }
+
+    expect(status.capabilities.storePage).toBe(true)
+    expect(status.ios?.appStoreId).toBe('1234567890')
   })
 })
 

@@ -22,7 +22,9 @@
     "in-app-updates"
   ],
   "files": [
-    "src",
+    "src/*.ts",
+    "src/internal/*.ts",
+    "src/specs/*.ts",
     "lib",
     "nitrogen",
     "nitro.json",
@@ -118,7 +120,7 @@
       [
         "typescript",
         {
-          "project": "tsconfig.json"
+          "project": "tsconfig.build.json"
         }
       ]
     ]

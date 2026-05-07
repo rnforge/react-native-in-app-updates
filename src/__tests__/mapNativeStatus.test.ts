@@ -9,7 +9,7 @@ describe('mapNativeStatus', () => {
       capabilities: {
         immediate: true,
         flexible: true,
-        storePage: false,
+        storePage: true,
         latestVersionLookup: false,
         installStateListener: true,
       },
