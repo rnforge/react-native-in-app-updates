@@ -68,6 +68,19 @@ console.log(status.allowed)           // { immediate, flexible }
 console.log(status.android?.playCore) // raw Play Core details (Android only)
 ```
 
+**Android options:**
+
+| Option | Type | Default | Description |
+|---|---|---|---|
+| `android.allowAssetPackDeletion` | `boolean` | `false` | Opt-in to allow Play Core to delete asset packs under storage pressure. Only affects Play Asset Delivery apps. |
+
+```typescript
+// Opt-in to asset-pack deletion during status check
+const status = await getUpdateStatus({
+  android: { allowAssetPackDeletion: true },
+})
+```
+
 **Key fields:**
 
 | Field | Description |
@@ -79,7 +92,7 @@ console.log(status.android?.playCore) // raw Play Core details (Android only)
 | `allowed` | Whether immediate/flexible flows are currently permitted by Play policy |
 | `android.playCore` | Raw Play Core details: `updateAvailability`, `availableVersionCode`, `clientVersionStalenessDays`, etc. |
 
-### `startImmediateUpdate()`
+### `startImmediateUpdate(options?)`
 
 Starts an Android immediate update flow. Presents a full-screen Play Core dialog that blocks the user until they accept or decline.
 
@@ -93,7 +106,18 @@ console.log(result.reason) // 'update-available', 'update-not-allowed', 'unsuppo
 - On Android Play installs: triggers the Play immediate UI. App may restart if the user accepts.
 - On iOS and non-Play Android installs: returns `supported: false` with a typed reason. No silent noop.
 
-### `startFlexibleUpdate()`
+**Android options:**
+
+| Option | Type | Default | Description |
+|---|---|---|---|
+| `android.allowAssetPackDeletion` | `boolean` | `false` | Opt-in to allow Play Core to delete asset packs under storage pressure during the immediate update flow. |
+
+```typescript
+// Opt-in to asset-pack deletion during immediate update
+await startImmediateUpdate({ android: { allowAssetPackDeletion: true } })
+```
+
+### `startFlexibleUpdate(options?)`
 
 Starts an Android flexible update flow. Presents a non-blocking Play Core snackbar/banner that begins a background download.
 
@@ -106,6 +130,17 @@ console.log(result.reason) // 'update-available', 'update-not-allowed', etc.
 
 - On Android Play installs: triggers the Play flexible UI. Download proceeds in the background.
 - On iOS and non-Play Android installs: returns `supported: false` with a typed reason.
+
+**Android options:**
+
+| Option | Type | Default | Description |
+|---|---|---|---|
+| `android.allowAssetPackDeletion` | `boolean` | `false` | Opt-in to allow Play Core to delete asset packs under storage pressure during the flexible update flow. |
+
+```typescript
+// Opt-in to asset-pack deletion during flexible update
+await startFlexibleUpdate({ android: { allowAssetPackDeletion: true } })
+```
 
 ### `completeFlexibleUpdate()`
 
@@ -183,6 +218,15 @@ Instead, iOS APIs return **explicit typed status**:
 | `openStorePage()` | Opens App Store if `appStoreId` provided; throws if missing |
 
 Use `openStorePage()` on iOS to direct users to the App Store for manual updates.
+
+## Android `allowAssetPackDeletion` Option
+
+The optional `android.allowAssetPackDeletion` flag controls whether Play Core may delete Play Asset Delivery asset packs when storage is insufficient during an update flow. This is **opt-in only** and defaults to `false` (current behavior unchanged).
+
+- This option applies to `getUpdateStatus()`, `startImmediateUpdate()`, and `startFlexibleUpdate()`.
+- `completeFlexibleUpdate()` does **not** accept this option.
+- This is **not** general APK expansion-file support. It only affects apps that use Play Asset Delivery.
+- If your app does not use Play Asset Delivery, this option has no effect.
 
 ## Android Google Play Distribution Boundary
 

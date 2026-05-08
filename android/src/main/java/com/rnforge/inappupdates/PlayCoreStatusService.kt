@@ -18,6 +18,7 @@ class PlayCoreStatusService {
 
     fun getUpdateStatus(options: GetUpdateStatusOptionsNative?): Promise<UpdateStatusNative> {
         val promise = Promise<UpdateStatusNative>()
+        val allowAssetPackDeletion = options?.android?.allowAssetPackDeletion
         val context = InAppUpdatesActivityProvider.applicationContext
 
         if (context == null) {
@@ -44,10 +45,10 @@ class PlayCoreStatusService {
         val appUpdateManager = PlayCoreAppUpdateManager.getInstance(context)
         appUpdateManager.appUpdateInfo
             .addOnSuccessListener { appUpdateInfo ->
-                val immediateAllowed = appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE)
-                val flexibleAllowed = appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.FLEXIBLE)
-                val immediateFailedPreconditions = mapFailedUpdatePreconditionsOrNull(appUpdateInfo, AppUpdateType.IMMEDIATE)
-                val flexibleFailedPreconditions = mapFailedUpdatePreconditionsOrNull(appUpdateInfo, AppUpdateType.FLEXIBLE)
+                val immediateAllowed = appUpdateInfo.isUpdateTypeAllowed(buildAppUpdateOptions(AppUpdateType.IMMEDIATE, allowAssetPackDeletion))
+                val flexibleAllowed = appUpdateInfo.isUpdateTypeAllowed(buildAppUpdateOptions(AppUpdateType.FLEXIBLE, allowAssetPackDeletion))
+                val immediateFailedPreconditions = mapFailedUpdatePreconditionsOrNull(appUpdateInfo, AppUpdateType.IMMEDIATE, allowAssetPackDeletion)
+                val flexibleFailedPreconditions = mapFailedUpdatePreconditionsOrNull(appUpdateInfo, AppUpdateType.FLEXIBLE, allowAssetPackDeletion)
 
                 val installStatus = mapInstallStatus(appUpdateInfo.installStatus())
 

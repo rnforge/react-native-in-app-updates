@@ -10,7 +10,9 @@
 #include <fbjni/fbjni.h>
 #include "GetUpdateStatusOptionsNative.hpp"
 
+#include "AndroidUpdateOptionsNative.hpp"
 #include "IosGetUpdateStatusOptionsNative.hpp"
+#include "JAndroidUpdateOptionsNative.hpp"
 #include "JIosGetUpdateStatusOptionsNative.hpp"
 #include <optional>
 #include <string>
@@ -36,8 +38,11 @@ namespace margelo::nitro::rnforge_inappupdates {
       static const auto clazz = javaClassStatic();
       static const auto fieldIos = clazz->getField<JIosGetUpdateStatusOptionsNative>("ios");
       jni::local_ref<JIosGetUpdateStatusOptionsNative> ios = this->getFieldValue(fieldIos);
+      static const auto fieldAndroid = clazz->getField<JAndroidUpdateOptionsNative>("android");
+      jni::local_ref<JAndroidUpdateOptionsNative> android = this->getFieldValue(fieldAndroid);
       return GetUpdateStatusOptionsNative(
-        ios != nullptr ? std::make_optional(ios->toCpp()) : std::nullopt
+        ios != nullptr ? std::make_optional(ios->toCpp()) : std::nullopt,
+        android != nullptr ? std::make_optional(android->toCpp()) : std::nullopt
       );
     }
 
@@ -47,12 +52,13 @@ namespace margelo::nitro::rnforge_inappupdates {
      */
     [[maybe_unused]]
     static jni::local_ref<JGetUpdateStatusOptionsNative::javaobject> fromCpp(const GetUpdateStatusOptionsNative& value) {
-      using JSignature = JGetUpdateStatusOptionsNative(jni::alias_ref<JIosGetUpdateStatusOptionsNative>);
+      using JSignature = JGetUpdateStatusOptionsNative(jni::alias_ref<JIosGetUpdateStatusOptionsNative>, jni::alias_ref<JAndroidUpdateOptionsNative>);
       static const auto clazz = javaClassStatic();
       static const auto create = clazz->getStaticMethod<JSignature>("fromCpp");
       return create(
         clazz,
-        value.ios.has_value() ? JIosGetUpdateStatusOptionsNative::fromCpp(value.ios.value()) : nullptr
+        value.ios.has_value() ? JIosGetUpdateStatusOptionsNative::fromCpp(value.ios.value()) : nullptr,
+        value.android.has_value() ? JAndroidUpdateOptionsNative::fromCpp(value.android.value()) : nullptr
       );
     }
   };

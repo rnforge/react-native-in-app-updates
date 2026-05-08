@@ -128,6 +128,56 @@ describe('startImmediateUpdate', () => {
     expect(result.allowed.immediate).toBe(false)
   })
 
+  it('passes android allowAssetPackDeletion option to native layer', async () => {
+    mockObject.startImmediateUpdate.mockResolvedValue({
+      platform: 'android',
+      supported: true,
+      updateAvailable: true,
+      capabilities: {
+        immediate: true,
+        flexible: true,
+        storePage: true,
+        latestVersionLookup: false,
+        installStateListener: true,
+      },
+      allowed: {
+        immediate: true,
+        flexible: true,
+      },
+      reason: 'update-available',
+    })
+
+    await startImmediateUpdate({ android: { allowAssetPackDeletion: true } })
+
+    expect(mockObject.startImmediateUpdate).toHaveBeenCalledWith({
+      android: { allowAssetPackDeletion: true },
+    })
+  })
+
+  it('does not pass options when omitted', async () => {
+    mockObject.startImmediateUpdate.mockResolvedValue({
+      platform: 'android',
+      supported: true,
+      updateAvailable: true,
+      capabilities: {
+        immediate: true,
+        flexible: true,
+        storePage: true,
+        latestVersionLookup: false,
+        installStateListener: true,
+      },
+      allowed: {
+        immediate: true,
+        flexible: true,
+      },
+      reason: 'update-available',
+    })
+
+    await startImmediateUpdate()
+
+    expect(mockObject.startImmediateUpdate).toHaveBeenCalledWith(undefined)
+  })
+
   it('throws InAppUpdatesError for native bridge failures', async () => {
     mockObject.startImmediateUpdate.mockRejectedValue(new Error('Native bridge failure'))
 

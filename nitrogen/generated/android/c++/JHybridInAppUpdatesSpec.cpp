@@ -25,6 +25,12 @@ namespace margelo::nitro::rnforge_inappupdates { struct IosAppStoreDetailsNative
 namespace margelo::nitro::rnforge_inappupdates { struct GetUpdateStatusOptionsNative; }
 // Forward declaration of `IosGetUpdateStatusOptionsNative` to properly resolve imports.
 namespace margelo::nitro::rnforge_inappupdates { struct IosGetUpdateStatusOptionsNative; }
+// Forward declaration of `AndroidUpdateOptionsNative` to properly resolve imports.
+namespace margelo::nitro::rnforge_inappupdates { struct AndroidUpdateOptionsNative; }
+// Forward declaration of `StartImmediateUpdateOptionsNative` to properly resolve imports.
+namespace margelo::nitro::rnforge_inappupdates { struct StartImmediateUpdateOptionsNative; }
+// Forward declaration of `StartFlexibleUpdateOptionsNative` to properly resolve imports.
+namespace margelo::nitro::rnforge_inappupdates { struct StartFlexibleUpdateOptionsNative; }
 // Forward declaration of `OpenStorePageOptionsNative` to properly resolve imports.
 namespace margelo::nitro::rnforge_inappupdates { struct OpenStorePageOptionsNative; }
 // Forward declaration of `IosOpenStorePageOptionsNative` to properly resolve imports.
@@ -61,6 +67,12 @@ namespace margelo::nitro::rnforge_inappupdates { struct InstallStateEventNative;
 #include "JGetUpdateStatusOptionsNative.hpp"
 #include "IosGetUpdateStatusOptionsNative.hpp"
 #include "JIosGetUpdateStatusOptionsNative.hpp"
+#include "AndroidUpdateOptionsNative.hpp"
+#include "JAndroidUpdateOptionsNative.hpp"
+#include "StartImmediateUpdateOptionsNative.hpp"
+#include "JStartImmediateUpdateOptionsNative.hpp"
+#include "StartFlexibleUpdateOptionsNative.hpp"
+#include "JStartFlexibleUpdateOptionsNative.hpp"
 #include "OpenStorePageOptionsNative.hpp"
 #include "JOpenStorePageOptionsNative.hpp"
 #include "IosOpenStorePageOptionsNative.hpp"
@@ -120,9 +132,9 @@ namespace margelo::nitro::rnforge_inappupdates {
       return __promise;
     }();
   }
-  std::shared_ptr<Promise<UpdateStatusNative>> JHybridInAppUpdatesSpec::startImmediateUpdate() {
-    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>()>("startImmediateUpdate");
-    auto __result = method(_javaPart);
+  std::shared_ptr<Promise<UpdateStatusNative>> JHybridInAppUpdatesSpec::startImmediateUpdate(const std::optional<StartImmediateUpdateOptionsNative>& options) {
+    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>(jni::alias_ref<JStartImmediateUpdateOptionsNative> /* options */)>("startImmediateUpdate");
+    auto __result = method(_javaPart, options.has_value() ? JStartImmediateUpdateOptionsNative::fromCpp(options.value()) : nullptr);
     return [&]() {
       auto __promise = Promise<UpdateStatusNative>::create();
       __result->cthis()->addOnResolvedListener([=](const jni::alias_ref<jni::JObject>& __boxedResult) {
@@ -136,9 +148,9 @@ namespace margelo::nitro::rnforge_inappupdates {
       return __promise;
     }();
   }
-  std::shared_ptr<Promise<UpdateStatusNative>> JHybridInAppUpdatesSpec::startFlexibleUpdate() {
-    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>()>("startFlexibleUpdate");
-    auto __result = method(_javaPart);
+  std::shared_ptr<Promise<UpdateStatusNative>> JHybridInAppUpdatesSpec::startFlexibleUpdate(const std::optional<StartFlexibleUpdateOptionsNative>& options) {
+    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>(jni::alias_ref<JStartFlexibleUpdateOptionsNative> /* options */)>("startFlexibleUpdate");
+    auto __result = method(_javaPart, options.has_value() ? JStartFlexibleUpdateOptionsNative::fromCpp(options.value()) : nullptr);
     return [&]() {
       auto __promise = Promise<UpdateStatusNative>::create();
       __result->cthis()->addOnResolvedListener([=](const jni::alias_ref<jni::JObject>& __boxedResult) {

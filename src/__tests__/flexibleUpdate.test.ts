@@ -76,6 +76,56 @@ describe('startFlexibleUpdate', () => {
     expect(result.reason).toBe('unsupported-platform')
     expect(result.updateAvailable).toBeNull()
   })
+
+  it('passes android allowAssetPackDeletion option to native layer', async () => {
+    mockObject.startFlexibleUpdate.mockResolvedValue({
+      platform: 'android',
+      supported: true,
+      updateAvailable: true,
+      capabilities: {
+        immediate: true,
+        flexible: true,
+        storePage: true,
+        latestVersionLookup: false,
+        installStateListener: true,
+      },
+      allowed: {
+        immediate: true,
+        flexible: true,
+      },
+      reason: 'update-available',
+    })
+
+    await startFlexibleUpdate({ android: { allowAssetPackDeletion: true } })
+
+    expect(mockObject.startFlexibleUpdate).toHaveBeenCalledWith({
+      android: { allowAssetPackDeletion: true },
+    })
+  })
+
+  it('does not pass options when omitted', async () => {
+    mockObject.startFlexibleUpdate.mockResolvedValue({
+      platform: 'android',
+      supported: true,
+      updateAvailable: true,
+      capabilities: {
+        immediate: true,
+        flexible: true,
+        storePage: true,
+        latestVersionLookup: false,
+        installStateListener: true,
+      },
+      allowed: {
+        immediate: true,
+        flexible: true,
+      },
+      reason: 'update-available',
+    })
+
+    await startFlexibleUpdate()
+
+    expect(mockObject.startFlexibleUpdate).toHaveBeenCalledWith(undefined)
+  })
 })
 
 describe('completeFlexibleUpdate', () => {

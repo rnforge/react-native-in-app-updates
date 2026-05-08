@@ -30,6 +30,12 @@ namespace margelo::nitro::rnforge_inappupdates { struct IosAppStoreDetailsNative
 namespace margelo::nitro::rnforge_inappupdates { struct GetUpdateStatusOptionsNative; }
 // Forward declaration of `IosGetUpdateStatusOptionsNative` to properly resolve imports.
 namespace margelo::nitro::rnforge_inappupdates { struct IosGetUpdateStatusOptionsNative; }
+// Forward declaration of `AndroidUpdateOptionsNative` to properly resolve imports.
+namespace margelo::nitro::rnforge_inappupdates { struct AndroidUpdateOptionsNative; }
+// Forward declaration of `StartImmediateUpdateOptionsNative` to properly resolve imports.
+namespace margelo::nitro::rnforge_inappupdates { struct StartImmediateUpdateOptionsNative; }
+// Forward declaration of `StartFlexibleUpdateOptionsNative` to properly resolve imports.
+namespace margelo::nitro::rnforge_inappupdates { struct StartFlexibleUpdateOptionsNative; }
 // Forward declaration of `OpenStorePageOptionsNative` to properly resolve imports.
 namespace margelo::nitro::rnforge_inappupdates { struct OpenStorePageOptionsNative; }
 // Forward declaration of `IosOpenStorePageOptionsNative` to properly resolve imports.
@@ -52,6 +58,9 @@ namespace margelo::nitro::rnforge_inappupdates { struct InstallStateEventNative;
 #include "IosAppStoreDetailsNative.hpp"
 #include "GetUpdateStatusOptionsNative.hpp"
 #include "IosGetUpdateStatusOptionsNative.hpp"
+#include "AndroidUpdateOptionsNative.hpp"
+#include "StartImmediateUpdateOptionsNative.hpp"
+#include "StartFlexibleUpdateOptionsNative.hpp"
 #include "OpenStorePageOptionsNative.hpp"
 #include "IosOpenStorePageOptionsNative.hpp"
 #include "InstallStateEventNative.hpp"
@@ -115,16 +124,16 @@ namespace margelo::nitro::rnforge_inappupdates {
       auto __value = std::move(__result.value());
       return __value;
     }
-    inline std::shared_ptr<Promise<UpdateStatusNative>> startImmediateUpdate() override {
-      auto __result = _swiftPart.startImmediateUpdate();
+    inline std::shared_ptr<Promise<UpdateStatusNative>> startImmediateUpdate(const std::optional<StartImmediateUpdateOptionsNative>& options) override {
+      auto __result = _swiftPart.startImmediateUpdate(options);
       if (__result.hasError()) [[unlikely]] {
         std::rethrow_exception(__result.error());
       }
       auto __value = std::move(__result.value());
       return __value;
     }
-    inline std::shared_ptr<Promise<UpdateStatusNative>> startFlexibleUpdate() override {
-      auto __result = _swiftPart.startFlexibleUpdate();
+    inline std::shared_ptr<Promise<UpdateStatusNative>> startFlexibleUpdate(const std::optional<StartFlexibleUpdateOptionsNative>& options) override {
+      auto __result = _swiftPart.startFlexibleUpdate(options);
       if (__result.hasError()) [[unlikely]] {
         std::rethrow_exception(__result.error());
       }

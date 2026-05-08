@@ -60,8 +60,21 @@ export interface IosGetUpdateStatusOptionsNative {
   country?: string
 }
 
+export interface AndroidUpdateOptionsNative {
+  allowAssetPackDeletion?: boolean
+}
+
 export interface GetUpdateStatusOptionsNative {
   ios?: IosGetUpdateStatusOptionsNative
+  android?: AndroidUpdateOptionsNative
+}
+
+export interface StartImmediateUpdateOptionsNative {
+  android?: AndroidUpdateOptionsNative
+}
+
+export interface StartFlexibleUpdateOptionsNative {
+  android?: AndroidUpdateOptionsNative
 }
 
 export interface IosOpenStorePageOptionsNative {
@@ -104,8 +117,8 @@ export interface InstallStateEventNative {
 
 export interface InAppUpdates extends HybridObject<{ ios: 'swift', android: 'kotlin' }> {
   getUpdateStatus(options?: GetUpdateStatusOptionsNative): Promise<UpdateStatusNative>
-  startImmediateUpdate(): Promise<UpdateStatusNative>
-  startFlexibleUpdate(): Promise<UpdateStatusNative>
+  startImmediateUpdate(options?: StartImmediateUpdateOptionsNative): Promise<UpdateStatusNative>
+  startFlexibleUpdate(options?: StartFlexibleUpdateOptionsNative): Promise<UpdateStatusNative>
   completeFlexibleUpdate(): Promise<UpdateStatusNative>
   openStorePage(options?: OpenStorePageOptionsNative): Promise<void>
   addInstallStateListener(listener: (event: InstallStateEventNative) => void): string

@@ -62,13 +62,13 @@ class HybridInAppUpdates: HybridInAppUpdatesSpec {
         }
     }
 
-    func startImmediateUpdate() throws -> Promise<UpdateStatusNative> {
+    func startImmediateUpdate(options: StartImmediateUpdateOptionsNative?) throws -> Promise<UpdateStatusNative> {
         return Promise { resolve, _ in
             resolve(makeStatus(reason: "unsupported-platform", storePage: false))
         }
     }
 
-    func startFlexibleUpdate() throws -> Promise<UpdateStatusNative> {
+    func startFlexibleUpdate(options: StartFlexibleUpdateOptionsNative?) throws -> Promise<UpdateStatusNative> {
         return Promise { resolve, _ in
             resolve(makeStatus(reason: "unsupported-platform", storePage: false))
         }

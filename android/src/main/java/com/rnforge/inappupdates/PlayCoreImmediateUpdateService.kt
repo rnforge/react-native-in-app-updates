@@ -9,6 +9,7 @@ import com.google.android.play.core.appupdate.AppUpdateOptions
 import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.install.model.UpdateAvailability
 import com.margelo.nitro.core.Promise
+import com.margelo.nitro.rnforge_inappupdates.StartImmediateUpdateOptionsNative
 import com.margelo.nitro.rnforge_inappupdates.UpdateStatusNative
 
 /**
@@ -17,8 +18,9 @@ import com.margelo.nitro.rnforge_inappupdates.UpdateStatusNative
  */
 class PlayCoreImmediateUpdateService {
 
-    fun startImmediateUpdate(): Promise<UpdateStatusNative> {
+    fun startImmediateUpdate(options: StartImmediateUpdateOptionsNative?): Promise<UpdateStatusNative> {
         val promise = Promise<UpdateStatusNative>()
+        val allowAssetPackDeletion = options?.android?.allowAssetPackDeletion
         val context = InAppUpdatesActivityProvider.applicationContext
 
         if (context == null) {
@@ -54,12 +56,12 @@ class PlayCoreImmediateUpdateService {
                         ))
                     }
                     UpdateAvailability.UPDATE_AVAILABLE -> {
-                        val immediateAllowed = appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE)
-                        val flexibleAllowed = appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.FLEXIBLE)
+                        val immediateAllowed = appUpdateInfo.isUpdateTypeAllowed(buildAppUpdateOptions(AppUpdateType.IMMEDIATE, allowAssetPackDeletion))
+                        val flexibleAllowed = appUpdateInfo.isUpdateTypeAllowed(buildAppUpdateOptions(AppUpdateType.FLEXIBLE, allowAssetPackDeletion))
                         if (immediateAllowed) {
                             val activity = InAppUpdatesActivityProvider.currentActivity
                             if (activity != null) {
-                                startUpdateFlow(appUpdateManager, appUpdateInfo, activity, promise, flexibleAllowed)
+                                startUpdateFlow(appUpdateManager, appUpdateInfo, activity, promise, flexibleAllowed, allowAssetPackDeletion)
                             } else {
                                 promise.resolve(createStatus(
                                     supported = true,
@@ -103,12 +105,13 @@ class PlayCoreImmediateUpdateService {
         appUpdateInfo: com.google.android.play.core.appupdate.AppUpdateInfo,
         activity: Activity,
         promise: Promise<UpdateStatusNative>,
-        flexibleAllowed: Boolean
+        flexibleAllowed: Boolean,
+        allowAssetPackDeletion: Boolean? = null
     ) {
         appUpdateManager.startUpdateFlow(
             appUpdateInfo,
             activity,
-            AppUpdateOptions.defaultOptions(AppUpdateType.IMMEDIATE)
+            buildAppUpdateOptions(AppUpdateType.IMMEDIATE, allowAssetPackDeletion)
         ).addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 promise.resolve(createStatus(

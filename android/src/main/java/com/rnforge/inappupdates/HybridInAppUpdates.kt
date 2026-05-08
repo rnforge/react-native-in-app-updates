@@ -5,6 +5,8 @@ import com.margelo.nitro.core.Promise
 import com.margelo.nitro.rnforge_inappupdates.GetUpdateStatusOptionsNative
 import com.margelo.nitro.rnforge_inappupdates.InstallStateEventNative
 import com.margelo.nitro.rnforge_inappupdates.OpenStorePageOptionsNative
+import com.margelo.nitro.rnforge_inappupdates.StartFlexibleUpdateOptionsNative
+import com.margelo.nitro.rnforge_inappupdates.StartImmediateUpdateOptionsNative
 import com.margelo.nitro.rnforge_inappupdates.UpdateStatusNative
 
 class HybridInAppUpdates: HybridInAppUpdatesSpec() {
@@ -18,12 +20,12 @@ class HybridInAppUpdates: HybridInAppUpdatesSpec() {
         return statusService.getUpdateStatus(options)
     }
 
-    override fun startImmediateUpdate(): Promise<UpdateStatusNative> {
-        return immediateUpdateService.startImmediateUpdate()
+    override fun startImmediateUpdate(options: StartImmediateUpdateOptionsNative?): Promise<UpdateStatusNative> {
+        return immediateUpdateService.startImmediateUpdate(options)
     }
 
-    override fun startFlexibleUpdate(): Promise<UpdateStatusNative> {
-        return flexibleUpdateService.startFlexibleUpdate()
+    override fun startFlexibleUpdate(options: StartFlexibleUpdateOptionsNative?): Promise<UpdateStatusNative> {
+        return flexibleUpdateService.startFlexibleUpdate(options)
     }
 
     override fun completeFlexibleUpdate(): Promise<UpdateStatusNative> {

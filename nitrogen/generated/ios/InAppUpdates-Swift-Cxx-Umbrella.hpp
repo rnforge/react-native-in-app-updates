@@ -12,6 +12,8 @@
 namespace margelo::nitro::rnforge_inappupdates { struct AllowedFlowsNative; }
 // Forward declaration of `AndroidDetailsNative` to properly resolve imports.
 namespace margelo::nitro::rnforge_inappupdates { struct AndroidDetailsNative; }
+// Forward declaration of `AndroidUpdateOptionsNative` to properly resolve imports.
+namespace margelo::nitro::rnforge_inappupdates { struct AndroidUpdateOptionsNative; }
 // Forward declaration of `CapabilitiesNative` to properly resolve imports.
 namespace margelo::nitro::rnforge_inappupdates { struct CapabilitiesNative; }
 // Forward declaration of `GetUpdateStatusOptionsNative` to properly resolve imports.
@@ -32,12 +34,17 @@ namespace margelo::nitro::rnforge_inappupdates { struct IosOpenStorePageOptionsN
 namespace margelo::nitro::rnforge_inappupdates { struct OpenStorePageOptionsNative; }
 // Forward declaration of `PlayCoreDetailsNative` to properly resolve imports.
 namespace margelo::nitro::rnforge_inappupdates { struct PlayCoreDetailsNative; }
+// Forward declaration of `StartFlexibleUpdateOptionsNative` to properly resolve imports.
+namespace margelo::nitro::rnforge_inappupdates { struct StartFlexibleUpdateOptionsNative; }
+// Forward declaration of `StartImmediateUpdateOptionsNative` to properly resolve imports.
+namespace margelo::nitro::rnforge_inappupdates { struct StartImmediateUpdateOptionsNative; }
 // Forward declaration of `UpdateStatusNative` to properly resolve imports.
 namespace margelo::nitro::rnforge_inappupdates { struct UpdateStatusNative; }
 
 // Include C++ defined types
 #include "AllowedFlowsNative.hpp"
 #include "AndroidDetailsNative.hpp"
+#include "AndroidUpdateOptionsNative.hpp"
 #include "CapabilitiesNative.hpp"
 #include "GetUpdateStatusOptionsNative.hpp"
 #include "HybridInAppUpdatesSpec.hpp"
@@ -48,6 +55,8 @@ namespace margelo::nitro::rnforge_inappupdates { struct UpdateStatusNative; }
 #include "IosOpenStorePageOptionsNative.hpp"
 #include "OpenStorePageOptionsNative.hpp"
 #include "PlayCoreDetailsNative.hpp"
+#include "StartFlexibleUpdateOptionsNative.hpp"
+#include "StartImmediateUpdateOptionsNative.hpp"
 #include "UpdateStatusNative.hpp"
 #include <NitroModules/Null.hpp>
 #include <NitroModules/Promise.hpp>

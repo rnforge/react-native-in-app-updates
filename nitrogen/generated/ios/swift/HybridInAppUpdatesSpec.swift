@@ -14,8 +14,8 @@ public protocol HybridInAppUpdatesSpec_protocol: HybridObject {
 
   // Methods
   func getUpdateStatus(options: GetUpdateStatusOptionsNative?) throws -> Promise<UpdateStatusNative>
-  func startImmediateUpdate() throws -> Promise<UpdateStatusNative>
-  func startFlexibleUpdate() throws -> Promise<UpdateStatusNative>
+  func startImmediateUpdate(options: StartImmediateUpdateOptionsNative?) throws -> Promise<UpdateStatusNative>
+  func startFlexibleUpdate(options: StartFlexibleUpdateOptionsNative?) throws -> Promise<UpdateStatusNative>
   func completeFlexibleUpdate() throws -> Promise<UpdateStatusNative>
   func openStorePage(options: OpenStorePageOptionsNative?) throws -> Promise<Void>
   func addInstallStateListener(listener: @escaping (_ event: InstallStateEventNative) -> Void) throws -> String

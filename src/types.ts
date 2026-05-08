@@ -119,11 +119,24 @@ export type InstallStateEvent = {
   android?: AndroidDetails
 }
 
+export type AndroidUpdateOptions = {
+  allowAssetPackDeletion?: boolean
+}
+
 export type GetUpdateStatusOptions = {
   ios?: {
     appStoreId?: string
     country?: string
   }
+  android?: AndroidUpdateOptions
+}
+
+export type StartImmediateUpdateOptions = {
+  android?: AndroidUpdateOptions
+}
+
+export type StartFlexibleUpdateOptions = {
+  android?: AndroidUpdateOptions
 }
 
 export type OpenStorePageOptions = {

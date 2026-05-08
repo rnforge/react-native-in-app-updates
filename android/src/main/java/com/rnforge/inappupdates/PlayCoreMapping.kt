@@ -95,18 +95,32 @@ fun createStatus(
 
 fun mapFailedUpdatePreconditionsOrNull(
     appUpdateInfo: AppUpdateInfo,
-    appUpdateType: Int
+    appUpdateType: Int,
+    allowAssetPackDeletion: Boolean? = null
 ): List<String>? {
     return try {
         val method = appUpdateInfo.javaClass.getMethod(
             "getFailedUpdatePreconditions",
             AppUpdateOptions::class.java
         )
-        val options = AppUpdateOptions.defaultOptions(appUpdateType)
+        val options = buildAppUpdateOptions(appUpdateType, allowAssetPackDeletion)
         @Suppress("UNCHECKED_CAST")
         (method.invoke(appUpdateInfo, options) as? Iterable<Any>)?.map { it.toString() }
     } catch (_: Exception) {
         null
+    }
+}
+
+fun buildAppUpdateOptions(
+    appUpdateType: Int,
+    allowAssetPackDeletion: Boolean? = null
+): AppUpdateOptions {
+    return if (allowAssetPackDeletion == true) {
+        AppUpdateOptions.newBuilder(appUpdateType)
+            .setAllowAssetPackDeletion(true)
+            .build()
+    } else {
+        AppUpdateOptions.defaultOptions(appUpdateType)
     }
 }
 

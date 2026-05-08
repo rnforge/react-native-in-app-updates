@@ -18,10 +18,16 @@ public extension GetUpdateStatusOptionsNative {
   /**
    * Create a new instance of `GetUpdateStatusOptionsNative`.
    */
-  init(ios: IosGetUpdateStatusOptionsNative?) {
+  init(ios: IosGetUpdateStatusOptionsNative?, android: AndroidUpdateOptionsNative?) {
     self.init({ () -> bridge.std__optional_IosGetUpdateStatusOptionsNative_ in
       if let __unwrappedValue = ios {
         return bridge.create_std__optional_IosGetUpdateStatusOptionsNative_(__unwrappedValue)
+      } else {
+        return .init()
+      }
+    }(), { () -> bridge.std__optional_AndroidUpdateOptionsNative_ in
+      if let __unwrappedValue = android {
+        return bridge.create_std__optional_AndroidUpdateOptionsNative_(__unwrappedValue)
       } else {
         return .init()
       }
@@ -31,5 +37,10 @@ public extension GetUpdateStatusOptionsNative {
   @inline(__always)
   var ios: IosGetUpdateStatusOptionsNative? {
     return self.__ios.value
+  }
+  
+  @inline(__always)
+  var android: AndroidUpdateOptionsNative? {
+    return self.__android.value
   }
 }

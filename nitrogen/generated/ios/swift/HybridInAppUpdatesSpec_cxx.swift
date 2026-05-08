@@ -144,9 +144,9 @@ open class HybridInAppUpdatesSpec_cxx {
   }
   
   @inline(__always)
-  public final func startImmediateUpdate() -> bridge.Result_std__shared_ptr_Promise_UpdateStatusNative___ {
+  public final func startImmediateUpdate(options: bridge.std__optional_StartImmediateUpdateOptionsNative_) -> bridge.Result_std__shared_ptr_Promise_UpdateStatusNative___ {
     do {
-      let __result = try self.__implementation.startImmediateUpdate()
+      let __result = try self.__implementation.startImmediateUpdate(options: options.value)
       let __resultCpp = { () -> bridge.std__shared_ptr_Promise_UpdateStatusNative__ in
         let __promise = bridge.create_std__shared_ptr_Promise_UpdateStatusNative__()
         let __promiseHolder = bridge.wrap_std__shared_ptr_Promise_UpdateStatusNative__(__promise)
@@ -163,9 +163,9 @@ open class HybridInAppUpdatesSpec_cxx {
   }
   
   @inline(__always)
-  public final func startFlexibleUpdate() -> bridge.Result_std__shared_ptr_Promise_UpdateStatusNative___ {
+  public final func startFlexibleUpdate(options: bridge.std__optional_StartFlexibleUpdateOptionsNative_) -> bridge.Result_std__shared_ptr_Promise_UpdateStatusNative___ {
     do {
-      let __result = try self.__implementation.startFlexibleUpdate()
+      let __result = try self.__implementation.startFlexibleUpdate(options: options.value)
       let __resultCpp = { () -> bridge.std__shared_ptr_Promise_UpdateStatusNative__ in
         let __promise = bridge.create_std__shared_ptr_Promise_UpdateStatusNative__()
         let __promiseHolder = bridge.wrap_std__shared_ptr_Promise_UpdateStatusNative__(__promise)

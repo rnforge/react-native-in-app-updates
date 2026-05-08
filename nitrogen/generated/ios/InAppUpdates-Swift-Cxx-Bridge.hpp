@@ -12,6 +12,8 @@
 namespace margelo::nitro::rnforge_inappupdates { struct AllowedFlowsNative; }
 // Forward declaration of `AndroidDetailsNative` to properly resolve imports.
 namespace margelo::nitro::rnforge_inappupdates { struct AndroidDetailsNative; }
+// Forward declaration of `AndroidUpdateOptionsNative` to properly resolve imports.
+namespace margelo::nitro::rnforge_inappupdates { struct AndroidUpdateOptionsNative; }
 // Forward declaration of `CapabilitiesNative` to properly resolve imports.
 namespace margelo::nitro::rnforge_inappupdates { struct CapabilitiesNative; }
 // Forward declaration of `GetUpdateStatusOptionsNative` to properly resolve imports.
@@ -32,6 +34,10 @@ namespace margelo::nitro::rnforge_inappupdates { struct IosOpenStorePageOptionsN
 namespace margelo::nitro::rnforge_inappupdates { struct OpenStorePageOptionsNative; }
 // Forward declaration of `PlayCoreDetailsNative` to properly resolve imports.
 namespace margelo::nitro::rnforge_inappupdates { struct PlayCoreDetailsNative; }
+// Forward declaration of `StartFlexibleUpdateOptionsNative` to properly resolve imports.
+namespace margelo::nitro::rnforge_inappupdates { struct StartFlexibleUpdateOptionsNative; }
+// Forward declaration of `StartImmediateUpdateOptionsNative` to properly resolve imports.
+namespace margelo::nitro::rnforge_inappupdates { struct StartImmediateUpdateOptionsNative; }
 // Forward declaration of `UpdateStatusNative` to properly resolve imports.
 namespace margelo::nitro::rnforge_inappupdates { struct UpdateStatusNative; }
 
@@ -42,6 +48,7 @@ namespace InAppUpdates { class HybridInAppUpdatesSpec_cxx; }
 // Include C++ defined types
 #include "AllowedFlowsNative.hpp"
 #include "AndroidDetailsNative.hpp"
+#include "AndroidUpdateOptionsNative.hpp"
 #include "CapabilitiesNative.hpp"
 #include "GetUpdateStatusOptionsNative.hpp"
 #include "HybridInAppUpdatesSpec.hpp"
@@ -52,6 +59,8 @@ namespace InAppUpdates { class HybridInAppUpdatesSpec_cxx; }
 #include "IosOpenStorePageOptionsNative.hpp"
 #include "OpenStorePageOptionsNative.hpp"
 #include "PlayCoreDetailsNative.hpp"
+#include "StartFlexibleUpdateOptionsNative.hpp"
+#include "StartImmediateUpdateOptionsNative.hpp"
 #include "UpdateStatusNative.hpp"
 #include <NitroModules/Null.hpp>
 #include <NitroModules/Promise.hpp>
@@ -361,6 +370,21 @@ namespace margelo::nitro::rnforge_inappupdates::bridge::swift {
     return optional.value();
   }
   
+  // pragma MARK: std::optional<AndroidUpdateOptionsNative>
+  /**
+   * Specialized version of `std::optional<AndroidUpdateOptionsNative>`.
+   */
+  using std__optional_AndroidUpdateOptionsNative_ = std::optional<AndroidUpdateOptionsNative>;
+  inline std::optional<AndroidUpdateOptionsNative> create_std__optional_AndroidUpdateOptionsNative_(const AndroidUpdateOptionsNative& value) noexcept {
+    return std::optional<AndroidUpdateOptionsNative>(value);
+  }
+  inline bool has_value_std__optional_AndroidUpdateOptionsNative_(const std::optional<AndroidUpdateOptionsNative>& optional) noexcept {
+    return optional.has_value();
+  }
+  inline AndroidUpdateOptionsNative get_std__optional_AndroidUpdateOptionsNative_(const std::optional<AndroidUpdateOptionsNative>& optional) noexcept {
+    return optional.value();
+  }
+  
   // pragma MARK: std::optional<GetUpdateStatusOptionsNative>
   /**
    * Specialized version of `std::optional<GetUpdateStatusOptionsNative>`.
@@ -373,6 +397,36 @@ namespace margelo::nitro::rnforge_inappupdates::bridge::swift {
     return optional.has_value();
   }
   inline GetUpdateStatusOptionsNative get_std__optional_GetUpdateStatusOptionsNative_(const std::optional<GetUpdateStatusOptionsNative>& optional) noexcept {
+    return optional.value();
+  }
+  
+  // pragma MARK: std::optional<StartImmediateUpdateOptionsNative>
+  /**
+   * Specialized version of `std::optional<StartImmediateUpdateOptionsNative>`.
+   */
+  using std__optional_StartImmediateUpdateOptionsNative_ = std::optional<StartImmediateUpdateOptionsNative>;
+  inline std::optional<StartImmediateUpdateOptionsNative> create_std__optional_StartImmediateUpdateOptionsNative_(const StartImmediateUpdateOptionsNative& value) noexcept {
+    return std::optional<StartImmediateUpdateOptionsNative>(value);
+  }
+  inline bool has_value_std__optional_StartImmediateUpdateOptionsNative_(const std::optional<StartImmediateUpdateOptionsNative>& optional) noexcept {
+    return optional.has_value();
+  }
+  inline StartImmediateUpdateOptionsNative get_std__optional_StartImmediateUpdateOptionsNative_(const std::optional<StartImmediateUpdateOptionsNative>& optional) noexcept {
+    return optional.value();
+  }
+  
+  // pragma MARK: std::optional<StartFlexibleUpdateOptionsNative>
+  /**
+   * Specialized version of `std::optional<StartFlexibleUpdateOptionsNative>`.
+   */
+  using std__optional_StartFlexibleUpdateOptionsNative_ = std::optional<StartFlexibleUpdateOptionsNative>;
+  inline std::optional<StartFlexibleUpdateOptionsNative> create_std__optional_StartFlexibleUpdateOptionsNative_(const StartFlexibleUpdateOptionsNative& value) noexcept {
+    return std::optional<StartFlexibleUpdateOptionsNative>(value);
+  }
+  inline bool has_value_std__optional_StartFlexibleUpdateOptionsNative_(const std::optional<StartFlexibleUpdateOptionsNative>& optional) noexcept {
+    return optional.has_value();
+  }
+  inline StartFlexibleUpdateOptionsNative get_std__optional_StartFlexibleUpdateOptionsNative_(const std::optional<StartFlexibleUpdateOptionsNative>& optional) noexcept {
     return optional.value();
   }
   

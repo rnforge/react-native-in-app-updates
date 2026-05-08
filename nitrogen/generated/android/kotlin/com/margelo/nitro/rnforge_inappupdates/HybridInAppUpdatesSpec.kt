@@ -35,11 +35,11 @@ abstract class HybridInAppUpdatesSpec: HybridObject() {
   
   @DoNotStrip
   @Keep
-  abstract fun startImmediateUpdate(): Promise<UpdateStatusNative>
+  abstract fun startImmediateUpdate(options: StartImmediateUpdateOptionsNative?): Promise<UpdateStatusNative>
   
   @DoNotStrip
   @Keep
-  abstract fun startFlexibleUpdate(): Promise<UpdateStatusNative>
+  abstract fun startFlexibleUpdate(options: StartFlexibleUpdateOptionsNative?): Promise<UpdateStatusNative>
   
   @DoNotStrip
   @Keep

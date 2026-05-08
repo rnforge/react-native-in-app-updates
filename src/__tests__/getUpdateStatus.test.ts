@@ -174,6 +174,86 @@ describe('getUpdateStatus', () => {
     })
   })
 
+  it('passes android allowAssetPackDeletion option to native layer', async () => {
+    mockObject.getUpdateStatus.mockResolvedValue({
+      platform: 'android',
+      supported: true,
+      updateAvailable: true,
+      capabilities: {
+        immediate: true,
+        flexible: true,
+        storePage: true,
+        latestVersionLookup: false,
+        installStateListener: true,
+      },
+      allowed: {
+        immediate: true,
+        flexible: true,
+      },
+      reason: 'update-available',
+    })
+
+    await getUpdateStatus({ android: { allowAssetPackDeletion: true } })
+
+    expect(mockObject.getUpdateStatus).toHaveBeenCalledWith({
+      android: { allowAssetPackDeletion: true },
+    })
+  })
+
+  it('passes both ios and android options to native layer', async () => {
+    mockObject.getUpdateStatus.mockResolvedValue({
+      platform: 'android',
+      supported: true,
+      updateAvailable: true,
+      capabilities: {
+        immediate: true,
+        flexible: true,
+        storePage: true,
+        latestVersionLookup: false,
+        installStateListener: true,
+      },
+      allowed: {
+        immediate: true,
+        flexible: true,
+      },
+      reason: 'update-available',
+    })
+
+    await getUpdateStatus({
+      ios: { appStoreId: '1234567890', country: 'us' },
+      android: { allowAssetPackDeletion: true },
+    })
+
+    expect(mockObject.getUpdateStatus).toHaveBeenCalledWith({
+      ios: { appStoreId: '1234567890', country: 'us' },
+      android: { allowAssetPackDeletion: true },
+    })
+  })
+
+  it('does not pass android options when omitted', async () => {
+    mockObject.getUpdateStatus.mockResolvedValue({
+      platform: 'android',
+      supported: true,
+      updateAvailable: true,
+      capabilities: {
+        immediate: true,
+        flexible: true,
+        storePage: true,
+        latestVersionLookup: false,
+        installStateListener: true,
+      },
+      allowed: {
+        immediate: true,
+        flexible: true,
+      },
+      reason: 'update-available',
+    })
+
+    await getUpdateStatus()
+
+    expect(mockObject.getUpdateStatus).toHaveBeenCalledWith(undefined)
+  })
+
   it('forwards empty appStoreId to native for validation', async () => {
     mockObject.getUpdateStatus.mockRejectedValue(
       new Error('INVALID_INPUT|message=Invalid%20appStoreId')

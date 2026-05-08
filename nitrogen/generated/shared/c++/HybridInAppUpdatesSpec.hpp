@@ -17,6 +17,10 @@
 namespace margelo::nitro::rnforge_inappupdates { struct UpdateStatusNative; }
 // Forward declaration of `GetUpdateStatusOptionsNative` to properly resolve imports.
 namespace margelo::nitro::rnforge_inappupdates { struct GetUpdateStatusOptionsNative; }
+// Forward declaration of `StartImmediateUpdateOptionsNative` to properly resolve imports.
+namespace margelo::nitro::rnforge_inappupdates { struct StartImmediateUpdateOptionsNative; }
+// Forward declaration of `StartFlexibleUpdateOptionsNative` to properly resolve imports.
+namespace margelo::nitro::rnforge_inappupdates { struct StartFlexibleUpdateOptionsNative; }
 // Forward declaration of `OpenStorePageOptionsNative` to properly resolve imports.
 namespace margelo::nitro::rnforge_inappupdates { struct OpenStorePageOptionsNative; }
 // Forward declaration of `InstallStateEventNative` to properly resolve imports.
@@ -26,6 +30,8 @@ namespace margelo::nitro::rnforge_inappupdates { struct InstallStateEventNative;
 #include <NitroModules/Promise.hpp>
 #include "GetUpdateStatusOptionsNative.hpp"
 #include <optional>
+#include "StartImmediateUpdateOptionsNative.hpp"
+#include "StartFlexibleUpdateOptionsNative.hpp"
 #include "OpenStorePageOptionsNative.hpp"
 #include <string>
 #include "InstallStateEventNative.hpp"
@@ -63,8 +69,8 @@ namespace margelo::nitro::rnforge_inappupdates {
     public:
       // Methods
       virtual std::shared_ptr<Promise<UpdateStatusNative>> getUpdateStatus(const std::optional<GetUpdateStatusOptionsNative>& options) = 0;
-      virtual std::shared_ptr<Promise<UpdateStatusNative>> startImmediateUpdate() = 0;
-      virtual std::shared_ptr<Promise<UpdateStatusNative>> startFlexibleUpdate() = 0;
+      virtual std::shared_ptr<Promise<UpdateStatusNative>> startImmediateUpdate(const std::optional<StartImmediateUpdateOptionsNative>& options) = 0;
+      virtual std::shared_ptr<Promise<UpdateStatusNative>> startFlexibleUpdate(const std::optional<StartFlexibleUpdateOptionsNative>& options) = 0;
       virtual std::shared_ptr<Promise<UpdateStatusNative>> completeFlexibleUpdate() = 0;
       virtual std::shared_ptr<Promise<void>> openStorePage(const std::optional<OpenStorePageOptionsNative>& options) = 0;
       virtual std::string addInstallStateListener(const std::function<void(const InstallStateEventNative& /* event */)>& listener) = 0;
