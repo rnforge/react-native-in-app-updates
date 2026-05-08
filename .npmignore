@@ -6,3 +6,5 @@ lib/typescript/src/__tests__/
 lib/typescript/src/__mocks__/
 lib/typescript/src/**/*.test.*
 lib/typescript/src/**/*.spec.*
+Package.swift
+ios/CoreTests/**

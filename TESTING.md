@@ -45,7 +45,7 @@ The `.github/workflows/ci.yml` workflow runs on every push to `main` and every p
 - `bun run build` — Build verification (bob)
 - `npm pack --dry-run` — Package content sanity check
 
-Native Android/iOS example builds are **not in CI** because `example/` is a source-only scaffold without `android/` or `ios/` project files. Manual Play Console validation remains a separate release gate tracked as Issue 0007.
+Native Android/iOS example builds are **not in CI** because `example/` is a source-only scaffold without `android/` or `ios/` project files. Manual Play Console validation remains a separate release gate.
 
 ## Example app
 
@@ -64,8 +64,25 @@ Android native unit tests are **not yet available** in this repository. Future n
 - Listener registration, event emission, and cleanup
 - Flexible update download → completion lifecycle
 
+## iOS native tests
+
+Xcode project XCTest is not wired yet.
+
+SwiftPM tests cover pure iOS lookup core logic:
+
+```bash
+swift test
+```
+
+The iOS lookup logic is split into seam-friendly Swift helpers in `ios/Core/AppStoreLookupCore.swift` so SwiftPM and future XCTest/Xcode coverage can target:
+
+- lookup URL construction
+- iTunes response parsing
+- dotted numeric version comparison
+- lookup failure/status mapping
+
 ## Play Console validation
 
-Real Play in-app update flow verification (immediate and flexible) requires a Google Play-distributed app, internal test track, and a physical device. This is tracked as **Issue 0007**.
+Real Play in-app update flow verification (immediate and flexible) requires a Google Play-distributed app, internal test track, and a physical device.
 
 See [`docs/manual-play-validation.md`](./docs/manual-play-validation.md) for the full release gate checklist.

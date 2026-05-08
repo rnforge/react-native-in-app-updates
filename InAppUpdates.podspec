@@ -21,6 +21,10 @@ Pod::Spec.new do |s|
     # Implementation (C++ objects)
     "cpp/**/*.{hpp,cpp}",
   ]
+  s.exclude_files = [
+    # Exclude test-only Swift files from CocoaPods compilation
+    "ios/CoreTests/**/*",
+  ]
 
   load 'nitrogen/generated/ios/InAppUpdates+autolinking.rb'
   add_nitrogen_files(s)

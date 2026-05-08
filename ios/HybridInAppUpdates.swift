@@ -15,16 +15,9 @@ class HybridInAppUpdates: HybridInAppUpdatesSpec {
             let appStoreId = options?.ios?.appStoreId
 
             if let appStoreId {
-                resolve(makeStatus(
-                    reason: "store-lookup-unavailable",
-                    appStoreId: appStoreId,
-                    storePage: true
-                ))
+                resolve(AppStoreLookupSupport.makeLookupUnavailableStatus(appStoreId: appStoreId))
             } else {
-                resolve(makeStatus(
-                    reason: "missing-app-store-id",
-                    storePage: false
-                ))
+                resolve(AppStoreLookupSupport.makeMissingAppStoreIdStatus())
             }
         }
     }
@@ -54,8 +47,7 @@ class HybridInAppUpdates: HybridInAppUpdatesSpec {
                 return
             }
 
-            let urlString = "https://apps.apple.com/app/id\(appStoreId)"
-            guard let url = URL(string: urlString) else {
+            guard let url = AppStoreLookupSupport.storePageURL(appStoreId: appStoreId) else {
                 reject(NSError(domain: "InAppUpdates", code: 3, userInfo: [NSLocalizedDescriptionKey: "Invalid appStoreId"]))
                 return
             }
@@ -92,38 +84,5 @@ class HybridInAppUpdates: HybridInAppUpdatesSpec {
 
     func removeInstallStateListener(listenerId: String) throws {
         // No-op: iOS does not support install state listeners.
-    }
-
-    private func makeStatus(
-        reason: String,
-        appStoreId: String? = nil,
-        storePage: Bool
-    ) -> UpdateStatusNative {
-        let iosDetails = appStoreId.map {
-            IosDetailsNative(
-                bundleIdentifier: Bundle.main.bundleIdentifier,
-                appStoreId: $0,
-                storeUrl: nil
-            )
-        }
-
-        return UpdateStatusNative(
-            platform: "ios",
-            supported: false,
-            updateAvailable: .first(NullType.null),
-            capabilities: CapabilitiesNative(
-                immediate: false,
-                flexible: false,
-                storePage: storePage,
-                latestVersionLookup: false,
-                installStateListener: false
-            ),
-            allowed: AllowedFlowsNative(
-                immediate: false,
-                flexible: false
-            ),
-            reason: reason,
-            ios: iosDetails
-        )
     }
 }
