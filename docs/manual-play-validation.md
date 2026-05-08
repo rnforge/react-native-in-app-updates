@@ -193,25 +193,31 @@ Run each step in order and record the observed result.
 
 ---
 
-### H. iOS unsupported / helper behavior smoke check
+### H. iOS App Store lookup and store page smoke check
 
 **Setup:** Run the example app on an iOS device or simulator.
 
 **Steps:**
 1. Tap **getUpdateStatus()** (without `appStoreId`).
-2. Enter an `appStoreId` and tap **getUpdateStatus()** again.
-3. Tap **startImmediateUpdate()**.
-4. Tap **startFlexibleUpdate()**.
-5. Tap **addInstallStateListener()**.
-6. Tap **openStorePage()** (with `appStoreId`).
+2. Enter a valid `appStoreId` and tap **getUpdateStatus()** again.
+3. Enter an invalid `appStoreId` (non-digits) and tap **getUpdateStatus()**.
+4. Tap **startImmediateUpdate()**.
+5. Tap **startFlexibleUpdate()**.
+6. Tap **addInstallStateListener()**.
+7. Tap **openStorePage()** (with `appStoreId` and optional `country`).
 
 **Expected:**
 - `getUpdateStatus()` without `appStoreId`: `supported: false`, `reason: "missing-app-store-id"`.
-- `getUpdateStatus()` with `appStoreId`: `supported: false`, `reason: "store-lookup-unavailable"`.
+- `getUpdateStatus()` with valid `appStoreId`: performs App Store metadata lookup.
+  - If store version is newer and OS-compatible: `supported: true`, `updateAvailable: true`, `reason: "update-available"`, `ios.appStore` populated.
+  - If store version matches current: `supported: true`, `updateAvailable: false`, `reason: "no-update-available"`.
+  - If network fails or no result: `supported: false`, `reason: "store-lookup-unavailable"`.
+  - If minimum OS > device OS: `supported: true`, `updateAvailable: null`, `reason: "update-not-allowed"`.
+- `getUpdateStatus()` with invalid `appStoreId`: throws `InAppUpdatesError` with `code: "invalid-input"`.
 - `startImmediateUpdate()`: `supported: false`, `reason: "unsupported-platform"`.
 - `startFlexibleUpdate()`: `supported: false`, `reason: "unsupported-platform"`.
 - `addInstallStateListener()`: fires one event with `supported: false`, `reason: "unsupported-platform"`, returns a noop subscription.
-- `openStorePage()`: opens the App Store page for the given `appStoreId`.
+- `openStorePage()`: opens the App Store page for the given `appStoreId`; optional `country` localizes the URL.
 
 **Observed:**
 
@@ -219,14 +225,14 @@ Run each step in order and record the observed result.
 
 ## 5. Expected Observations by API
 
-| API | Expected happy-path result | Expected unsupported result |
+| API | Expected happy-path result | Expected unsupported/error result |
 |---|---|---|
-| `getUpdateStatus()` | `supported: true`, `updateAvailable: true/false`, `android.playCore` details | `supported: false`, `reason: "unsupported-install-source"` or `"play-core-unavailable"` |
+| `getUpdateStatus()` | Android: `supported: true`, `updateAvailable: true/false`, `android.playCore` details. iOS: `supported: true`, `updateAvailable: true/false/null`, `ios.appStore` metadata. | Android: `supported: false`, `reason: "unsupported-install-source"` or `"play-core-unavailable"`. iOS: `supported: false`, `reason: "missing-app-store-id"` or `"store-lookup-unavailable"`. |
 | `startImmediateUpdate()` | Play Core immediate UI shown, app may restart | `supported: false`, `reason: "unsupported-install-source"` |
 | `startFlexibleUpdate()` | Play Core flexible UI shown, background download starts | `supported: false`, `reason: "unsupported-install-source"` |
 | `completeFlexibleUpdate()` | App installs update and restarts | `supported: true`, `reason: "update-not-allowed"` if no download pending |
 | `addInstallStateListener()` | Events fire with progress and status changes | iOS: `supported: false`, `reason: "unsupported-platform"` |
-| `openStorePage()` | Platform-appropriate store page opens | Throws `InAppUpdatesError` on iOS if `appStoreId` missing |
+| `openStorePage()` | Platform-appropriate store page opens | iOS: throws `InAppUpdatesError` with `code: "invalid-input"` if `appStoreId` missing, empty, non-digits, or `country` invalid |
 
 ---
 
@@ -284,6 +290,5 @@ The `@rnforge/react-native-in-app-updates` v1 package is **release-ready** only 
 
 ## Related Documents
 
-- [`TESTING.md`](./TESTING.md) — Automated test and local verification commands
+- [`TESTING.md`](../TESTING.md) — Automated test and local verification commands
 - [`example/App.tsx`](../example/App.tsx) — Minimal example source for running the validation steps
-- [Issue 0007](https://github.com/rnforge/react-native-in-app-updates/issues/7) — Tracking issue for this release gate

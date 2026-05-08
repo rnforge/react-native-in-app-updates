@@ -10,6 +10,7 @@
 #include <fbjni/fbjni.h>
 #include "IosOpenStorePageOptionsNative.hpp"
 
+#include <optional>
 #include <string>
 
 namespace margelo::nitro::rnforge_inappupdates {
@@ -33,8 +34,11 @@ namespace margelo::nitro::rnforge_inappupdates {
       static const auto clazz = javaClassStatic();
       static const auto fieldAppStoreId = clazz->getField<jni::JString>("appStoreId");
       jni::local_ref<jni::JString> appStoreId = this->getFieldValue(fieldAppStoreId);
+      static const auto fieldCountry = clazz->getField<jni::JString>("country");
+      jni::local_ref<jni::JString> country = this->getFieldValue(fieldCountry);
       return IosOpenStorePageOptionsNative(
-        appStoreId->toStdString()
+        appStoreId->toStdString(),
+        country != nullptr ? std::make_optional(country->toStdString()) : std::nullopt
       );
     }
 
@@ -44,12 +48,13 @@ namespace margelo::nitro::rnforge_inappupdates {
      */
     [[maybe_unused]]
     static jni::local_ref<JIosOpenStorePageOptionsNative::javaobject> fromCpp(const IosOpenStorePageOptionsNative& value) {
-      using JSignature = JIosOpenStorePageOptionsNative(jni::alias_ref<jni::JString>);
+      using JSignature = JIosOpenStorePageOptionsNative(jni::alias_ref<jni::JString>, jni::alias_ref<jni::JString>);
       static const auto clazz = javaClassStatic();
       static const auto create = clazz->getStaticMethod<JSignature>("fromCpp");
       return create(
         clazz,
-        jni::make_jstring(value.appStoreId)
+        jni::make_jstring(value.appStoreId),
+        value.country.has_value() ? jni::make_jstring(value.country.value()) : nullptr
       );
     }
   };

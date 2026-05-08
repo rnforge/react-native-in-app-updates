@@ -20,6 +20,8 @@ namespace margelo::nitro::rnforge_inappupdates { struct GetUpdateStatusOptionsNa
 namespace margelo::nitro::rnforge_inappupdates { class HybridInAppUpdatesSpec; }
 // Forward declaration of `InstallStateEventNative` to properly resolve imports.
 namespace margelo::nitro::rnforge_inappupdates { struct InstallStateEventNative; }
+// Forward declaration of `IosAppStoreDetailsNative` to properly resolve imports.
+namespace margelo::nitro::rnforge_inappupdates { struct IosAppStoreDetailsNative; }
 // Forward declaration of `IosDetailsNative` to properly resolve imports.
 namespace margelo::nitro::rnforge_inappupdates { struct IosDetailsNative; }
 // Forward declaration of `IosGetUpdateStatusOptionsNative` to properly resolve imports.
@@ -44,6 +46,7 @@ namespace InAppUpdates { class HybridInAppUpdatesSpec_cxx; }
 #include "GetUpdateStatusOptionsNative.hpp"
 #include "HybridInAppUpdatesSpec.hpp"
 #include "InstallStateEventNative.hpp"
+#include "IosAppStoreDetailsNative.hpp"
 #include "IosDetailsNative.hpp"
 #include "IosGetUpdateStatusOptionsNative.hpp"
 #include "IosOpenStorePageOptionsNative.hpp"
@@ -60,6 +63,7 @@ namespace InAppUpdates { class HybridInAppUpdatesSpec_cxx; }
 #include <optional>
 #include <string>
 #include <variant>
+#include <vector>
 
 /**
  * Contains specialized versions of C++ templated types so they can be accessed from Swift,
@@ -170,6 +174,32 @@ namespace margelo::nitro::rnforge_inappupdates::bridge::swift {
     return optional.value();
   }
   
+  // pragma MARK: std::vector<std::string>
+  /**
+   * Specialized version of `std::vector<std::string>`.
+   */
+  using std__vector_std__string_ = std::vector<std::string>;
+  inline std::vector<std::string> create_std__vector_std__string_(size_t size) noexcept {
+    std::vector<std::string> vector;
+    vector.reserve(size);
+    return vector;
+  }
+  
+  // pragma MARK: std::optional<std::vector<std::string>>
+  /**
+   * Specialized version of `std::optional<std::vector<std::string>>`.
+   */
+  using std__optional_std__vector_std__string__ = std::optional<std::vector<std::string>>;
+  inline std::optional<std::vector<std::string>> create_std__optional_std__vector_std__string__(const std::vector<std::string>& value) noexcept {
+    return std::optional<std::vector<std::string>>(value);
+  }
+  inline bool has_value_std__optional_std__vector_std__string__(const std::optional<std::vector<std::string>>& optional) noexcept {
+    return optional.has_value();
+  }
+  inline std::vector<std::string> get_std__optional_std__vector_std__string__(const std::optional<std::vector<std::string>>& optional) noexcept {
+    return optional.value();
+  }
+  
   // pragma MARK: std::optional<double>
   /**
    * Specialized version of `std::optional<double>`.
@@ -227,6 +257,21 @@ namespace margelo::nitro::rnforge_inappupdates::bridge::swift {
     return optional.has_value();
   }
   inline AndroidDetailsNative get_std__optional_AndroidDetailsNative_(const std::optional<AndroidDetailsNative>& optional) noexcept {
+    return optional.value();
+  }
+  
+  // pragma MARK: std::optional<IosAppStoreDetailsNative>
+  /**
+   * Specialized version of `std::optional<IosAppStoreDetailsNative>`.
+   */
+  using std__optional_IosAppStoreDetailsNative_ = std::optional<IosAppStoreDetailsNative>;
+  inline std::optional<IosAppStoreDetailsNative> create_std__optional_IosAppStoreDetailsNative_(const IosAppStoreDetailsNative& value) noexcept {
+    return std::optional<IosAppStoreDetailsNative>(value);
+  }
+  inline bool has_value_std__optional_IosAppStoreDetailsNative_(const std::optional<IosAppStoreDetailsNative>& optional) noexcept {
+    return optional.has_value();
+  }
+  inline IosAppStoreDetailsNative get_std__optional_IosAppStoreDetailsNative_(const std::optional<IosAppStoreDetailsNative>& optional) noexcept {
     return optional.value();
   }
   

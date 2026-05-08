@@ -78,9 +78,17 @@ enum AppStoreLookupCore {
         }
     }
 
-    static func storePageURL(appStoreId: String) -> URL? {
+    static func storePageURL(appStoreId: String, country: String? = nil) -> URL? {
         guard isDigitsOnly(appStoreId) else {
             return nil
+        }
+
+        if let country = country {
+            let normalized = country.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+            guard normalized.count == 2, normalized.unicodeScalars.allSatisfy({ CharacterSet.letters.contains($0) }) else {
+                return nil
+            }
+            return URL(string: "https://apps.apple.com/\(normalized)/app/id\(appStoreId)")
         }
 
         return URL(string: "https://apps.apple.com/app/id\(appStoreId)")

@@ -31,6 +31,7 @@
 
 
 #include <string>
+#include <vector>
 #include <optional>
 
 namespace margelo::nitro::rnforge_inappupdates {
@@ -40,6 +41,10 @@ namespace margelo::nitro::rnforge_inappupdates {
    */
   struct PlayCoreDetailsNative final {
   public:
+    std::optional<std::vector<std::string>> immediateFailedPreconditions     SWIFT_PRIVATE;
+    std::optional<std::vector<std::string>> flexibleFailedPreconditions     SWIFT_PRIVATE;
+    std::optional<double> installErrorCode     SWIFT_PRIVATE;
+    std::optional<double> taskErrorCode     SWIFT_PRIVATE;
     std::optional<std::string> updateAvailability     SWIFT_PRIVATE;
     std::optional<std::string> installStatus     SWIFT_PRIVATE;
     std::optional<double> updatePriority     SWIFT_PRIVATE;
@@ -52,7 +57,7 @@ namespace margelo::nitro::rnforge_inappupdates {
 
   public:
     PlayCoreDetailsNative() = default;
-    explicit PlayCoreDetailsNative(std::optional<std::string> updateAvailability, std::optional<std::string> installStatus, std::optional<double> updatePriority, std::optional<double> clientVersionStalenessDays, std::optional<double> availableVersionCode, std::optional<double> bytesDownloaded, std::optional<double> totalBytesToDownload, std::optional<bool> immediateAllowed, std::optional<bool> flexibleAllowed): updateAvailability(updateAvailability), installStatus(installStatus), updatePriority(updatePriority), clientVersionStalenessDays(clientVersionStalenessDays), availableVersionCode(availableVersionCode), bytesDownloaded(bytesDownloaded), totalBytesToDownload(totalBytesToDownload), immediateAllowed(immediateAllowed), flexibleAllowed(flexibleAllowed) {}
+    explicit PlayCoreDetailsNative(std::optional<std::vector<std::string>> immediateFailedPreconditions, std::optional<std::vector<std::string>> flexibleFailedPreconditions, std::optional<double> installErrorCode, std::optional<double> taskErrorCode, std::optional<std::string> updateAvailability, std::optional<std::string> installStatus, std::optional<double> updatePriority, std::optional<double> clientVersionStalenessDays, std::optional<double> availableVersionCode, std::optional<double> bytesDownloaded, std::optional<double> totalBytesToDownload, std::optional<bool> immediateAllowed, std::optional<bool> flexibleAllowed): immediateFailedPreconditions(immediateFailedPreconditions), flexibleFailedPreconditions(flexibleFailedPreconditions), installErrorCode(installErrorCode), taskErrorCode(taskErrorCode), updateAvailability(updateAvailability), installStatus(installStatus), updatePriority(updatePriority), clientVersionStalenessDays(clientVersionStalenessDays), availableVersionCode(availableVersionCode), bytesDownloaded(bytesDownloaded), totalBytesToDownload(totalBytesToDownload), immediateAllowed(immediateAllowed), flexibleAllowed(flexibleAllowed) {}
 
   public:
     friend bool operator==(const PlayCoreDetailsNative& lhs, const PlayCoreDetailsNative& rhs) = default;
@@ -68,6 +73,10 @@ namespace margelo::nitro {
     static inline margelo::nitro::rnforge_inappupdates::PlayCoreDetailsNative fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
       jsi::Object obj = arg.asObject(runtime);
       return margelo::nitro::rnforge_inappupdates::PlayCoreDetailsNative(
+        JSIConverter<std::optional<std::vector<std::string>>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "immediateFailedPreconditions"))),
+        JSIConverter<std::optional<std::vector<std::string>>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "flexibleFailedPreconditions"))),
+        JSIConverter<std::optional<double>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "installErrorCode"))),
+        JSIConverter<std::optional<double>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "taskErrorCode"))),
         JSIConverter<std::optional<std::string>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "updateAvailability"))),
         JSIConverter<std::optional<std::string>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "installStatus"))),
         JSIConverter<std::optional<double>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "updatePriority"))),
@@ -81,6 +90,10 @@ namespace margelo::nitro {
     }
     static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::rnforge_inappupdates::PlayCoreDetailsNative& arg) {
       jsi::Object obj(runtime);
+      obj.setProperty(runtime, PropNameIDCache::get(runtime, "immediateFailedPreconditions"), JSIConverter<std::optional<std::vector<std::string>>>::toJSI(runtime, arg.immediateFailedPreconditions));
+      obj.setProperty(runtime, PropNameIDCache::get(runtime, "flexibleFailedPreconditions"), JSIConverter<std::optional<std::vector<std::string>>>::toJSI(runtime, arg.flexibleFailedPreconditions));
+      obj.setProperty(runtime, PropNameIDCache::get(runtime, "installErrorCode"), JSIConverter<std::optional<double>>::toJSI(runtime, arg.installErrorCode));
+      obj.setProperty(runtime, PropNameIDCache::get(runtime, "taskErrorCode"), JSIConverter<std::optional<double>>::toJSI(runtime, arg.taskErrorCode));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "updateAvailability"), JSIConverter<std::optional<std::string>>::toJSI(runtime, arg.updateAvailability));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "installStatus"), JSIConverter<std::optional<std::string>>::toJSI(runtime, arg.installStatus));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "updatePriority"), JSIConverter<std::optional<double>>::toJSI(runtime, arg.updatePriority));
@@ -100,6 +113,10 @@ namespace margelo::nitro {
       if (!nitro::isPlainObject(runtime, obj)) {
         return false;
       }
+      if (!JSIConverter<std::optional<std::vector<std::string>>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "immediateFailedPreconditions")))) return false;
+      if (!JSIConverter<std::optional<std::vector<std::string>>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "flexibleFailedPreconditions")))) return false;
+      if (!JSIConverter<std::optional<double>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "installErrorCode")))) return false;
+      if (!JSIConverter<std::optional<double>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "taskErrorCode")))) return false;
       if (!JSIConverter<std::optional<std::string>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "updateAvailability")))) return false;
       if (!JSIConverter<std::optional<std::string>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "installStatus")))) return false;
       if (!JSIConverter<std::optional<double>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "updatePriority")))) return false;

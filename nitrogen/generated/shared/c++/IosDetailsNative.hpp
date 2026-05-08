@@ -28,10 +28,12 @@
 #error NitroModules cannot be found! Are you sure you installed NitroModules properly?
 #endif
 
-
+// Forward declaration of `IosAppStoreDetailsNative` to properly resolve imports.
+namespace margelo::nitro::rnforge_inappupdates { struct IosAppStoreDetailsNative; }
 
 #include <string>
 #include <optional>
+#include "IosAppStoreDetailsNative.hpp"
 
 namespace margelo::nitro::rnforge_inappupdates {
 
@@ -43,10 +45,11 @@ namespace margelo::nitro::rnforge_inappupdates {
     std::optional<std::string> bundleIdentifier     SWIFT_PRIVATE;
     std::optional<std::string> appStoreId     SWIFT_PRIVATE;
     std::optional<std::string> storeUrl     SWIFT_PRIVATE;
+    std::optional<IosAppStoreDetailsNative> appStore     SWIFT_PRIVATE;
 
   public:
     IosDetailsNative() = default;
-    explicit IosDetailsNative(std::optional<std::string> bundleIdentifier, std::optional<std::string> appStoreId, std::optional<std::string> storeUrl): bundleIdentifier(bundleIdentifier), appStoreId(appStoreId), storeUrl(storeUrl) {}
+    explicit IosDetailsNative(std::optional<std::string> bundleIdentifier, std::optional<std::string> appStoreId, std::optional<std::string> storeUrl, std::optional<IosAppStoreDetailsNative> appStore): bundleIdentifier(bundleIdentifier), appStoreId(appStoreId), storeUrl(storeUrl), appStore(appStore) {}
 
   public:
     friend bool operator==(const IosDetailsNative& lhs, const IosDetailsNative& rhs) = default;
@@ -64,7 +67,8 @@ namespace margelo::nitro {
       return margelo::nitro::rnforge_inappupdates::IosDetailsNative(
         JSIConverter<std::optional<std::string>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "bundleIdentifier"))),
         JSIConverter<std::optional<std::string>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "appStoreId"))),
-        JSIConverter<std::optional<std::string>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "storeUrl")))
+        JSIConverter<std::optional<std::string>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "storeUrl"))),
+        JSIConverter<std::optional<margelo::nitro::rnforge_inappupdates::IosAppStoreDetailsNative>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "appStore")))
       );
     }
     static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::rnforge_inappupdates::IosDetailsNative& arg) {
@@ -72,6 +76,7 @@ namespace margelo::nitro {
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "bundleIdentifier"), JSIConverter<std::optional<std::string>>::toJSI(runtime, arg.bundleIdentifier));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "appStoreId"), JSIConverter<std::optional<std::string>>::toJSI(runtime, arg.appStoreId));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "storeUrl"), JSIConverter<std::optional<std::string>>::toJSI(runtime, arg.storeUrl));
+      obj.setProperty(runtime, PropNameIDCache::get(runtime, "appStore"), JSIConverter<std::optional<margelo::nitro::rnforge_inappupdates::IosAppStoreDetailsNative>>::toJSI(runtime, arg.appStore));
       return obj;
     }
     static inline bool canConvert(jsi::Runtime& runtime, const jsi::Value& value) {
@@ -85,6 +90,7 @@ namespace margelo::nitro {
       if (!JSIConverter<std::optional<std::string>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "bundleIdentifier")))) return false;
       if (!JSIConverter<std::optional<std::string>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "appStoreId")))) return false;
       if (!JSIConverter<std::optional<std::string>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "storeUrl")))) return false;
+      if (!JSIConverter<std::optional<margelo::nitro::rnforge_inappupdates::IosAppStoreDetailsNative>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "appStore")))) return false;
       return true;
     }
   };

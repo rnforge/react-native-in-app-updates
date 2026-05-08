@@ -20,7 +20,10 @@ import java.util.Objects
 data class IosGetUpdateStatusOptionsNative(
   @DoNotStrip
   @Keep
-  val appStoreId: String?
+  val appStoreId: String?,
+  @DoNotStrip
+  @Keep
+  val country: String?
 ) {
   /* primary constructor */
 
@@ -28,11 +31,13 @@ data class IosGetUpdateStatusOptionsNative(
     if (this === other) return true
     if (other !is IosGetUpdateStatusOptionsNative) return false
     return Objects.deepEquals(this.appStoreId, other.appStoreId)
+      && Objects.deepEquals(this.country, other.country)
   }
 
   override fun hashCode(): Int {
     return arrayOf(
-      appStoreId
+      appStoreId,
+      country
     ).contentDeepHashCode()
   }
 
@@ -44,8 +49,8 @@ data class IosGetUpdateStatusOptionsNative(
     @Keep
     @Suppress("unused")
     @JvmStatic
-    private fun fromCpp(appStoreId: String?): IosGetUpdateStatusOptionsNative {
-      return IosGetUpdateStatusOptionsNative(appStoreId)
+    private fun fromCpp(appStoreId: String?, country: String?): IosGetUpdateStatusOptionsNative {
+      return IosGetUpdateStatusOptionsNative(appStoreId, country)
     }
   }
 }

@@ -19,6 +19,8 @@ namespace margelo::nitro::rnforge_inappupdates { struct AndroidDetailsNative; }
 namespace margelo::nitro::rnforge_inappupdates { struct PlayCoreDetailsNative; }
 // Forward declaration of `IosDetailsNative` to properly resolve imports.
 namespace margelo::nitro::rnforge_inappupdates { struct IosDetailsNative; }
+// Forward declaration of `IosAppStoreDetailsNative` to properly resolve imports.
+namespace margelo::nitro::rnforge_inappupdates { struct IosAppStoreDetailsNative; }
 // Forward declaration of `GetUpdateStatusOptionsNative` to properly resolve imports.
 namespace margelo::nitro::rnforge_inappupdates { struct GetUpdateStatusOptionsNative; }
 // Forward declaration of `IosGetUpdateStatusOptionsNative` to properly resolve imports.
@@ -49,8 +51,11 @@ namespace margelo::nitro::rnforge_inappupdates { struct InstallStateEventNative;
 #include "JAndroidDetailsNative.hpp"
 #include "PlayCoreDetailsNative.hpp"
 #include "JPlayCoreDetailsNative.hpp"
+#include <vector>
 #include "IosDetailsNative.hpp"
 #include "JIosDetailsNative.hpp"
+#include "IosAppStoreDetailsNative.hpp"
+#include "JIosAppStoreDetailsNative.hpp"
 #include <NitroModules/JUnit.hpp>
 #include "GetUpdateStatusOptionsNative.hpp"
 #include "JGetUpdateStatusOptionsNative.hpp"

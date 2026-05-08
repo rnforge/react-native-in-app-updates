@@ -26,7 +26,40 @@ describe('openStorePage', () => {
     await openStorePage({ ios: { appStoreId: '1234567890' } })
 
     expect(mockObject.openStorePage).toHaveBeenCalledWith({
-      ios: { appStoreId: '1234567890' },
+      ios: { appStoreId: '1234567890', country: undefined },
+    })
+  })
+
+  it('iOS country option passed through', async () => {
+    mockPlatformOS = 'ios'
+    mockObject.openStorePage.mockResolvedValue(undefined)
+
+    await openStorePage({ ios: { appStoreId: '1234567890', country: 'us' } })
+
+    expect(mockObject.openStorePage).toHaveBeenCalledWith({
+      ios: { appStoreId: '1234567890', country: 'us' },
+    })
+  })
+
+  it('iOS country "US" normalizes to "us" before passing to native', async () => {
+    mockPlatformOS = 'ios'
+    mockObject.openStorePage.mockResolvedValue(undefined)
+
+    await openStorePage({ ios: { appStoreId: '1234567890', country: 'US' } })
+
+    expect(mockObject.openStorePage).toHaveBeenCalledWith({
+      ios: { appStoreId: '1234567890', country: 'us' },
+    })
+  })
+
+  it('iOS country " us " normalizes to "us" before passing to native', async () => {
+    mockPlatformOS = 'ios'
+    mockObject.openStorePage.mockResolvedValue(undefined)
+
+    await openStorePage({ ios: { appStoreId: '1234567890', country: ' us ' } })
+
+    expect(mockObject.openStorePage).toHaveBeenCalledWith({
+      ios: { appStoreId: '1234567890', country: 'us' },
     })
   })
 
@@ -34,7 +67,37 @@ describe('openStorePage', () => {
     mockPlatformOS = 'ios'
 
     await expect(openStorePage()).rejects.toBeInstanceOf(InAppUpdatesError)
-    await expect(openStorePage()).rejects.toThrow('Missing ios.appStoreId')
+    await expect(openStorePage()).rejects.toMatchObject({ code: 'invalid-input' })
+    expect(mockObject.openStorePage).not.toHaveBeenCalled()
+  })
+
+  it('iOS empty appStoreId throws invalid-input', async () => {
+    mockPlatformOS = 'ios'
+
+    await expect(openStorePage({ ios: { appStoreId: '' } })).rejects.toMatchObject({
+      name: 'InAppUpdatesError',
+      code: 'invalid-input',
+    })
+    expect(mockObject.openStorePage).not.toHaveBeenCalled()
+  })
+
+  it('iOS non-digit appStoreId throws invalid-input', async () => {
+    mockPlatformOS = 'ios'
+
+    await expect(openStorePage({ ios: { appStoreId: 'abc' } })).rejects.toMatchObject({
+      name: 'InAppUpdatesError',
+      code: 'invalid-input',
+    })
+    expect(mockObject.openStorePage).not.toHaveBeenCalled()
+  })
+
+  it('iOS invalid country throws invalid-input', async () => {
+    mockPlatformOS = 'ios'
+
+    await expect(openStorePage({ ios: { appStoreId: '1234567890', country: 'usa' } })).rejects.toMatchObject({
+      name: 'InAppUpdatesError',
+      code: 'invalid-input',
+    })
     expect(mockObject.openStorePage).not.toHaveBeenCalled()
   })
 

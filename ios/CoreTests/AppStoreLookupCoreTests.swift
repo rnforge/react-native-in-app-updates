@@ -60,4 +60,24 @@ final class AppStoreLookupCoreTests: XCTestCase {
     func testAmbiguousVersionComparison() {
         XCTAssertNil(AppStoreLookupCore.compareDottedNumericVersions("1.2b", "1.2"))
     }
+
+    func testStorePageURLWithoutCountry() {
+        let url = AppStoreLookupCore.storePageURL(appStoreId: "1234567890", country: nil)
+        XCTAssertEqual(url?.absoluteString, "https://apps.apple.com/app/id1234567890")
+    }
+
+    func testStorePageURLWithCountry() {
+        let url = AppStoreLookupCore.storePageURL(appStoreId: "1234567890", country: "US")
+        XCTAssertEqual(url?.absoluteString, "https://apps.apple.com/us/app/id1234567890")
+    }
+
+    func testStorePageURLInvalidAppStoreId() {
+        let url = AppStoreLookupCore.storePageURL(appStoreId: "abc", country: nil)
+        XCTAssertNil(url)
+    }
+
+    func testStorePageURLInvalidCountry() {
+        let url = AppStoreLookupCore.storePageURL(appStoreId: "1234567890", country: "usa")
+        XCTAssertNil(url)
+    }
 }

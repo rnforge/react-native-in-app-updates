@@ -20,6 +20,8 @@ namespace margelo::nitro::rnforge_inappupdates { struct GetUpdateStatusOptionsNa
 namespace margelo::nitro::rnforge_inappupdates { class HybridInAppUpdatesSpec; }
 // Forward declaration of `InstallStateEventNative` to properly resolve imports.
 namespace margelo::nitro::rnforge_inappupdates { struct InstallStateEventNative; }
+// Forward declaration of `IosAppStoreDetailsNative` to properly resolve imports.
+namespace margelo::nitro::rnforge_inappupdates { struct IosAppStoreDetailsNative; }
 // Forward declaration of `IosDetailsNative` to properly resolve imports.
 namespace margelo::nitro::rnforge_inappupdates { struct IosDetailsNative; }
 // Forward declaration of `IosGetUpdateStatusOptionsNative` to properly resolve imports.
@@ -40,6 +42,7 @@ namespace margelo::nitro::rnforge_inappupdates { struct UpdateStatusNative; }
 #include "GetUpdateStatusOptionsNative.hpp"
 #include "HybridInAppUpdatesSpec.hpp"
 #include "InstallStateEventNative.hpp"
+#include "IosAppStoreDetailsNative.hpp"
 #include "IosDetailsNative.hpp"
 #include "IosGetUpdateStatusOptionsNative.hpp"
 #include "IosOpenStorePageOptionsNative.hpp"
@@ -55,6 +58,7 @@ namespace margelo::nitro::rnforge_inappupdates { struct UpdateStatusNative; }
 #include <optional>
 #include <string>
 #include <variant>
+#include <vector>
 
 // C++ helpers for Swift
 #include "InAppUpdates-Swift-Cxx-Bridge.hpp"

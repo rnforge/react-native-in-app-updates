@@ -20,6 +20,18 @@ import java.util.Objects
 data class PlayCoreDetailsNative(
   @DoNotStrip
   @Keep
+  val immediateFailedPreconditions: Array<String>?,
+  @DoNotStrip
+  @Keep
+  val flexibleFailedPreconditions: Array<String>?,
+  @DoNotStrip
+  @Keep
+  val installErrorCode: Double?,
+  @DoNotStrip
+  @Keep
+  val taskErrorCode: Double?,
+  @DoNotStrip
+  @Keep
   val updateAvailability: String?,
   @DoNotStrip
   @Keep
@@ -51,7 +63,11 @@ data class PlayCoreDetailsNative(
   override fun equals(other: Any?): Boolean {
     if (this === other) return true
     if (other !is PlayCoreDetailsNative) return false
-    return Objects.deepEquals(this.updateAvailability, other.updateAvailability)
+    return Objects.deepEquals(this.immediateFailedPreconditions, other.immediateFailedPreconditions)
+      && Objects.deepEquals(this.flexibleFailedPreconditions, other.flexibleFailedPreconditions)
+      && Objects.deepEquals(this.installErrorCode, other.installErrorCode)
+      && Objects.deepEquals(this.taskErrorCode, other.taskErrorCode)
+      && Objects.deepEquals(this.updateAvailability, other.updateAvailability)
       && Objects.deepEquals(this.installStatus, other.installStatus)
       && Objects.deepEquals(this.updatePriority, other.updatePriority)
       && Objects.deepEquals(this.clientVersionStalenessDays, other.clientVersionStalenessDays)
@@ -64,6 +80,10 @@ data class PlayCoreDetailsNative(
 
   override fun hashCode(): Int {
     return arrayOf(
+      immediateFailedPreconditions,
+      flexibleFailedPreconditions,
+      installErrorCode,
+      taskErrorCode,
       updateAvailability,
       installStatus,
       updatePriority,
@@ -84,8 +104,8 @@ data class PlayCoreDetailsNative(
     @Keep
     @Suppress("unused")
     @JvmStatic
-    private fun fromCpp(updateAvailability: String?, installStatus: String?, updatePriority: Double?, clientVersionStalenessDays: Double?, availableVersionCode: Double?, bytesDownloaded: Double?, totalBytesToDownload: Double?, immediateAllowed: Boolean?, flexibleAllowed: Boolean?): PlayCoreDetailsNative {
-      return PlayCoreDetailsNative(updateAvailability, installStatus, updatePriority, clientVersionStalenessDays, availableVersionCode, bytesDownloaded, totalBytesToDownload, immediateAllowed, flexibleAllowed)
+    private fun fromCpp(immediateFailedPreconditions: Array<String>?, flexibleFailedPreconditions: Array<String>?, installErrorCode: Double?, taskErrorCode: Double?, updateAvailability: String?, installStatus: String?, updatePriority: Double?, clientVersionStalenessDays: Double?, availableVersionCode: Double?, bytesDownloaded: Double?, totalBytesToDownload: Double?, immediateAllowed: Boolean?, flexibleAllowed: Boolean?): PlayCoreDetailsNative {
+      return PlayCoreDetailsNative(immediateFailedPreconditions, flexibleFailedPreconditions, installErrorCode, taskErrorCode, updateAvailability, installStatus, updatePriority, clientVersionStalenessDays, availableVersionCode, bytesDownloaded, totalBytesToDownload, immediateAllowed, flexibleAllowed)
     }
   }
 }

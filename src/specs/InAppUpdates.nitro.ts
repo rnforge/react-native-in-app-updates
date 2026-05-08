@@ -34,14 +34,30 @@ export interface AndroidDetailsNative {
   playCore?: PlayCoreDetailsNative
 }
 
+export interface IosAppStoreDetailsNative {
+  version?: string
+  trackViewUrl?: string
+  trackName?: string
+  releaseNotes?: string
+  description?: string
+  minimumOsVersion?: string
+  averageUserRating?: number
+  userRatingCount?: number
+  artworkUrl60?: string
+  artworkUrl100?: string
+  artworkUrl512?: string
+}
+
 export interface IosDetailsNative {
   bundleIdentifier?: string
   appStoreId?: string
   storeUrl?: string
+  appStore?: IosAppStoreDetailsNative
 }
 
 export interface IosGetUpdateStatusOptionsNative {
   appStoreId?: string
+  country?: string
 }
 
 export interface GetUpdateStatusOptionsNative {
@@ -50,6 +66,7 @@ export interface GetUpdateStatusOptionsNative {
 
 export interface IosOpenStorePageOptionsNative {
   appStoreId: string
+  country?: string
 }
 
 export interface OpenStorePageOptionsNative {

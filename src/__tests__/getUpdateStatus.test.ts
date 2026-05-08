@@ -170,7 +170,48 @@ describe('getUpdateStatus', () => {
     expect(result.supported).toBe(true)
     expect(result.platform).toBe('android')
     expect(mockObject.getUpdateStatus).toHaveBeenCalledWith({
-      ios: { appStoreId: '1234567890' },
+      ios: { appStoreId: '1234567890', country: undefined },
+    })
+  })
+
+  it('forwards empty appStoreId to native for validation', async () => {
+    mockObject.getUpdateStatus.mockRejectedValue(
+      new Error('INVALID_INPUT|message=Invalid%20appStoreId')
+    )
+
+    await expect(getUpdateStatus({ ios: { appStoreId: '' } })).rejects.toMatchObject({
+      name: 'InAppUpdatesError',
+      code: 'invalid-input',
+    })
+
+    expect(mockObject.getUpdateStatus).toHaveBeenCalledWith({
+      ios: { appStoreId: '', country: undefined },
+    })
+  })
+
+  it('passes country option to native layer', async () => {
+    mockObject.getUpdateStatus.mockResolvedValue({
+      platform: 'ios',
+      supported: true,
+      updateAvailable: false,
+      capabilities: {
+        immediate: false,
+        flexible: false,
+        storePage: true,
+        latestVersionLookup: true,
+        installStateListener: false,
+      },
+      allowed: {
+        immediate: false,
+        flexible: false,
+      },
+      reason: 'no-update-available',
+    })
+
+    await getUpdateStatus({ ios: { appStoreId: '1234567890', country: 'us' } })
+
+    expect(mockObject.getUpdateStatus).toHaveBeenCalledWith({
+      ios: { appStoreId: '1234567890', country: 'us' },
     })
   })
 
@@ -201,7 +242,87 @@ describe('getUpdateStatus', () => {
     expect(result.updateAvailable).toBeNull()
   })
 
-  it('iOS appStoreId provided returns store-lookup-unavailable', async () => {
+  it('iOS lookup success with update available populates ios.appStore', async () => {
+    mockObject.getUpdateStatus.mockResolvedValue({
+      platform: 'ios',
+      supported: true,
+      updateAvailable: true,
+      capabilities: {
+        immediate: false,
+        flexible: false,
+        storePage: true,
+        latestVersionLookup: true,
+        installStateListener: false,
+      },
+      allowed: {
+        immediate: false,
+        flexible: false,
+      },
+      reason: 'update-available',
+      currentVersion: '1.0.0',
+      latestStoreVersion: '2.0.0',
+      ios: {
+        bundleIdentifier: 'com.example.app',
+        appStoreId: '1234567890',
+        storeUrl: 'https://apps.apple.com/app/id1234567890',
+        appStore: {
+          version: '2.0.0',
+          trackName: 'Example App',
+          releaseNotes: 'Bug fixes',
+          averageUserRating: 4.5,
+          userRatingCount: 100,
+        },
+      },
+    })
+
+    const result = await getUpdateStatus({ ios: { appStoreId: '1234567890' } })
+
+    expect(result.supported).toBe(true)
+    expect(result.updateAvailable).toBe(true)
+    expect(result.reason).toBe('update-available')
+    expect(result.capabilities.latestVersionLookup).toBe(true)
+    expect(result.ios?.appStoreId).toBe('1234567890')
+    expect(result.ios?.appStore?.version).toBe('2.0.0')
+    expect(result.ios?.appStore?.trackName).toBe('Example App')
+    expect(result.latestStoreVersion).toBe('2.0.0')
+  })
+
+  it('iOS lookup success with no update', async () => {
+    mockObject.getUpdateStatus.mockResolvedValue({
+      platform: 'ios',
+      supported: true,
+      updateAvailable: false,
+      capabilities: {
+        immediate: false,
+        flexible: false,
+        storePage: true,
+        latestVersionLookup: true,
+        installStateListener: false,
+      },
+      allowed: {
+        immediate: false,
+        flexible: false,
+      },
+      reason: 'no-update-available',
+      currentVersion: '2.0.0',
+      latestStoreVersion: '2.0.0',
+      ios: {
+        bundleIdentifier: 'com.example.app',
+        appStoreId: '1234567890',
+        appStore: {
+          version: '2.0.0',
+        },
+      },
+    })
+
+    const result = await getUpdateStatus({ ios: { appStoreId: '1234567890' } })
+
+    expect(result.supported).toBe(true)
+    expect(result.updateAvailable).toBe(false)
+    expect(result.reason).toBe('no-update-available')
+  })
+
+  it('iOS lookup failure returns store-lookup-unavailable', async () => {
     mockObject.getUpdateStatus.mockResolvedValue({
       platform: 'ios',
       supported: false,
@@ -229,7 +350,44 @@ describe('getUpdateStatus', () => {
     expect(result.supported).toBe(false)
     expect(result.reason).toBe('store-lookup-unavailable')
     expect(result.capabilities.storePage).toBe(true)
+    expect(result.capabilities.latestVersionLookup).toBe(false)
     expect(result.ios?.appStoreId).toBe('1234567890')
+  })
+
+  it('iOS ambiguous version returns update-not-allowed', async () => {
+    mockObject.getUpdateStatus.mockResolvedValue({
+      platform: 'ios',
+      supported: true,
+      updateAvailable: null,
+      capabilities: {
+        immediate: false,
+        flexible: false,
+        storePage: true,
+        latestVersionLookup: true,
+        installStateListener: false,
+      },
+      allowed: {
+        immediate: false,
+        flexible: false,
+      },
+      reason: 'update-not-allowed',
+      currentVersion: '1.0.0-beta',
+      latestStoreVersion: '2.0.0',
+      ios: {
+        bundleIdentifier: 'com.example.app',
+        appStoreId: '1234567890',
+        appStore: {
+          version: '2.0.0',
+        },
+      },
+    })
+
+    const result = await getUpdateStatus({ ios: { appStoreId: '1234567890' } })
+
+    expect(result.supported).toBe(true)
+    expect(result.updateAvailable).toBeNull()
+    expect(result.reason).toBe('update-not-allowed')
+    expect(result.capabilities.latestVersionLookup).toBe(true)
   })
 
   it('returns developer-triggered-update-in-progress as supported with updateAvailable true', async () => {
@@ -313,6 +471,19 @@ describe('getUpdateStatus', () => {
     mockObject.getUpdateStatus.mockRejectedValue(new Error('Native bridge failure'))
 
     await expect(getUpdateStatus()).rejects.toBeInstanceOf(Error)
+  })
+
+  it('normalizes INVALID_INPUT prefix to invalid-input error', async () => {
+    mockObject.getUpdateStatus.mockRejectedValue(
+      new Error('INVALID_INPUT|message=Invalid%20appStoreId')
+    )
+
+    await expect(getUpdateStatus()).rejects.toMatchObject({
+      name: 'InAppUpdatesError',
+      code: 'invalid-input',
+    })
+
+    await expect(getUpdateStatus()).rejects.toHaveProperty('message', 'Invalid appStoreId')
   })
 
   it('normalizes structured Play Core task failures', async () => {

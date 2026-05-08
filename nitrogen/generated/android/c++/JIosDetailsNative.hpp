@@ -10,6 +10,8 @@
 #include <fbjni/fbjni.h>
 #include "IosDetailsNative.hpp"
 
+#include "IosAppStoreDetailsNative.hpp"
+#include "JIosAppStoreDetailsNative.hpp"
 #include <optional>
 #include <string>
 
@@ -38,10 +40,13 @@ namespace margelo::nitro::rnforge_inappupdates {
       jni::local_ref<jni::JString> appStoreId = this->getFieldValue(fieldAppStoreId);
       static const auto fieldStoreUrl = clazz->getField<jni::JString>("storeUrl");
       jni::local_ref<jni::JString> storeUrl = this->getFieldValue(fieldStoreUrl);
+      static const auto fieldAppStore = clazz->getField<JIosAppStoreDetailsNative>("appStore");
+      jni::local_ref<JIosAppStoreDetailsNative> appStore = this->getFieldValue(fieldAppStore);
       return IosDetailsNative(
         bundleIdentifier != nullptr ? std::make_optional(bundleIdentifier->toStdString()) : std::nullopt,
         appStoreId != nullptr ? std::make_optional(appStoreId->toStdString()) : std::nullopt,
-        storeUrl != nullptr ? std::make_optional(storeUrl->toStdString()) : std::nullopt
+        storeUrl != nullptr ? std::make_optional(storeUrl->toStdString()) : std::nullopt,
+        appStore != nullptr ? std::make_optional(appStore->toCpp()) : std::nullopt
       );
     }
 
@@ -51,14 +56,15 @@ namespace margelo::nitro::rnforge_inappupdates {
      */
     [[maybe_unused]]
     static jni::local_ref<JIosDetailsNative::javaobject> fromCpp(const IosDetailsNative& value) {
-      using JSignature = JIosDetailsNative(jni::alias_ref<jni::JString>, jni::alias_ref<jni::JString>, jni::alias_ref<jni::JString>);
+      using JSignature = JIosDetailsNative(jni::alias_ref<jni::JString>, jni::alias_ref<jni::JString>, jni::alias_ref<jni::JString>, jni::alias_ref<JIosAppStoreDetailsNative>);
       static const auto clazz = javaClassStatic();
       static const auto create = clazz->getStaticMethod<JSignature>("fromCpp");
       return create(
         clazz,
         value.bundleIdentifier.has_value() ? jni::make_jstring(value.bundleIdentifier.value()) : nullptr,
         value.appStoreId.has_value() ? jni::make_jstring(value.appStoreId.value()) : nullptr,
-        value.storeUrl.has_value() ? jni::make_jstring(value.storeUrl.value()) : nullptr
+        value.storeUrl.has_value() ? jni::make_jstring(value.storeUrl.value()) : nullptr,
+        value.appStore.has_value() ? JIosAppStoreDetailsNative::fromCpp(value.appStore.value()) : nullptr
       );
     }
   };

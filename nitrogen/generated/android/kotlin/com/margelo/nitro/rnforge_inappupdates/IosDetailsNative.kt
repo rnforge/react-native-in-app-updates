@@ -26,7 +26,10 @@ data class IosDetailsNative(
   val appStoreId: String?,
   @DoNotStrip
   @Keep
-  val storeUrl: String?
+  val storeUrl: String?,
+  @DoNotStrip
+  @Keep
+  val appStore: IosAppStoreDetailsNative?
 ) {
   /* primary constructor */
 
@@ -36,13 +39,15 @@ data class IosDetailsNative(
     return Objects.deepEquals(this.bundleIdentifier, other.bundleIdentifier)
       && Objects.deepEquals(this.appStoreId, other.appStoreId)
       && Objects.deepEquals(this.storeUrl, other.storeUrl)
+      && Objects.deepEquals(this.appStore, other.appStore)
   }
 
   override fun hashCode(): Int {
     return arrayOf(
       bundleIdentifier,
       appStoreId,
-      storeUrl
+      storeUrl,
+      appStore
     ).contentDeepHashCode()
   }
 
@@ -54,8 +59,8 @@ data class IosDetailsNative(
     @Keep
     @Suppress("unused")
     @JvmStatic
-    private fun fromCpp(bundleIdentifier: String?, appStoreId: String?, storeUrl: String?): IosDetailsNative {
-      return IosDetailsNative(bundleIdentifier, appStoreId, storeUrl)
+    private fun fromCpp(bundleIdentifier: String?, appStoreId: String?, storeUrl: String?, appStore: IosAppStoreDetailsNative?): IosDetailsNative {
+      return IosDetailsNative(bundleIdentifier, appStoreId, storeUrl, appStore)
     }
   }
 }

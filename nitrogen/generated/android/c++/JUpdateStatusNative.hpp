@@ -13,10 +13,12 @@
 #include "AllowedFlowsNative.hpp"
 #include "AndroidDetailsNative.hpp"
 #include "CapabilitiesNative.hpp"
+#include "IosAppStoreDetailsNative.hpp"
 #include "IosDetailsNative.hpp"
 #include "JAllowedFlowsNative.hpp"
 #include "JAndroidDetailsNative.hpp"
 #include "JCapabilitiesNative.hpp"
+#include "JIosAppStoreDetailsNative.hpp"
 #include "JIosDetailsNative.hpp"
 #include "JPlayCoreDetailsNative.hpp"
 #include "JVariant_NullType_Boolean.hpp"
@@ -27,6 +29,7 @@
 #include <optional>
 #include <string>
 #include <variant>
+#include <vector>
 
 namespace margelo::nitro::rnforge_inappupdates {
 

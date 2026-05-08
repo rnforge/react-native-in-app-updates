@@ -7,8 +7,8 @@ export async function getUpdateStatus(
   options?: GetUpdateStatusOptions
 ): Promise<UpdateStatus> {
   try {
-    const nativeOptions = options?.ios?.appStoreId
-      ? { ios: { appStoreId: options.ios.appStoreId } }
+    const nativeOptions = options?.ios
+      ? { ios: { appStoreId: options.ios.appStoreId, country: options.ios.country } }
       : undefined
     const result = await InAppUpdates.getUpdateStatus(nativeOptions)
     return mapNativeStatus(result)

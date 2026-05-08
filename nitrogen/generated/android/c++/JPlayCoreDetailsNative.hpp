@@ -12,6 +12,7 @@
 
 #include <optional>
 #include <string>
+#include <vector>
 
 namespace margelo::nitro::rnforge_inappupdates {
 
@@ -32,6 +33,14 @@ namespace margelo::nitro::rnforge_inappupdates {
     [[nodiscard]]
     PlayCoreDetailsNative toCpp() const {
       static const auto clazz = javaClassStatic();
+      static const auto fieldImmediateFailedPreconditions = clazz->getField<jni::JArrayClass<jni::JString>>("immediateFailedPreconditions");
+      jni::local_ref<jni::JArrayClass<jni::JString>> immediateFailedPreconditions = this->getFieldValue(fieldImmediateFailedPreconditions);
+      static const auto fieldFlexibleFailedPreconditions = clazz->getField<jni::JArrayClass<jni::JString>>("flexibleFailedPreconditions");
+      jni::local_ref<jni::JArrayClass<jni::JString>> flexibleFailedPreconditions = this->getFieldValue(fieldFlexibleFailedPreconditions);
+      static const auto fieldInstallErrorCode = clazz->getField<jni::JDouble>("installErrorCode");
+      jni::local_ref<jni::JDouble> installErrorCode = this->getFieldValue(fieldInstallErrorCode);
+      static const auto fieldTaskErrorCode = clazz->getField<jni::JDouble>("taskErrorCode");
+      jni::local_ref<jni::JDouble> taskErrorCode = this->getFieldValue(fieldTaskErrorCode);
       static const auto fieldUpdateAvailability = clazz->getField<jni::JString>("updateAvailability");
       jni::local_ref<jni::JString> updateAvailability = this->getFieldValue(fieldUpdateAvailability);
       static const auto fieldInstallStatus = clazz->getField<jni::JString>("installStatus");
@@ -51,6 +60,28 @@ namespace margelo::nitro::rnforge_inappupdates {
       static const auto fieldFlexibleAllowed = clazz->getField<jni::JBoolean>("flexibleAllowed");
       jni::local_ref<jni::JBoolean> flexibleAllowed = this->getFieldValue(fieldFlexibleAllowed);
       return PlayCoreDetailsNative(
+        immediateFailedPreconditions != nullptr ? std::make_optional([&](auto&& __input) {
+          size_t __size = __input->size();
+          std::vector<std::string> __vector;
+          __vector.reserve(__size);
+          for (size_t __i = 0; __i < __size; __i++) {
+            auto __element = __input->getElement(__i);
+            __vector.push_back(__element->toStdString());
+          }
+          return __vector;
+        }(immediateFailedPreconditions)) : std::nullopt,
+        flexibleFailedPreconditions != nullptr ? std::make_optional([&](auto&& __input) {
+          size_t __size = __input->size();
+          std::vector<std::string> __vector;
+          __vector.reserve(__size);
+          for (size_t __i = 0; __i < __size; __i++) {
+            auto __element = __input->getElement(__i);
+            __vector.push_back(__element->toStdString());
+          }
+          return __vector;
+        }(flexibleFailedPreconditions)) : std::nullopt,
+        installErrorCode != nullptr ? std::make_optional(installErrorCode->value()) : std::nullopt,
+        taskErrorCode != nullptr ? std::make_optional(taskErrorCode->value()) : std::nullopt,
         updateAvailability != nullptr ? std::make_optional(updateAvailability->toStdString()) : std::nullopt,
         installStatus != nullptr ? std::make_optional(installStatus->toStdString()) : std::nullopt,
         updatePriority != nullptr ? std::make_optional(updatePriority->value()) : std::nullopt,
@@ -69,11 +100,33 @@ namespace margelo::nitro::rnforge_inappupdates {
      */
     [[maybe_unused]]
     static jni::local_ref<JPlayCoreDetailsNative::javaobject> fromCpp(const PlayCoreDetailsNative& value) {
-      using JSignature = JPlayCoreDetailsNative(jni::alias_ref<jni::JString>, jni::alias_ref<jni::JString>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JBoolean>, jni::alias_ref<jni::JBoolean>);
+      using JSignature = JPlayCoreDetailsNative(jni::alias_ref<jni::JArrayClass<jni::JString>>, jni::alias_ref<jni::JArrayClass<jni::JString>>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JString>, jni::alias_ref<jni::JString>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JBoolean>, jni::alias_ref<jni::JBoolean>);
       static const auto clazz = javaClassStatic();
       static const auto create = clazz->getStaticMethod<JSignature>("fromCpp");
       return create(
         clazz,
+        value.immediateFailedPreconditions.has_value() ? [&](auto&& __input) {
+          size_t __size = __input.size();
+          jni::local_ref<jni::JArrayClass<jni::JString>> __array = jni::JArrayClass<jni::JString>::newArray(__size);
+          for (size_t __i = 0; __i < __size; __i++) {
+            const auto& __element = __input[__i];
+            auto __elementJni = jni::make_jstring(__element);
+            __array->setElement(__i, *__elementJni);
+          }
+          return __array;
+        }(value.immediateFailedPreconditions.value()) : nullptr,
+        value.flexibleFailedPreconditions.has_value() ? [&](auto&& __input) {
+          size_t __size = __input.size();
+          jni::local_ref<jni::JArrayClass<jni::JString>> __array = jni::JArrayClass<jni::JString>::newArray(__size);
+          for (size_t __i = 0; __i < __size; __i++) {
+            const auto& __element = __input[__i];
+            auto __elementJni = jni::make_jstring(__element);
+            __array->setElement(__i, *__elementJni);
+          }
+          return __array;
+        }(value.flexibleFailedPreconditions.value()) : nullptr,
+        value.installErrorCode.has_value() ? jni::JDouble::valueOf(value.installErrorCode.value()) : nullptr,
+        value.taskErrorCode.has_value() ? jni::JDouble::valueOf(value.taskErrorCode.value()) : nullptr,
         value.updateAvailability.has_value() ? jni::make_jstring(value.updateAvailability.value()) : nullptr,
         value.installStatus.has_value() ? jni::make_jstring(value.installStatus.value()) : nullptr,
         value.updatePriority.has_value() ? jni::JDouble::valueOf(value.updatePriority.value()) : nullptr,

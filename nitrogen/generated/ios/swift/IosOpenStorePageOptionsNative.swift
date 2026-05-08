@@ -18,12 +18,30 @@ public extension IosOpenStorePageOptionsNative {
   /**
    * Create a new instance of `IosOpenStorePageOptionsNative`.
    */
-  init(appStoreId: String) {
-    self.init(std.string(appStoreId))
+  init(appStoreId: String, country: String?) {
+    self.init(std.string(appStoreId), { () -> bridge.std__optional_std__string_ in
+      if let __unwrappedValue = country {
+        return bridge.create_std__optional_std__string_(std.string(__unwrappedValue))
+      } else {
+        return .init()
+      }
+    }())
   }
 
   @inline(__always)
   var appStoreId: String {
     return String(self.__appStoreId)
+  }
+  
+  @inline(__always)
+  var country: String? {
+    return { () -> String? in
+      if bridge.has_value_std__optional_std__string_(self.__country) {
+        let __unwrapped = bridge.get_std__optional_std__string_(self.__country)
+        return String(__unwrapped)
+      } else {
+        return nil
+      }
+    }()
   }
 }

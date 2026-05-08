@@ -20,6 +20,7 @@
 #include "JAndroidDetailsNative.hpp"
 #include "PlayCoreDetailsNative.hpp"
 #include "JPlayCoreDetailsNative.hpp"
+#include <vector>
 
 namespace margelo::nitro::rnforge_inappupdates {
 

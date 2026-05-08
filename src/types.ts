@@ -69,10 +69,25 @@ export type AndroidDetails = {
   playCore?: PlayCoreDetails
 }
 
+export type IosAppStoreDetails = {
+  version?: string
+  trackViewUrl?: string
+  trackName?: string
+  releaseNotes?: string
+  description?: string
+  minimumOsVersion?: string
+  averageUserRating?: number
+  userRatingCount?: number
+  artworkUrl60?: string
+  artworkUrl100?: string
+  artworkUrl512?: string
+}
+
 export type IosDetails = {
   bundleIdentifier?: string
   appStoreId?: string
   storeUrl?: string
+  appStore?: IosAppStoreDetails
 }
 
 export type UpdateStatus = {
@@ -107,12 +122,14 @@ export type InstallStateEvent = {
 export type GetUpdateStatusOptions = {
   ios?: {
     appStoreId?: string
+    country?: string
   }
 }
 
 export type OpenStorePageOptions = {
   ios?: {
     appStoreId: string
+    country?: string
   }
 }
 

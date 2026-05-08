@@ -11,13 +11,53 @@ import NitroModules
 
 class HybridInAppUpdates: HybridInAppUpdatesSpec {
     func getUpdateStatus(options: GetUpdateStatusOptionsNative?) throws -> Promise<UpdateStatusNative> {
-        return Promise { resolve, _ in
+        return Promise { resolve, reject in
             let appStoreId = options?.ios?.appStoreId
+            let country = options?.ios?.country
 
-            if let appStoreId {
-                resolve(AppStoreLookupSupport.makeLookupUnavailableStatus(appStoreId: appStoreId))
-            } else {
+            guard let appStoreId else {
                 resolve(AppStoreLookupSupport.makeMissingAppStoreIdStatus())
+                return
+            }
+
+            let validation = AppStoreLookupSupport.validateLookupInput(appStoreId: appStoreId, country: country)
+            switch validation {
+            case .invalidAppStoreId:
+                let message = "Invalid appStoreId: must be digits-only"
+                let encoded = message.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? message
+                reject(NSError(domain: "InAppUpdates", code: 100, userInfo: [NSLocalizedDescriptionKey: "INVALID_INPUT|message=\(encoded)"]))
+                return
+            case .invalidCountry:
+                let message = "Invalid country: must be two-letter code"
+                let encoded = message.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? message
+                reject(NSError(domain: "InAppUpdates", code: 101, userInfo: [NSLocalizedDescriptionKey: "INVALID_INPUT|message=\(encoded)"]))
+                return
+            case .valid:
+                break
+            }
+
+            guard let url = AppStoreLookupSupport.lookupURL(appStoreId: appStoreId, country: country) else {
+                resolve(AppStoreLookupSupport.makeLookupFailedStatus(appStoreId: appStoreId, country: country))
+                return
+            }
+
+            let client = AppStoreLookupHTTPClient()
+            client.performLookup(url: url) { result in
+                DispatchQueue.main.async {
+                    switch result {
+                    case .success(let data):
+                        guard let metadata = AppStoreLookupSupport.parseLookupMetadata(data: data) else {
+                            resolve(AppStoreLookupSupport.makeLookupFailedStatus(appStoreId: appStoreId, country: country))
+                            return
+                        }
+
+                        let currentVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
+                        resolve(AppStoreLookupSupport.makeSuccessStatus(metadata: metadata, currentVersion: currentVersion, appStoreId: appStoreId))
+
+                    case .failure:
+                        resolve(AppStoreLookupSupport.makeLookupFailedStatus(appStoreId: appStoreId, country: country))
+                    }
+                }
             }
         }
     }
@@ -42,13 +82,36 @@ class HybridInAppUpdates: HybridInAppUpdatesSpec {
 
     func openStorePage(options: OpenStorePageOptionsNative?) throws -> Promise<Void> {
         return Promise { resolve, reject in
-            guard let appStoreId = options?.ios?.appStoreId else {
-                reject(NSError(domain: "InAppUpdates", code: 2, userInfo: [NSLocalizedDescriptionKey: "Missing ios.appStoreId for openStorePage()"]))
+            let appStoreId = options?.ios?.appStoreId
+            let country = options?.ios?.country
+
+            guard let appStoreId, !appStoreId.isEmpty else {
+                let message = "Missing ios.appStoreId for openStorePage()"
+                let encoded = message.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? message
+                reject(NSError(domain: "InAppUpdates", code: 2, userInfo: [NSLocalizedDescriptionKey: "INVALID_INPUT|message=\(encoded)"]))
                 return
             }
 
-            guard let url = AppStoreLookupSupport.storePageURL(appStoreId: appStoreId) else {
-                reject(NSError(domain: "InAppUpdates", code: 3, userInfo: [NSLocalizedDescriptionKey: "Invalid appStoreId"]))
+            let validation = AppStoreLookupSupport.validateLookupInput(appStoreId: appStoreId, country: country)
+            switch validation {
+            case .invalidAppStoreId:
+                let message = "Invalid ios.appStoreId: must be digits-only"
+                let encoded = message.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? message
+                reject(NSError(domain: "InAppUpdates", code: 3, userInfo: [NSLocalizedDescriptionKey: "INVALID_INPUT|message=\(encoded)"]))
+                return
+            case .invalidCountry:
+                let message = "Invalid ios.country: must be two-letter code"
+                let encoded = message.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? message
+                reject(NSError(domain: "InAppUpdates", code: 4, userInfo: [NSLocalizedDescriptionKey: "INVALID_INPUT|message=\(encoded)"]))
+                return
+            case .valid:
+                break
+            }
+
+            guard let url = AppStoreLookupSupport.storePageURL(appStoreId: appStoreId, country: country) else {
+                let message = "Failed to build App Store URL"
+                let encoded = message.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? message
+                reject(NSError(domain: "InAppUpdates", code: 5, userInfo: [NSLocalizedDescriptionKey: "INVALID_INPUT|message=\(encoded)"]))
                 return
             }
 
@@ -57,7 +120,7 @@ class HybridInAppUpdates: HybridInAppUpdatesSpec {
                     if success {
                         resolve()
                     } else {
-                        reject(NSError(domain: "InAppUpdates", code: 4, userInfo: [NSLocalizedDescriptionKey: "Failed to open App Store"]))
+                        reject(NSError(domain: "InAppUpdates", code: 6, userInfo: [NSLocalizedDescriptionKey: "Failed to open App Store"]))
                     }
                 }
             }

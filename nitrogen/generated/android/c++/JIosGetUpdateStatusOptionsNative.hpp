@@ -34,8 +34,11 @@ namespace margelo::nitro::rnforge_inappupdates {
       static const auto clazz = javaClassStatic();
       static const auto fieldAppStoreId = clazz->getField<jni::JString>("appStoreId");
       jni::local_ref<jni::JString> appStoreId = this->getFieldValue(fieldAppStoreId);
+      static const auto fieldCountry = clazz->getField<jni::JString>("country");
+      jni::local_ref<jni::JString> country = this->getFieldValue(fieldCountry);
       return IosGetUpdateStatusOptionsNative(
-        appStoreId != nullptr ? std::make_optional(appStoreId->toStdString()) : std::nullopt
+        appStoreId != nullptr ? std::make_optional(appStoreId->toStdString()) : std::nullopt,
+        country != nullptr ? std::make_optional(country->toStdString()) : std::nullopt
       );
     }
 
@@ -45,12 +48,13 @@ namespace margelo::nitro::rnforge_inappupdates {
      */
     [[maybe_unused]]
     static jni::local_ref<JIosGetUpdateStatusOptionsNative::javaobject> fromCpp(const IosGetUpdateStatusOptionsNative& value) {
-      using JSignature = JIosGetUpdateStatusOptionsNative(jni::alias_ref<jni::JString>);
+      using JSignature = JIosGetUpdateStatusOptionsNative(jni::alias_ref<jni::JString>, jni::alias_ref<jni::JString>);
       static const auto clazz = javaClassStatic();
       static const auto create = clazz->getStaticMethod<JSignature>("fromCpp");
       return create(
         clazz,
-        value.appStoreId.has_value() ? jni::make_jstring(value.appStoreId.value()) : nullptr
+        value.appStoreId.has_value() ? jni::make_jstring(value.appStoreId.value()) : nullptr,
+        value.country.has_value() ? jni::make_jstring(value.country.value()) : nullptr
       );
     }
   };

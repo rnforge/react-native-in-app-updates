@@ -18,7 +18,7 @@ public extension IosDetailsNative {
   /**
    * Create a new instance of `IosDetailsNative`.
    */
-  init(bundleIdentifier: String?, appStoreId: String?, storeUrl: String?) {
+  init(bundleIdentifier: String?, appStoreId: String?, storeUrl: String?, appStore: IosAppStoreDetailsNative?) {
     self.init({ () -> bridge.std__optional_std__string_ in
       if let __unwrappedValue = bundleIdentifier {
         return bridge.create_std__optional_std__string_(std.string(__unwrappedValue))
@@ -34,6 +34,12 @@ public extension IosDetailsNative {
     }(), { () -> bridge.std__optional_std__string_ in
       if let __unwrappedValue = storeUrl {
         return bridge.create_std__optional_std__string_(std.string(__unwrappedValue))
+      } else {
+        return .init()
+      }
+    }(), { () -> bridge.std__optional_IosAppStoreDetailsNative_ in
+      if let __unwrappedValue = appStore {
+        return bridge.create_std__optional_IosAppStoreDetailsNative_(__unwrappedValue)
       } else {
         return .init()
       }
@@ -74,5 +80,10 @@ public extension IosDetailsNative {
         return nil
       }
     }()
+  }
+  
+  @inline(__always)
+  var appStore: IosAppStoreDetailsNative? {
+    return self.__appStore.value
   }
 }

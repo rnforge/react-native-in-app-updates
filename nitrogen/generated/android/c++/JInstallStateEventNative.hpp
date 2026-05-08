@@ -16,6 +16,7 @@
 #include "PlayCoreDetailsNative.hpp"
 #include <optional>
 #include <string>
+#include <vector>
 
 namespace margelo::nitro::rnforge_inappupdates {
 

@@ -41,10 +41,11 @@ namespace margelo::nitro::rnforge_inappupdates {
   struct IosGetUpdateStatusOptionsNative final {
   public:
     std::optional<std::string> appStoreId     SWIFT_PRIVATE;
+    std::optional<std::string> country     SWIFT_PRIVATE;
 
   public:
     IosGetUpdateStatusOptionsNative() = default;
-    explicit IosGetUpdateStatusOptionsNative(std::optional<std::string> appStoreId): appStoreId(appStoreId) {}
+    explicit IosGetUpdateStatusOptionsNative(std::optional<std::string> appStoreId, std::optional<std::string> country): appStoreId(appStoreId), country(country) {}
 
   public:
     friend bool operator==(const IosGetUpdateStatusOptionsNative& lhs, const IosGetUpdateStatusOptionsNative& rhs) = default;
@@ -60,12 +61,14 @@ namespace margelo::nitro {
     static inline margelo::nitro::rnforge_inappupdates::IosGetUpdateStatusOptionsNative fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
       jsi::Object obj = arg.asObject(runtime);
       return margelo::nitro::rnforge_inappupdates::IosGetUpdateStatusOptionsNative(
-        JSIConverter<std::optional<std::string>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "appStoreId")))
+        JSIConverter<std::optional<std::string>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "appStoreId"))),
+        JSIConverter<std::optional<std::string>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "country")))
       );
     }
     static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::rnforge_inappupdates::IosGetUpdateStatusOptionsNative& arg) {
       jsi::Object obj(runtime);
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "appStoreId"), JSIConverter<std::optional<std::string>>::toJSI(runtime, arg.appStoreId));
+      obj.setProperty(runtime, PropNameIDCache::get(runtime, "country"), JSIConverter<std::optional<std::string>>::toJSI(runtime, arg.country));
       return obj;
     }
     static inline bool canConvert(jsi::Runtime& runtime, const jsi::Value& value) {
@@ -77,6 +80,7 @@ namespace margelo::nitro {
         return false;
       }
       if (!JSIConverter<std::optional<std::string>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "appStoreId")))) return false;
+      if (!JSIConverter<std::optional<std::string>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "country")))) return false;
       return true;
     }
   };

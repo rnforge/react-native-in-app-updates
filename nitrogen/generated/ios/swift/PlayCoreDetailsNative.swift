@@ -18,8 +18,44 @@ public extension PlayCoreDetailsNative {
   /**
    * Create a new instance of `PlayCoreDetailsNative`.
    */
-  init(updateAvailability: String?, installStatus: String?, updatePriority: Double?, clientVersionStalenessDays: Double?, availableVersionCode: Double?, bytesDownloaded: Double?, totalBytesToDownload: Double?, immediateAllowed: Bool?, flexibleAllowed: Bool?) {
-    self.init({ () -> bridge.std__optional_std__string_ in
+  init(immediateFailedPreconditions: [String]?, flexibleFailedPreconditions: [String]?, installErrorCode: Double?, taskErrorCode: Double?, updateAvailability: String?, installStatus: String?, updatePriority: Double?, clientVersionStalenessDays: Double?, availableVersionCode: Double?, bytesDownloaded: Double?, totalBytesToDownload: Double?, immediateAllowed: Bool?, flexibleAllowed: Bool?) {
+    self.init({ () -> bridge.std__optional_std__vector_std__string__ in
+      if let __unwrappedValue = immediateFailedPreconditions {
+        return bridge.create_std__optional_std__vector_std__string__({ () -> bridge.std__vector_std__string_ in
+          var __vector = bridge.create_std__vector_std__string_(__unwrappedValue.count)
+          for __item in __unwrappedValue {
+            __vector.push_back(std.string(__item))
+          }
+          return __vector
+        }())
+      } else {
+        return .init()
+      }
+    }(), { () -> bridge.std__optional_std__vector_std__string__ in
+      if let __unwrappedValue = flexibleFailedPreconditions {
+        return bridge.create_std__optional_std__vector_std__string__({ () -> bridge.std__vector_std__string_ in
+          var __vector = bridge.create_std__vector_std__string_(__unwrappedValue.count)
+          for __item in __unwrappedValue {
+            __vector.push_back(std.string(__item))
+          }
+          return __vector
+        }())
+      } else {
+        return .init()
+      }
+    }(), { () -> bridge.std__optional_double_ in
+      if let __unwrappedValue = installErrorCode {
+        return bridge.create_std__optional_double_(__unwrappedValue)
+      } else {
+        return .init()
+      }
+    }(), { () -> bridge.std__optional_double_ in
+      if let __unwrappedValue = taskErrorCode {
+        return bridge.create_std__optional_double_(__unwrappedValue)
+      } else {
+        return .init()
+      }
+    }(), { () -> bridge.std__optional_std__string_ in
       if let __unwrappedValue = updateAvailability {
         return bridge.create_std__optional_std__string_(std.string(__unwrappedValue))
       } else {
@@ -76,6 +112,54 @@ public extension PlayCoreDetailsNative {
     }())
   }
 
+  @inline(__always)
+  var immediateFailedPreconditions: [String]? {
+    return { () -> [String]? in
+      if bridge.has_value_std__optional_std__vector_std__string__(self.__immediateFailedPreconditions) {
+        let __unwrapped = bridge.get_std__optional_std__vector_std__string__(self.__immediateFailedPreconditions)
+        return __unwrapped.map({ __item in String(__item) })
+      } else {
+        return nil
+      }
+    }()
+  }
+  
+  @inline(__always)
+  var flexibleFailedPreconditions: [String]? {
+    return { () -> [String]? in
+      if bridge.has_value_std__optional_std__vector_std__string__(self.__flexibleFailedPreconditions) {
+        let __unwrapped = bridge.get_std__optional_std__vector_std__string__(self.__flexibleFailedPreconditions)
+        return __unwrapped.map({ __item in String(__item) })
+      } else {
+        return nil
+      }
+    }()
+  }
+  
+  @inline(__always)
+  var installErrorCode: Double? {
+    return { () -> Double? in
+      if bridge.has_value_std__optional_double_(self.__installErrorCode) {
+        let __unwrapped = bridge.get_std__optional_double_(self.__installErrorCode)
+        return __unwrapped
+      } else {
+        return nil
+      }
+    }()
+  }
+  
+  @inline(__always)
+  var taskErrorCode: Double? {
+    return { () -> Double? in
+      if bridge.has_value_std__optional_double_(self.__taskErrorCode) {
+        let __unwrapped = bridge.get_std__optional_double_(self.__taskErrorCode)
+        return __unwrapped
+      } else {
+        return nil
+      }
+    }()
+  }
+  
   @inline(__always)
   var updateAvailability: String? {
     return { () -> String? in
