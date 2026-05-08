@@ -10,3 +10,11 @@ export {
   type InstallStateListener,
   type InstallStateSubscription,
 } from './addInstallStateListener'
+export {
+  isUpdateAvailable,
+  canStartImmediateUpdate,
+  canStartFlexibleUpdate,
+  canCompleteFlexibleUpdate,
+  canOpenStorePage,
+  supportsInstallStateListener,
+} from './helpers'

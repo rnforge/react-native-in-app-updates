@@ -203,6 +203,45 @@ If any of these are not met, the package returns `supported: false` with a typed
 | No update available | `'no-update-available'` |
 | Update available but not allowed by policy | `'update-not-allowed'` |
 
+## Helper Predicates
+
+Small pure JS helpers make branching on `UpdateStatus` safer and more readable:
+
+```typescript
+import {
+  getUpdateStatus,
+  isUpdateAvailable,
+  canStartImmediateUpdate,
+  canStartFlexibleUpdate,
+  canCompleteFlexibleUpdate,
+  canOpenStorePage,
+  supportsInstallStateListener,
+} from '@rnforge/react-native-in-app-updates'
+
+const status = await getUpdateStatus()
+
+if (canStartImmediateUpdate(status)) {
+  await startImmediateUpdate()
+} else if (canStartFlexibleUpdate(status)) {
+  await startFlexibleUpdate()
+} else if (canCompleteFlexibleUpdate(status)) {
+  await completeFlexibleUpdate()
+} else if (canOpenStorePage(status)) {
+  await openStorePage()
+}
+```
+
+| Helper | Returns `true` when |
+|---|---|
+| `isUpdateAvailable(status)` | `updateAvailable === true` |
+| `canStartImmediateUpdate(status)` | `supported`, `capabilities.immediate`, `updateAvailable`, and `allowed.immediate` are all true |
+| `canStartFlexibleUpdate(status)` | `supported`, `capabilities.flexible`, `updateAvailable`, and `allowed.flexible` are all true |
+| `canCompleteFlexibleUpdate(status)` | `supported`, `capabilities.flexible`, and `installStatus === 'downloaded'` |
+| `canOpenStorePage(status)` | `capabilities.storePage === true` (may be true even when `supported: false`) |
+| `supportsInstallStateListener(status)` | `capabilities.installStateListener === true` |
+
+Helpers return booleans only. If a helper returns `false`, inspect `status.reason` to understand why.
+
 ## Expected Status / Result Philosophy
 
 This package uses a **capability-first** model:
@@ -212,7 +251,7 @@ This package uses a **capability-first** model:
 - Update APIs return an `UpdateStatus`-shaped result so you can branch on `supported`, `updateAvailable`, and `reason` without `try/catch` for normal conditions.
 
 ```typescript
-// Capability-first branching
+// Capability-first branching with helpers
 const status = await getUpdateStatus()
 
 if (!status.supported) {
@@ -221,14 +260,14 @@ if (!status.supported) {
   return
 }
 
-if (!status.updateAvailable) {
+if (!isUpdateAvailable(status)) {
   console.log('No update available')
   return
 }
 
-if (status.allowed.immediate) {
+if (canStartImmediateUpdate(status)) {
   await startImmediateUpdate()
-} else if (status.allowed.flexible) {
+} else if (canStartFlexibleUpdate(status)) {
   await startFlexibleUpdate()
 }
 ```
