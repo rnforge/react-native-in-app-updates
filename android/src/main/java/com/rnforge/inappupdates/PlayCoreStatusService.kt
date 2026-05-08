@@ -3,7 +3,6 @@ package com.rnforge.inappupdates
 import android.content.Context
 import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.gms.common.ConnectionResult
-import com.google.android.play.core.appupdate.AppUpdateManager
 import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.install.model.UpdateAvailability
 import com.margelo.nitro.core.Promise
@@ -47,6 +46,8 @@ class PlayCoreStatusService {
             .addOnSuccessListener { appUpdateInfo ->
                 val immediateAllowed = appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE)
                 val flexibleAllowed = appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.FLEXIBLE)
+                val immediateFailedPreconditions = mapFailedUpdatePreconditionsOrNull(appUpdateInfo, AppUpdateType.IMMEDIATE)
+                val flexibleFailedPreconditions = mapFailedUpdatePreconditionsOrNull(appUpdateInfo, AppUpdateType.FLEXIBLE)
 
                 val installStatus = mapInstallStatus(appUpdateInfo.installStatus())
 
@@ -58,6 +59,8 @@ class PlayCoreStatusService {
                             reason = "no-update-available",
                             immediateAllowed = immediateAllowed,
                             flexibleAllowed = flexibleAllowed,
+                            immediateFailedPreconditions = immediateFailedPreconditions,
+                            flexibleFailedPreconditions = flexibleFailedPreconditions,
                             installStatus = installStatus,
                             appUpdateInfo = appUpdateInfo,
                             context = context
@@ -70,6 +73,8 @@ class PlayCoreStatusService {
                             reason = "update-available",
                             immediateAllowed = immediateAllowed,
                             flexibleAllowed = flexibleAllowed,
+                            immediateFailedPreconditions = immediateFailedPreconditions,
+                            flexibleFailedPreconditions = flexibleFailedPreconditions,
                             installStatus = installStatus,
                             appUpdateInfo = appUpdateInfo,
                             context = context
@@ -82,6 +87,8 @@ class PlayCoreStatusService {
                             reason = "developer-triggered-update-in-progress",
                             immediateAllowed = immediateAllowed,
                             flexibleAllowed = flexibleAllowed,
+                            immediateFailedPreconditions = immediateFailedPreconditions,
+                            flexibleFailedPreconditions = flexibleFailedPreconditions,
                             installStatus = installStatus,
                             appUpdateInfo = appUpdateInfo,
                             context = context
@@ -93,7 +100,7 @@ class PlayCoreStatusService {
                 }
             }
             .addOnFailureListener { error ->
-                promise.reject(error)
+                promise.reject(encodeTaskFailure(error))
             }
 
         return promise
@@ -105,12 +112,16 @@ class PlayCoreStatusService {
         reason: String,
         immediateAllowed: Boolean? = null,
         flexibleAllowed: Boolean? = null,
+        immediateFailedPreconditions: List<String>? = null,
+        flexibleFailedPreconditions: List<String>? = null,
         installStatus: String? = null,
         appUpdateInfo: com.google.android.play.core.appupdate.AppUpdateInfo? = null,
         context: Context? = null
     ): UpdateStatusNative {
         val playCoreDetails = if (appUpdateInfo != null) {
             PlayCoreDetailsNative(
+                immediateFailedPreconditions = immediateFailedPreconditions,
+                flexibleFailedPreconditions = flexibleFailedPreconditions,
                 updateAvailability = when (appUpdateInfo.updateAvailability()) {
                     UpdateAvailability.UPDATE_AVAILABLE -> "UPDATE_AVAILABLE"
                     UpdateAvailability.UPDATE_NOT_AVAILABLE -> "UPDATE_NOT_AVAILABLE"

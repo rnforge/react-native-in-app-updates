@@ -92,7 +92,7 @@ class PlayCoreImmediateUpdateService {
                 }
             }
             .addOnFailureListener { error ->
-                promise.reject(error)
+                promise.reject(encodeTaskFailure(error))
             }
 
         return promise
@@ -119,7 +119,7 @@ class PlayCoreImmediateUpdateService {
                     flexibleAllowed = flexibleAllowed
                 ))
             } else {
-                promise.reject(task.exception ?: Exception("Immediate update flow failed"))
+                promise.reject(encodeTaskFailure(task.exception ?: Exception("Immediate update flow failed")))
             }
         }
     }

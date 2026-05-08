@@ -314,4 +314,24 @@ describe('getUpdateStatus', () => {
 
     await expect(getUpdateStatus()).rejects.toBeInstanceOf(Error)
   })
+
+  it('normalizes structured Play Core task failures', async () => {
+    mockObject.getUpdateStatus.mockRejectedValue(
+      new Error(
+        'PLAY_CORE_TASK_FAILURE|message=Task%20failed%20%7C%20bad%3Dinput|taskErrorCode=-1'
+      )
+    )
+
+    await expect(getUpdateStatus()).rejects.toMatchObject({
+      name: 'InAppUpdatesError',
+      code: 'native-error',
+      android: {
+        playCore: {
+          taskErrorCode: -1,
+        },
+      },
+    })
+
+    await expect(getUpdateStatus()).rejects.toHaveProperty('message', 'Task failed | bad=input')
+  })
 })

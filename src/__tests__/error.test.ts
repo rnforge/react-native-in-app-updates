@@ -41,4 +41,15 @@ describe('InAppUpdatesError', () => {
       expect(error.code).toBe(code)
     })
   })
+
+  it('can carry android diagnostics', () => {
+    const error = new InAppUpdatesError('Test', 'native-error', {
+      packageName: 'com.example.app',
+      playCore: {
+        taskErrorCode: -1,
+      },
+    })
+
+    expect(error.android?.playCore?.taskErrorCode).toBe(-1)
+  })
 })

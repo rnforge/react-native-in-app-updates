@@ -2,7 +2,11 @@ package com.rnforge.inappupdates
 
 import android.content.Context
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
+import com.google.android.play.core.appupdate.AppUpdateInfo
+import com.google.android.play.core.appupdate.AppUpdateOptions
+import com.google.android.play.core.install.InstallException
 import com.google.android.play.core.install.model.InstallStatus
 import com.margelo.nitro.core.NullType
 import com.margelo.nitro.rnforge_inappupdates.AllowedFlowsNative
@@ -87,4 +91,39 @@ fun createStatus(
         installStatus = installStatus,
         android = android
     )
+}
+
+fun mapFailedUpdatePreconditionsOrNull(
+    appUpdateInfo: AppUpdateInfo,
+    appUpdateType: Int
+): List<String>? {
+    return try {
+        val method = appUpdateInfo.javaClass.getMethod(
+            "getFailedUpdatePreconditions",
+            AppUpdateOptions::class.java
+        )
+        val options = AppUpdateOptions.defaultOptions(appUpdateType)
+        @Suppress("UNCHECKED_CAST")
+        (method.invoke(appUpdateInfo, options) as? Iterable<Any>)?.map { it.toString() }
+    } catch (_: Exception) {
+        null
+    }
+}
+
+fun encodeTaskFailure(error: Exception): Exception {
+    val message = when (error) {
+        is InstallException -> {
+            "PLAY_CORE_TASK_FAILURE|message=${Uri.encode(error.message ?: "Play Core task failed")}|taskErrorCode=${error.errorCode}"
+        }
+        else -> error.message ?: "Play Core task failed"
+    }
+    return Exception(message, error)
+}
+
+fun mapInstallErrorCodeLabel(status: Int, rawErrorCode: Int): String? {
+    return if (status == InstallStatus.FAILED) {
+        "INSTALL_ERROR_$rawErrorCode"
+    } else {
+        null
+    }
 }

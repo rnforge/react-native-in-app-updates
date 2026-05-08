@@ -14,6 +14,10 @@ export interface AllowedFlowsNative {
 }
 
 export interface PlayCoreDetailsNative {
+  immediateFailedPreconditions?: string[]
+  flexibleFailedPreconditions?: string[]
+  installErrorCode?: number
+  taskErrorCode?: number
   updateAvailability?: string
   installStatus?: string
   updatePriority?: number

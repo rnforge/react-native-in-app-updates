@@ -93,7 +93,7 @@ class PlayCoreFlexibleUpdateService {
                 }
             }
             .addOnFailureListener { error ->
-                promise.reject(error)
+                promise.reject(encodeTaskFailure(error))
             }
 
         return promise
@@ -140,7 +140,7 @@ class PlayCoreFlexibleUpdateService {
                                     flexibleAllowed = true
                                 ))
                             } else {
-                                promise.reject(task.exception ?: Exception("completeUpdate failed"))
+                                promise.reject(encodeTaskFailure(task.exception ?: Exception("completeUpdate failed")))
                             }
                         }
                 } else {
@@ -154,7 +154,7 @@ class PlayCoreFlexibleUpdateService {
                 }
             }
             .addOnFailureListener { error ->
-                promise.reject(error)
+                promise.reject(encodeTaskFailure(error))
             }
 
         return promise
@@ -181,7 +181,7 @@ class PlayCoreFlexibleUpdateService {
                     flexibleAllowed = true
                 ))
             } else {
-                promise.reject(task.exception ?: Exception("Flexible update flow failed"))
+                promise.reject(encodeTaskFailure(task.exception ?: Exception("Flexible update flow failed")))
             }
         }
     }

@@ -187,6 +187,40 @@ describe('InstallStateEvent contract', () => {
     expect(event.progress).toBe(0.25)
     expect(event.android?.packageName).toBe('com.example.app')
   })
+
+  it('allows source-shaped playCore diagnostics fields', () => {
+    const status: api.UpdateStatus = {
+      platform: 'android',
+      supported: true,
+      updateAvailable: true,
+      capabilities: {
+        immediate: true,
+        flexible: true,
+        storePage: true,
+        latestVersionLookup: false,
+        installStateListener: true,
+      },
+      allowed: {
+        immediate: true,
+        flexible: true,
+      },
+      reason: 'update-available',
+      android: {
+        packageName: 'com.example.app',
+        playCore: {
+          immediateFailedPreconditions: ['APP_UPDATE_NOT_ALLOWED'],
+          flexibleFailedPreconditions: ['APP_UPDATE_NOT_ALLOWED'],
+          installErrorCode: -2,
+          taskErrorCode: -1,
+        },
+      },
+    }
+
+    expect(status.android?.playCore?.immediateFailedPreconditions).toEqual([
+      'APP_UPDATE_NOT_ALLOWED',
+    ])
+    expect(status.android?.playCore?.taskErrorCode).toBe(-1)
+  })
 })
 
 describe('UnsupportedReason union', () => {

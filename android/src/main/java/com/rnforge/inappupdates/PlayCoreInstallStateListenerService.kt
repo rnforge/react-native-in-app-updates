@@ -36,14 +36,15 @@ class PlayCoreInstallStateListenerService {
                 bytesDownloaded = bytesDownloaded,
                 totalBytesToDownload = totalBytesToDownload,
                 progress = progress,
-                errorCode = null,
+                errorCode = mapInstallErrorCodeLabel(state.installStatus(), state.installErrorCode()),
                 message = null,
                 android = AndroidDetailsNative(
                     packageName = context?.packageName,
                     playCore = PlayCoreDetailsNative(
                         installStatus = installStatus,
                         bytesDownloaded = bytesDownloaded,
-                        totalBytesToDownload = totalBytesToDownload
+                        totalBytesToDownload = totalBytesToDownload,
+                        installErrorCode = state.installErrorCode().toDouble()
                     )
                 )
             )
@@ -82,4 +83,5 @@ class PlayCoreInstallStateListenerService {
             else -> "unknown"
         }
     }
+
 }

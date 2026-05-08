@@ -49,6 +49,10 @@ export type AllowedFlows = {
 }
 
 export type PlayCoreDetails = {
+  immediateFailedPreconditions?: string[]
+  flexibleFailedPreconditions?: string[]
+  installErrorCode?: number
+  taskErrorCode?: number
   updateAvailability?: string
   installStatus?: string
   updatePriority?: number
@@ -120,10 +124,12 @@ export type InAppUpdatesErrorCode =
 
 export class InAppUpdatesError extends Error {
   readonly code: InAppUpdatesErrorCode
+  readonly android?: AndroidDetails
 
-  constructor(message: string, code: InAppUpdatesErrorCode) {
+  constructor(message: string, code: InAppUpdatesErrorCode, android?: AndroidDetails) {
     super(message)
     this.code = code
+    this.android = android
     this.name = 'InAppUpdatesError'
   }
 }
