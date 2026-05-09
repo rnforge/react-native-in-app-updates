@@ -26,6 +26,7 @@ Runs the Jest suite against `src/__tests__/**/*.test.ts`. Tests mock `react-nati
 - `openStorePage()` — iOS appStoreId passthrough and validation, Android no-options and passthrough, native failure
 - API export/contract tests — all v1 public APIs exported, `UpdateStatus` and `InstallStateEvent` shape, union type values
 - `InAppUpdatesError` — constructor, `instanceof`, error codes, stack trace
+- `buildNativeUpdateOptions` — typed Android option shaping, `allowAssetPackDeletion` passthrough
 
 ## Build verification
 
@@ -49,20 +50,64 @@ Native Android/iOS example builds are **not in CI** because `example/` is a sour
 
 ## Example app
 
-The `example/` directory contains a **minimal example source scaffold** — not a fully generated React Native app. It lacks native Android and iOS project files (`android/`, `ios/`, Pods, Gradle, etc.). Use `example/App.tsx` as a reference for integrating the v1 API into your own application.
+The `example/` directory contains a **minimal example source scaffold** — not a fully generated React Native app. It lacks native Android and iOS project files (`android/`, `ios/`), Pods, Gradle, etc. Use `example/App.tsx` as a reference for integrating the v1 API into your own application.
 
 > Note: The `example/` source is **not included in the root package `tsconfig.json`** (which only covers `src/**/*` and `nitrogen/**/*.json`). It is typechecked separately via `bun run typecheck:example` and should be treated as illustrative source, not as a compiled package target.
 
-## Android native / Gradle tests
+## Android native tests
 
-Android native unit tests are **not yet available** in this repository. Future native test coverage should include:
+Android native test sources exist under `android/src/test/java/com/rnforge/inappupdates/` and use JUnit 4, but this package repo does not currently include a runnable Gradle wrapper or test harness. They are intended to run from a consuming app or a future dedicated harness.
 
-- Play Core `AppUpdateInfo` → typed `UpdateStatus` mapping
-- `Activity` / `currentActivity` resolution and null-safety
-- Install source detection (Play vs. sideload)
-- Fallback intent resolution for `openStorePage()`
-- Listener registration, event emission, and cleanup
-- Flexible update download → completion lifecycle
+### Testable seams
+
+Play Core services accept injectable dependencies so tests can control behavior without real Play Store availability:
+
+- **`AppUpdateManagerProvider`** — abstracts `AppUpdateManager` creation. Production uses `PlayCoreAppUpdateManagerProvider` (shared singleton). Tests can inject a fake provider.
+- **`EnvironmentChecker`** — abstracts install-source and Google Play Services checks. Production uses `DefaultEnvironmentChecker`. Tests can inject a fake to control environment state.
+
+All services have constructor defaults, so production code (`HybridInAppUpdates`) is unchanged.
+
+### What these test sources are intended to cover when run in a Gradle harness
+
+- **PlayCoreMappingTest** — Pure mapping functions with no Android framework dependency:
+  - `mapInstallStatus()` — all known Play Core constants plus unknown fallbacks
+  - `buildAppUpdateOptions()` — default, `allowAssetPackDeletion = true/false/null`
+  - `encodeTaskFailure()` — regular exceptions and `InstallException` with error codes
+  - `mapInstallErrorCodeLabel()` — maps only when status is `FAILED`
+  - `createUnsupportedStatus()` / `createStatus()` — RNForge status object structure
+
+- **PlayCoreEnvironmentTest** — Early-return guard behavior:
+  - `checkEarlyEnvironment()` returns `update-not-allowed` when context is `null`
+
+- **PlayCoreInstallStateListenerServiceTest** — Listener seam safety:
+  - Null-context path does not invoke `AppUpdateManagerProvider`
+  - Adding/removing listeners is safe when context is unavailable
+
+### What requires real Play Core or instrumentation
+
+Paths that interact with `AppUpdateInfo`, `Task<AppUpdateInfo>`, or `startUpdateFlow()` need either:
+
+- `com.google.android.play.core.appupdate.testing.FakeAppUpdateManager` (when available in the Play Core testing artifact)
+- Mockito + Robolectric for mocking Play Core classes and Android `Context`
+- Instrumentation tests on an emulator or physical device
+
+These paths are covered by design via the injected seams but are not exercised by the current test sources because they require a runnable Gradle harness with Play Core on the classpath:
+
+- `mapAppUpdateInfoToStatus()` — needs `AppUpdateInfo` (opaque Play Core object)
+- `PlayCoreStatusService` success paths — needs `AppUpdateInfo` from `appUpdateInfo()` task
+- `PlayCoreImmediateUpdateService` flow start — needs `Activity` and `AppUpdateInfo`
+- `PlayCoreFlexibleUpdateService` flow start and `completeFlexibleUpdate()` — needs `Activity` and download state
+- Install-state listener event mapping — needs real or fake `InstallState` objects
+
+### Running Android tests
+
+This library does not include a standalone `gradlew`. Android tests must be run from a consuming React Native app or a dedicated test harness. A future example app with a generated `android/` project or a standalone test module would provide the necessary Gradle wrapper and root-project setup.
+
+If you add Mockito and Robolectric to `android/build.gradle`, you can expand coverage to:
+
+- Service early-return paths with a mocked `Context`
+- `EnvironmentChecker` behavior with controlled `PackageManager` shadows
+- `PlayCoreInstallStateListenerService` registration with a fake `AppUpdateManager`
 
 ## iOS native tests
 

@@ -8,3 +8,4 @@ lib/typescript/src/**/*.test.*
 lib/typescript/src/**/*.spec.*
 Package.swift
 ios/CoreTests/**
+android/src/test/**

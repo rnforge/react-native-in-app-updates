@@ -12,10 +12,20 @@ import java.util.UUID
  *
  * Listeners are registered on the shared AppUpdateManager so that flexible
  * update downloads started by startFlexibleUpdate() can be observed.
+ *
+ * Testability: inject [AppUpdateManagerProvider] to control the manager
+ * used for register/unregister operations.
  */
-class PlayCoreInstallStateListenerService {
+class PlayCoreInstallStateListenerService(
+    private val managerProvider: AppUpdateManagerProvider = PlayCoreAppUpdateManagerProvider
+) {
 
-    private val listeners = mutableMapOf<String, InstallStateUpdatedListener>()
+    private data class ListenerRegistration(
+        val listener: InstallStateUpdatedListener,
+        val manager: com.google.android.play.core.appupdate.AppUpdateManager?
+    )
+
+    private val listeners = mutableMapOf<String, ListenerRegistration>()
 
     fun addInstallStateListener(callback: (event: InstallStateEventNative) -> Unit): String {
         val listenerId = UUID.randomUUID().toString()
@@ -51,24 +61,19 @@ class PlayCoreInstallStateListenerService {
             callback(event)
         }
 
-        listeners[listenerId] = listener
+        val manager = if (context != null) {
+            managerProvider.getManager(context).also { it.registerListener(listener) }
+        } else null
 
-        if (context != null) {
-            val appUpdateManager = PlayCoreAppUpdateManager.getInstance(context)
-            appUpdateManager.registerListener(listener)
-        }
+        listeners[listenerId] = ListenerRegistration(listener, manager)
 
         return listenerId
     }
 
     fun removeInstallStateListener(listenerId: String) {
-        val listener = listeners.remove(listenerId)
-        if (listener != null) {
-            val context = InAppUpdatesActivityProvider.applicationContext
-            if (context != null) {
-                val appUpdateManager = PlayCoreAppUpdateManager.getInstance(context)
-                appUpdateManager.unregisterListener(listener)
-            }
+        val registration = listeners.remove(listenerId)
+        if (registration != null) {
+            registration.manager?.unregisterListener(registration.listener)
         }
     }
 
@@ -83,5 +88,4 @@ class PlayCoreInstallStateListenerService {
             else -> "unknown"
         }
     }
-
 }

@@ -1,104 +1,40 @@
 package com.rnforge.inappupdates
 
 import android.content.Context
-import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.gms.common.ConnectionResult
-import com.google.android.play.core.install.model.AppUpdateType
-import com.google.android.play.core.install.model.UpdateAvailability
 import com.margelo.nitro.core.Promise
 import com.margelo.nitro.rnforge_inappupdates.GetUpdateStatusOptionsNative
-import com.margelo.nitro.rnforge_inappupdates.PlayCoreDetailsNative
 import com.margelo.nitro.rnforge_inappupdates.UpdateStatusNative
 
 /**
  * Handles Play Core status snapshot for getUpdateStatus().
  * Requests fresh AppUpdateInfo for every call.
+ *
+ * Testability: inject [AppUpdateManagerProvider] and [EnvironmentChecker]
+ * to control Play Core responses and environment state.
  */
-class PlayCoreStatusService {
+class PlayCoreStatusService(
+    private val managerProvider: AppUpdateManagerProvider = PlayCoreAppUpdateManagerProvider,
+    private val envChecker: EnvironmentChecker = DefaultEnvironmentChecker
+) {
 
     fun getUpdateStatus(options: GetUpdateStatusOptionsNative?): Promise<UpdateStatusNative> {
         val promise = Promise<UpdateStatusNative>()
         val allowAssetPackDeletion = options?.android?.allowAssetPackDeletion
         val context = InAppUpdatesActivityProvider.applicationContext
 
-        if (context == null) {
-            promise.resolve(createStatus(
-                supported = true,
-                updateAvailable = null,
-                reason = "update-not-allowed"
-            ))
+        val earlyStatus = checkEarlyEnvironment(context, envChecker)
+        if (earlyStatus != null) {
+            promise.resolve(earlyStatus)
             return promise
         }
 
-        val installSource = getInstallSource(context)
-        if (installSource != "com.android.vending") {
-            promise.resolve(createUnsupportedStatus("unsupported-install-source"))
-            return promise
-        }
-
-        val playServicesResult = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(context)
-        if (playServicesResult != ConnectionResult.SUCCESS) {
-            promise.resolve(createUnsupportedStatus("play-core-unavailable"))
-            return promise
-        }
-
-        val appUpdateManager = PlayCoreAppUpdateManager.getInstance(context)
+        val appUpdateManager = managerProvider.getManager(context!!)
         appUpdateManager.appUpdateInfo
             .addOnSuccessListener { appUpdateInfo ->
-                val immediateAllowed = appUpdateInfo.isUpdateTypeAllowed(buildAppUpdateOptions(AppUpdateType.IMMEDIATE, allowAssetPackDeletion))
-                val flexibleAllowed = appUpdateInfo.isUpdateTypeAllowed(buildAppUpdateOptions(AppUpdateType.FLEXIBLE, allowAssetPackDeletion))
-                val immediateFailedPreconditions = mapFailedUpdatePreconditionsOrNull(appUpdateInfo, AppUpdateType.IMMEDIATE, allowAssetPackDeletion)
-                val flexibleFailedPreconditions = mapFailedUpdatePreconditionsOrNull(appUpdateInfo, AppUpdateType.FLEXIBLE, allowAssetPackDeletion)
-
-                val installStatus = mapInstallStatus(appUpdateInfo.installStatus())
-
-                when (appUpdateInfo.updateAvailability()) {
-                    UpdateAvailability.UPDATE_NOT_AVAILABLE -> {
-                        promise.resolve(createDetailedStatus(
-                            supported = true,
-                            updateAvailable = false,
-                            reason = "no-update-available",
-                            immediateAllowed = immediateAllowed,
-                            flexibleAllowed = flexibleAllowed,
-                            immediateFailedPreconditions = immediateFailedPreconditions,
-                            flexibleFailedPreconditions = flexibleFailedPreconditions,
-                            installStatus = installStatus,
-                            appUpdateInfo = appUpdateInfo,
-                            context = context
-                        ))
-                    }
-                    UpdateAvailability.UPDATE_AVAILABLE -> {
-                        promise.resolve(createDetailedStatus(
-                            supported = true,
-                            updateAvailable = true,
-                            reason = "update-available",
-                            immediateAllowed = immediateAllowed,
-                            flexibleAllowed = flexibleAllowed,
-                            immediateFailedPreconditions = immediateFailedPreconditions,
-                            flexibleFailedPreconditions = flexibleFailedPreconditions,
-                            installStatus = installStatus,
-                            appUpdateInfo = appUpdateInfo,
-                            context = context
-                        ))
-                    }
-                    UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS -> {
-                        promise.resolve(createDetailedStatus(
-                            supported = true,
-                            updateAvailable = true,
-                            reason = "developer-triggered-update-in-progress",
-                            immediateAllowed = immediateAllowed,
-                            flexibleAllowed = flexibleAllowed,
-                            immediateFailedPreconditions = immediateFailedPreconditions,
-                            flexibleFailedPreconditions = flexibleFailedPreconditions,
-                            installStatus = installStatus,
-                            appUpdateInfo = appUpdateInfo,
-                            context = context
-                        ))
-                    }
-                    else -> {
-                        promise.resolve(createUnsupportedStatus("unknown"))
-                    }
-                }
+                promise.resolve(
+                    mapAppUpdateInfoToStatus(appUpdateInfo, context, allowAssetPackDeletion)
+                )
             }
             .addOnFailureListener { error ->
                 promise.reject(encodeTaskFailure(error))
@@ -106,51 +42,34 @@ class PlayCoreStatusService {
 
         return promise
     }
+}
 
-    private fun createDetailedStatus(
-        supported: Boolean,
-        updateAvailable: Boolean?,
-        reason: String,
-        immediateAllowed: Boolean? = null,
-        flexibleAllowed: Boolean? = null,
-        immediateFailedPreconditions: List<String>? = null,
-        flexibleFailedPreconditions: List<String>? = null,
-        installStatus: String? = null,
-        appUpdateInfo: com.google.android.play.core.appupdate.AppUpdateInfo? = null,
-        context: Context? = null
-    ): UpdateStatusNative {
-        val playCoreDetails = if (appUpdateInfo != null) {
-            PlayCoreDetailsNative(
-                immediateFailedPreconditions = immediateFailedPreconditions,
-                flexibleFailedPreconditions = flexibleFailedPreconditions,
-                updateAvailability = when (appUpdateInfo.updateAvailability()) {
-                    UpdateAvailability.UPDATE_AVAILABLE -> "UPDATE_AVAILABLE"
-                    UpdateAvailability.UPDATE_NOT_AVAILABLE -> "UPDATE_NOT_AVAILABLE"
-                    UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS -> "DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS"
-                    else -> "UNKNOWN"
-                },
-                installStatus = installStatus,
-                updatePriority = appUpdateInfo.updatePriority().toDouble(),
-                clientVersionStalenessDays = if (appUpdateInfo.clientVersionStalenessDays() != null) appUpdateInfo.clientVersionStalenessDays()!!.toDouble() else null,
-                availableVersionCode = appUpdateInfo.availableVersionCode().toDouble(),
-                bytesDownloaded = appUpdateInfo.bytesDownloaded().toDouble(),
-                totalBytesToDownload = appUpdateInfo.totalBytesToDownload().toDouble(),
-                immediateAllowed = immediateAllowed,
-                flexibleAllowed = flexibleAllowed
-            )
-        } else null
-
+/**
+ * Shared early-return guard used by status and flow services.
+ * Returns a typed status when context is null, install source is wrong,
+ * or Google Play Services are unavailable.
+ */
+internal fun checkEarlyEnvironment(
+    context: Context?,
+    envChecker: EnvironmentChecker
+): UpdateStatusNative? {
+    if (context == null) {
         return createStatus(
-            supported = supported,
-            updateAvailable = updateAvailable,
-            reason = reason,
-            immediateAllowed = immediateAllowed,
-            flexibleAllowed = flexibleAllowed,
-            installStatus = installStatus,
-            android = if (context != null) com.margelo.nitro.rnforge_inappupdates.AndroidDetailsNative(
-                packageName = context.packageName,
-                playCore = playCoreDetails
-            ) else null
+            supported = true,
+            updateAvailable = null,
+            reason = "update-not-allowed"
         )
     }
+
+    val installSource = envChecker.getInstallSource(context)
+    if (installSource != "com.android.vending") {
+        return createUnsupportedStatus("unsupported-install-source")
+    }
+
+    val playServicesResult = envChecker.isGooglePlayServicesAvailable(context)
+    if (playServicesResult != ConnectionResult.SUCCESS) {
+        return createUnsupportedStatus("play-core-unavailable")
+    }
+
+    return null
 }
