@@ -1,19 +1,34 @@
 package com.rnforge.inappupdates
 
-import com.google.android.gms.common.ConnectionResult
+import android.net.Uri
 import com.google.android.play.core.install.InstallException
 import com.google.android.play.core.install.model.InstallStatus
+import org.junit.Assume.assumeFalse
+import org.junit.Assume.assumeNotNull
 import org.junit.Assert.*
 import org.junit.Test
 
 /**
- * Tests for pure mapping functions in PlayCoreMapping.kt.
+ * Tests for mapping functions in PlayCoreMapping.kt.
  *
- * These target pure mapping logic and do not require Play Store availability,
+ * These target mapping logic and do not require Play Store availability,
  * an emulator, or instrumentation. They still require the Android/Play Core/
  * Nitro test classpath from a Gradle harness.
  */
 class PlayCoreMappingTest {
+
+    /**
+     * Returns true if the JVM test environment cannot run Android framework
+     * methods (e.g. android.net.Uri.encode is not mocked).
+     */
+    private fun isAndroidFrameworkUnavailable(): Boolean {
+        return try {
+            Uri.encode("test")
+            false
+        } catch (_: RuntimeException) {
+            true
+        }
+    }
 
     @Test
     fun mapInstallStatus_knownStatuses() {
@@ -71,6 +86,8 @@ class PlayCoreMappingTest {
 
     @Test
     fun encodeTaskFailure_installException() {
+        assumeFalse("Android framework Uri not available in this JVM environment", isAndroidFrameworkUnavailable())
+
         // InstallException constructor is package-private in some Play Core versions;
         // we construct via reflection to keep the test stable.
         val installException = try {
@@ -78,15 +95,14 @@ class PlayCoreMappingTest {
             ctor.isAccessible = true
             ctor.newInstance(2) // error code 2 = ERROR_PLAY_STORE_NOT_FOUND
         } catch (_: Exception) {
-            // If reflection fails, fall back to a regular Exception and skip this assertion
             null
         }
 
-        if (installException != null) {
-            val encoded = encodeTaskFailure(installException as Exception)
-            assertTrue("Should contain PLAY_CORE_TASK_FAILURE prefix", encoded.message!!.startsWith("PLAY_CORE_TASK_FAILURE"))
-            assertTrue("Should contain taskErrorCode", encoded.message!!.contains("taskErrorCode="))
-        }
+        assumeNotNull("InstallException could not be constructed via reflection", installException)
+
+        val encoded = encodeTaskFailure(installException as Exception)
+        assertTrue("Should contain PLAY_CORE_TASK_FAILURE prefix", encoded.message!!.startsWith("PLAY_CORE_TASK_FAILURE"))
+        assertTrue("Should contain taskErrorCode", encoded.message!!.contains("taskErrorCode="))
     }
 
     @Test
@@ -129,7 +145,7 @@ class PlayCoreMappingTest {
         )
         assertEquals("android", status.platform)
         assertTrue(status.supported)
-        assertTrue(status.updateAvailable.getBool())
+        assertTrue(status.updateAvailable?.asSecondOrNull() ?: false)
         assertEquals("update-available", status.reason)
         assertTrue(status.allowed.immediate)
         assertFalse(status.allowed.flexible)
@@ -144,7 +160,7 @@ class PlayCoreMappingTest {
             reason = "update-not-allowed"
         )
         assertTrue(status.supported)
-        assertTrue(status.updateAvailable.isNull())
+        assertTrue(status.updateAvailable?.isFirst ?: false)
         assertEquals("update-not-allowed", status.reason)
     }
 }

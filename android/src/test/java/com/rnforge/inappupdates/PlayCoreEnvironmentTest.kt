@@ -28,7 +28,7 @@ class PlayCoreEnvironmentTest {
 
         assertNotNull(status)
         assertTrue(status!!.supported)
-        assertTrue(status.updateAvailable.isNull())
+        assertTrue(status.updateAvailable?.isFirst ?: false)
         assertEquals("update-not-allowed", status.reason)
     }
 }

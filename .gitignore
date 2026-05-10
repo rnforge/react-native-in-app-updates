@@ -40,12 +40,23 @@ project.xcworkspace
 local.properties
 android.iml
 
-# Cocoapods
-#
+# Example app build artifacts
+example/.bundle/
+example/android/build
+example/android/app/build
+example/android/.gradle
+example/android/.idea
+example/android/local.properties
+example/ios/build
 example/ios/Pods
-
-# Ruby
+example/ios/*.xcworkspace
+example/ios/*.xcodeproj/xcuserdata
+example/ios/*.xcodeproj/project.xcworkspace
 example/vendor/
+example/node_modules/
+example/.expo/
+example/lib/
+example/tsconfig.tsbuildinfo
 
 # node.js
 #

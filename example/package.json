@@ -2,11 +2,33 @@
   "name": "rnforge-in-app-updates-example",
   "version": "0.1.0",
   "private": true,
-  "description": "Minimal example source scaffold for @rnforge/react-native-in-app-updates. This is NOT a fully generated React Native app — it lacks native Android and iOS project files. Use it as a reference for integrating the API into your own app.",
+  "scripts": {
+    "android": "react-native run-android",
+    "ios": "react-native run-ios",
+    "start": "react-native start",
+    "typecheck": "tsc --noEmit"
+  },
   "dependencies": {
     "@rnforge/react-native-in-app-updates": "file:..",
     "react": "19.2.3",
     "react-native": "0.84.1",
     "react-native-nitro-modules": "0.35.6"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.25.2",
+    "@babel/preset-env": "^7.25.3",
+    "@babel/runtime": "^7.25.0",
+    "@react-native-community/cli": "20.1.0",
+    "@react-native-community/cli-platform-android": "20.1.0",
+    "@react-native-community/cli-platform-ios": "20.1.0",
+    "@react-native/babel-preset": "0.84.1",
+    "@react-native/eslint-config": "0.84.1",
+    "@react-native/metro-config": "0.84.1",
+    "@react-native/typescript-config": "0.84.1",
+    "@types/react": "^19.2.0",
+    "typescript": "^5.8.3"
+  },
+  "engines": {
+    "node": ">= 22.11.0"
   }
 }

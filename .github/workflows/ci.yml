@@ -38,10 +38,16 @@ jobs:
             ${{ runner.os }}-bun-
 
       - name: Install dependencies
-        run: bun install
+        run: bun install --frozen-lockfile
 
       - name: Type check (src + specs)
         run: bun run typecheck
+
+      - name: Install example dependencies
+        working-directory: example
+        # Example uses a local file:.. dependency to the package root.
+        # Use non-frozen install here to avoid Bun local-link edge cases.
+        run: bun install
 
       - name: Type check (example)
         run: bun run typecheck:example

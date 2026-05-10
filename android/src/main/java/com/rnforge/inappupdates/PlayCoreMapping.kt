@@ -46,7 +46,7 @@ fun createUnsupportedStatus(reason: String): UpdateStatusNative {
     return UpdateStatusNative(
         platform = "android",
         supported = false,
-        updateAvailable = Variant_NullType_Boolean.create(NullType.null),
+        updateAvailable = Variant_NullType_Boolean.create(NullType.NULL),
         capabilities = CapabilitiesNative(
             immediate = false,
             flexible = false,
@@ -58,7 +58,14 @@ fun createUnsupportedStatus(reason: String): UpdateStatusNative {
             immediate = false,
             flexible = false
         ),
-        reason = reason
+        reason = reason,
+        currentVersion = null,
+        currentBuild = null,
+        latestStoreVersion = null,
+        latestStoreBuild = null,
+        installStatus = null,
+        android = null,
+        ios = null
     )
 }
 
@@ -75,7 +82,7 @@ fun createStatus(
         platform = "android",
         supported = supported,
         updateAvailable = updateAvailable?.let { Variant_NullType_Boolean.create(it) }
-            ?: Variant_NullType_Boolean.create(NullType.null),
+            ?: Variant_NullType_Boolean.create(NullType.NULL),
         capabilities = CapabilitiesNative(
             immediate = true,
             flexible = true,
@@ -88,8 +95,13 @@ fun createStatus(
             flexible = flexibleAllowed ?: false
         ),
         reason = reason,
+        currentVersion = null,
+        currentBuild = null,
+        latestStoreVersion = null,
+        latestStoreBuild = null,
         installStatus = installStatus,
-        android = android
+        android = android,
+        ios = null
     )
 }
 

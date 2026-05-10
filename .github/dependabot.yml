@@ -10,6 +10,7 @@ updates:
   - package-ecosystem: 'gradle'
     directories:
       - '/android/'
+      - '/example/android/'
     schedule:
       interval: 'daily'
     labels:
@@ -21,6 +22,7 @@ updates:
   - package-ecosystem: 'npm'
     directories:
       - '/'
+      - '/example/'
     schedule:
       interval: 'daily'
     labels:
@@ -43,3 +45,12 @@ updates:
         patterns:
           - 'nitrogen'
           - 'react-native-nitro-modules'
+
+  - package-ecosystem: 'bundler'
+    directories:
+      - '/example/'
+    schedule:
+      interval: 'daily'
+    labels:
+      - 'dependencies'
+      - 'ruby'

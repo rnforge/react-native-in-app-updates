@@ -46,17 +46,64 @@ The `.github/workflows/ci.yml` workflow runs on every push to `main` and every p
 - `bun run build` — Build verification (bob)
 - `npm pack --dry-run` — Package content sanity check
 
-Native Android/iOS example builds are **not in CI** because `example/` is a source-only scaffold without `android/` or `ios/` project files. Manual Play Console validation remains a separate release gate.
+Native Android/iOS example builds are **not in CI** because they require Android SDK / Xcode and are too heavy for standard CI runners. Manual Play Console validation remains a separate release gate.
 
 ## Example app
 
-The `example/` directory contains a **minimal example source scaffold** — not a fully generated React Native app. It lacks native Android and iOS project files (`android/`, `ios/`), Pods, Gradle, etc. Use `example/App.tsx` as a reference for integrating the v1 API into your own application.
+The `example/` directory is a **real runnable React Native app** generated with React Native CLI (RN 0.84.1). It includes native Android and iOS project files and demonstrates all v1 public APIs.
 
-> Note: The `example/` source is **not included in the root package `tsconfig.json`** (which only covers `src/**/*` and `nitrogen/**/*.json`). It is typechecked separately via `bun run typecheck:example` and should be treated as illustrative source, not as a compiled package target.
+### Install example dependencies
+
+```bash
+# From repo root
+bun install --frozen-lockfile
+
+# Then install example dependencies
+cd example
+bun install
+```
+
+> `bun run typecheck:example` requires example dependencies to be installed first, because `example/tsconfig.json` extends `@react-native/typescript-config` which is a devDependency of the example app only.
+>
+> Bun's incremental install can hang with local `file:..` symlink dependencies when `example/node_modules` already exists. If you hit this, run `rm -rf example/node_modules` and retry. CI uses a clean checkout so it is not affected.
+
+### Run the example
+
+```bash
+# Start Metro
+cd example && bun start
+
+# Android (requires Android SDK and emulator/device)
+cd example/android && ./gradlew assembleDebug
+
+# iOS (requires macOS and Xcode)
+cd example/ios && bundle install && bundle exec pod install
+# Then open the .xcworkspace in Xcode or run: cd example && bun ios
+```
+
+> Note: The `example/` source is **not included in the root package `tsconfig.json`** (which only covers `src/**/*` and `nitrogen/**/*.json`). It is typechecked separately via `bun run typecheck:example`.
+
+### iOS verification
+
+iOS builds require macOS and Xcode. On non-Mac environments, iOS verification is deferred until a Mac environment is available.
 
 ## Android native tests
 
-Android native test sources exist under `android/src/test/java/com/rnforge/inappupdates/` and use JUnit 4, but this package repo does not currently include a runnable Gradle wrapper or test harness. They are intended to run from a consuming app or a future dedicated harness.
+Android native test sources exist under `android/src/test/java/com/rnforge/inappupdates/` and use JUnit 4. The example app provides a runnable Gradle harness.
+
+### Running from the example app
+
+```bash
+cd example/android
+
+# Verify the library module is autolinked
+./gradlew projects
+
+# Run library unit tests (requires compilation to succeed)
+./gradlew :rnforge_react-native-in-app-updates:testDebugUnitTest
+```
+
+> **Status:** The Gradle harness is functional and the library module is autolinked (`:rnforge_react-native-in-app-updates`). The library compiles and the Android native test task runs successfully: **17 tests, 4 skipped, 0 failures**. Skipped tests are explicit JUnit assumptions (unmocked Android framework in JVM), not silent passes. Future Android native coverage can add `FakeAppUpdateManager` / Mockito / Robolectric tests.
 
 ### Testable seams
 
@@ -69,7 +116,7 @@ All services have constructor defaults, so production code (`HybridInAppUpdates`
 
 ### What these test sources are intended to cover when run in a Gradle harness
 
-- **PlayCoreMappingTest** — Pure mapping functions with no Android framework dependency:
+- **PlayCoreMappingTest** — Mapping-focused tests that still require Android/Play Core/Nitro classes on the Gradle test classpath:
   - `mapInstallStatus()` — all known Play Core constants plus unknown fallbacks
   - `buildAppUpdateOptions()` — default, `allowAssetPackDeletion = true/false/null`
   - `encodeTaskFailure()` — regular exceptions and `InstallException` with error codes
@@ -79,9 +126,10 @@ All services have constructor defaults, so production code (`HybridInAppUpdates`
 - **PlayCoreEnvironmentTest** — Early-return guard behavior:
   - `checkEarlyEnvironment()` returns `update-not-allowed` when context is `null`
 
-- **PlayCoreInstallStateListenerServiceTest** — Listener seam safety:
+- **PlayCoreInstallStateListenerServiceTest** — Listener seam safety test sources exist:
   - Null-context path does not invoke `AppUpdateManagerProvider`
   - Adding/removing listeners is safe when context is unavailable
+  - Currently skipped when NitroModules cannot load in the JVM test environment; future 0017 work should make these run under a Robolectric or instrumentation harness.
 
 ### What requires real Play Core or instrumentation
 
@@ -99,9 +147,7 @@ These paths are covered by design via the injected seams but are not exercised b
 - `PlayCoreFlexibleUpdateService` flow start and `completeFlexibleUpdate()` — needs `Activity` and download state
 - Install-state listener event mapping — needs real or fake `InstallState` objects
 
-### Running Android tests
-
-This library does not include a standalone `gradlew`. Android tests must be run from a consuming React Native app or a dedicated test harness. A future example app with a generated `android/` project or a standalone test module would provide the necessary Gradle wrapper and root-project setup.
+### Expanding Android test coverage
 
 If you add Mockito and Robolectric to `android/build.gradle`, you can expand coverage to:
 

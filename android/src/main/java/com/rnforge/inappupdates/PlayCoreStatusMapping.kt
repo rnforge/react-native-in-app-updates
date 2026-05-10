@@ -32,8 +32,10 @@ fun mapAppUpdateInfoToStatus(
     val installStatus = mapInstallStatus(info.installStatus())
 
     val playCoreDetails = PlayCoreDetailsNative(
-        immediateFailedPreconditions = immediateFailedPreconditions,
-        flexibleFailedPreconditions = flexibleFailedPreconditions,
+        immediateFailedPreconditions = immediateFailedPreconditions?.toTypedArray(),
+        flexibleFailedPreconditions = flexibleFailedPreconditions?.toTypedArray(),
+        installErrorCode = null,
+        taskErrorCode = null,
         updateAvailability = mapUpdateAvailability(info.updateAvailability()),
         installStatus = installStatus,
         updatePriority = info.updatePriority().toDouble(),

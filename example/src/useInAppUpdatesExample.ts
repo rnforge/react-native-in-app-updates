@@ -1,15 +1,7 @@
 /**
- * Minimal example source scaffold for @rnforge/react-native-in-app-updates
+ * Example hooks for @rnforge/react-native-in-app-updates
  *
- * IMPORTANT: This is NOT a fully generated React Native app. It does not
- * include native Android or iOS project files (android/, ios/, Pods, Gradle,
- * etc.). Use this file as a reference for how to integrate the v1 API into
- * your own React Native application.
- *
- * Prerequisites:
- * - A working React Native app with react-native-nitro-modules installed
- * - For Android: Play Core and Play Services available (Google Play builds only)
- * - For iOS: UIApplication.shared.open() for store page navigation
+ * Demonstrates all v1 public APIs with logging, including v1.1 platform options.
  */
 
 import { useCallback, useEffect, useRef, useState } from 'react'
@@ -56,6 +48,8 @@ function serialize(value: unknown): string {
 export function useInAppUpdatesExample() {
   const [log, setLog] = useState<string[]>(['Tap a button below to call an API.'])
   const [appStoreId, setAppStoreId] = useState('')
+  const [country, setCountry] = useState('')
+  const [allowAssetPackDeletion, setAllowAssetPackDeletion] = useState(false)
   const [listenerActive, setListenerActive] = useState(false)
   const subscriptionRef = useRef<InAppUpdates.InstallStateSubscription | null>(null)
   const mountedRef = useRef(true)
@@ -67,35 +61,64 @@ export function useInAppUpdatesExample() {
     setLog((prev) => [...prev.slice(-20), line])
   }, [])
 
+  const buildGetUpdateStatusOptions = useCallback(() => {
+    const options: InAppUpdates.GetUpdateStatusOptions = {}
+    if (appStoreId || country) {
+      options.ios = {}
+      if (appStoreId) options.ios.appStoreId = appStoreId
+      if (country) options.ios.country = country
+    }
+    if (allowAssetPackDeletion) {
+      options.android = { allowAssetPackDeletion: true }
+    }
+    return Object.keys(options).length > 0 ? options : undefined
+  }, [appStoreId, country, allowAssetPackDeletion])
+
+  const buildStartUpdateOptions = useCallback(() => {
+    if (!allowAssetPackDeletion) return undefined
+    return { android: { allowAssetPackDeletion: true } }
+  }, [allowAssetPackDeletion])
+
+  const buildOpenStorePageOptions = useCallback(() => {
+    if (!appStoreId && !country) return undefined
+    const options: InAppUpdates.OpenStorePageOptions = {
+      ios: {
+        appStoreId: appStoreId || '',
+        ...(country ? { country } : {}),
+      },
+    }
+    return options
+  }, [appStoreId, country])
+
   const handleGetUpdateStatus = useCallback(async () => {
     try {
-      const options = appStoreId
-        ? { ios: { appStoreId } }
-        : undefined
+      const options = buildGetUpdateStatusOptions()
       const result = await InAppUpdates.getUpdateStatus(options)
       appendLog('getUpdateStatus', result)
     } catch (err) {
       appendLog('getUpdateStatus ERROR', err)
     }
-  }, [appStoreId, appendLog])
+  }, [buildGetUpdateStatusOptions, appendLog])
 
   const handleStartImmediateUpdate = useCallback(async () => {
     try {
-      const result = await InAppUpdates.startImmediateUpdate()
+      const options = buildStartUpdateOptions()
+      const result = await InAppUpdates.startImmediateUpdate(options)
       appendLog('startImmediateUpdate', result)
     } catch (err) {
       appendLog('startImmediateUpdate ERROR', err)
     }
-  }, [appendLog])
+  }, [buildStartUpdateOptions, appendLog])
 
   const handleStartFlexibleUpdate = useCallback(async () => {
     try {
-      const result = await InAppUpdates.startFlexibleUpdate()
+      const options = buildStartUpdateOptions()
+      const result = await InAppUpdates.startFlexibleUpdate(options)
       appendLog('startFlexibleUpdate', result)
     } catch (err) {
       appendLog('startFlexibleUpdate ERROR', err)
     }
-  }, [appendLog])
+  }, [buildStartUpdateOptions, appendLog])
 
   const handleCompleteFlexibleUpdate = useCallback(async () => {
     try {
@@ -108,15 +131,13 @@ export function useInAppUpdatesExample() {
 
   const handleOpenStorePage = useCallback(async () => {
     try {
-      const options = appStoreId
-        ? { ios: { appStoreId } }
-        : undefined
+      const options = buildOpenStorePageOptions()
       await InAppUpdates.openStorePage(options)
       appendLog('openStorePage', 'resolved')
     } catch (err) {
       appendLog('openStorePage ERROR', err)
     }
-  }, [appStoreId, appendLog])
+  }, [buildOpenStorePageOptions, appendLog])
 
   const handleStartListener = useCallback(() => {
     if (subscriptionRef.current) {
@@ -159,6 +180,10 @@ export function useInAppUpdatesExample() {
   return {
     appStoreId,
     setAppStoreId,
+    country,
+    setCountry,
+    allowAssetPackDeletion,
+    setAllowAssetPackDeletion,
     log,
     listenerActive,
     handleGetUpdateStatus,

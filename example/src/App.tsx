@@ -1,10 +1,7 @@
 /**
- * Minimal example source scaffold for @rnforge/react-native-in-app-updates
+ * Example app for @rnforge/react-native-in-app-updates
  *
- * IMPORTANT: This is NOT a fully generated React Native app. It does not
- * include native Android or iOS project files (android/, ios/, Pods, Gradle,
- * etc.). Use this file as a reference for how to integrate the v1 API into
- * your own React Native application.
+ * A real runnable React Native app demonstrating the v1 API.
  */
 
 import React from 'react'
@@ -14,6 +11,7 @@ import {
   SafeAreaView,
   ScrollView,
   StyleSheet,
+  Switch,
   Text,
   TextInput,
   View,
@@ -24,6 +22,10 @@ export default function App() {
   const {
     appStoreId,
     setAppStoreId,
+    country,
+    setCountry,
+    allowAssetPackDeletion,
+    setAllowAssetPackDeletion,
     log,
     listenerActive,
     handleGetUpdateStatus,
@@ -39,7 +41,7 @@ export default function App() {
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scroll}>
         <Text style={styles.title}>RNForge In-App Updates</Text>
-        <Text style={styles.subtitle}>Minimal example source scaffold</Text>
+        <Text style={styles.subtitle}>Example app</Text>
 
         <View style={styles.section}>
           <Text style={styles.label}>iOS App Store ID (optional):</Text>
@@ -50,6 +52,26 @@ export default function App() {
             placeholder="e.g. 1234567890"
             keyboardType="numeric"
             autoCapitalize="none"
+          />
+        </View>
+
+        <View style={styles.section}>
+          <Text style={styles.label}>iOS Country (optional, 2-letter):</Text>
+          <TextInput
+            style={styles.input}
+            value={country}
+            onChangeText={setCountry}
+            placeholder="e.g. us"
+            autoCapitalize="none"
+            maxLength={2}
+          />
+        </View>
+
+        <View style={styles.rowSection}>
+          <Text style={styles.label}>Android allowAssetPackDeletion:</Text>
+          <Switch
+            value={allowAssetPackDeletion}
+            onValueChange={setAllowAssetPackDeletion}
           />
         </View>
 
@@ -133,6 +155,13 @@ const styles = StyleSheet.create({
   },
   section: {
     marginBottom: 10,
+  },
+  rowSection: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 10,
+    paddingVertical: 4,
   },
   label: {
     fontSize: 14,

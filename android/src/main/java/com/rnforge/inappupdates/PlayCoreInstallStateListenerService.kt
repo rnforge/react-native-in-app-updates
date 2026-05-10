@@ -51,10 +51,19 @@ class PlayCoreInstallStateListenerService(
                 android = AndroidDetailsNative(
                     packageName = context?.packageName,
                     playCore = PlayCoreDetailsNative(
+                        immediateFailedPreconditions = null,
+                        flexibleFailedPreconditions = null,
+                        installErrorCode = state.installErrorCode().toDouble(),
+                        taskErrorCode = null,
+                        updateAvailability = null,
                         installStatus = installStatus,
+                        updatePriority = null,
+                        clientVersionStalenessDays = null,
+                        availableVersionCode = null,
                         bytesDownloaded = bytesDownloaded,
                         totalBytesToDownload = totalBytesToDownload,
-                        installErrorCode = state.installErrorCode().toDouble()
+                        immediateAllowed = null,
+                        flexibleAllowed = null
                     )
                 )
             )
