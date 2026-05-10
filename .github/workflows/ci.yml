@@ -43,6 +43,9 @@ jobs:
       - name: Type check (src + specs)
         run: bun run typecheck
 
+      - name: Build package
+        run: bun run build
+
       - name: Install example dependencies
         working-directory: example
         # Example uses a local file:.. dependency to the package root.
@@ -54,9 +57,6 @@ jobs:
 
       - name: Run unit tests
         run: bunx jest
-
-      - name: Build package
-        run: bun run build
 
       - name: Dry-run npm pack
         run: npm pack --dry-run
