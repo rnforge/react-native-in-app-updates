@@ -18,18 +18,32 @@ import com.margelo.nitro.rnforge_inappupdates.UpdateStatusNative
  */
 class PlayCoreFlexibleUpdateService(
     private val managerProvider: AppUpdateManagerProvider = PlayCoreAppUpdateManagerProvider,
-    private val envChecker: EnvironmentChecker = DefaultEnvironmentChecker
+    private val envChecker: EnvironmentChecker = DefaultEnvironmentChecker,
+    private val activityProvider: ActivityProvider = DefaultActivityProvider
 ) {
 
     fun startFlexibleUpdate(options: StartFlexibleUpdateOptionsNative?): Promise<UpdateStatusNative> {
         val promise = Promise<UpdateStatusNative>()
+        startFlexibleUpdate(
+            options = options,
+            onSuccess = { promise.resolve(it) },
+            onFailure = { promise.reject(it) }
+        )
+        return promise
+    }
+
+    internal fun startFlexibleUpdate(
+        options: StartFlexibleUpdateOptionsNative?,
+        onSuccess: (UpdateStatusNative) -> Unit,
+        onFailure: (Exception) -> Unit
+    ) {
         val allowAssetPackDeletion = options?.android?.allowAssetPackDeletion
-        val context = InAppUpdatesActivityProvider.applicationContext
+        val context = activityProvider.applicationContext
 
         val earlyStatus = checkEarlyEnvironment(context, envChecker)
         if (earlyStatus != null) {
-            promise.resolve(earlyStatus)
-            return promise
+            onSuccess(earlyStatus)
+            return
         }
 
         val appUpdateManager = managerProvider.getManager(context!!)
@@ -37,7 +51,7 @@ class PlayCoreFlexibleUpdateService(
             .addOnSuccessListener { appUpdateInfo ->
                 when (appUpdateInfo.updateAvailability()) {
                     UpdateAvailability.UPDATE_NOT_AVAILABLE -> {
-                        promise.resolve(createStatus(
+                        onSuccess(createStatus(
                             supported = true,
                             updateAvailable = false,
                             reason = "no-update-available"
@@ -51,14 +65,19 @@ class PlayCoreFlexibleUpdateService(
                             buildAppUpdateOptions(AppUpdateType.IMMEDIATE, allowAssetPackDeletion)
                         )
                         if (flexibleAllowed) {
-                            val activity = InAppUpdatesActivityProvider.currentActivity
+                            val activity = activityProvider.currentActivity
                             if (activity != null) {
                                 startUpdateFlow(
-                                    appUpdateManager, appUpdateInfo, activity, promise,
-                                    immediateAllowed, allowAssetPackDeletion
+                                    appUpdateManager = appUpdateManager,
+                                    appUpdateInfo = appUpdateInfo,
+                                    activity = activity,
+                                    onSuccess = onSuccess,
+                                    onFailure = onFailure,
+                                    immediateAllowed = immediateAllowed,
+                                    allowAssetPackDeletion = allowAssetPackDeletion
                                 )
                             } else {
-                                promise.resolve(createStatus(
+                                onSuccess(createStatus(
                                     supported = true,
                                     updateAvailable = true,
                                     reason = "update-not-allowed",
@@ -67,7 +86,7 @@ class PlayCoreFlexibleUpdateService(
                                 ))
                             }
                         } else {
-                            promise.resolve(createStatus(
+                            onSuccess(createStatus(
                                 supported = true,
                                 updateAvailable = true,
                                 reason = "update-not-allowed",
@@ -77,32 +96,41 @@ class PlayCoreFlexibleUpdateService(
                         }
                     }
                     UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS -> {
-                        promise.resolve(createStatus(
+                        onSuccess(createStatus(
                             supported = true,
                             updateAvailable = true,
                             reason = "developer-triggered-update-in-progress"
                         ))
                     }
                     else -> {
-                        promise.resolve(createUnsupportedStatus("unknown"))
+                        onSuccess(createUnsupportedStatus("unknown"))
                     }
                 }
             }
             .addOnFailureListener { error ->
-                promise.reject(encodeTaskFailure(error))
+                onFailure(encodeTaskFailure(error))
             }
-
-        return promise
     }
 
     fun completeFlexibleUpdate(): Promise<UpdateStatusNative> {
         val promise = Promise<UpdateStatusNative>()
-        val context = InAppUpdatesActivityProvider.applicationContext
+        completeFlexibleUpdate(
+            onSuccess = { promise.resolve(it) },
+            onFailure = { promise.reject(it) }
+        )
+        return promise
+    }
+
+    internal fun completeFlexibleUpdate(
+        onSuccess: (UpdateStatusNative) -> Unit,
+        onFailure: (Exception) -> Unit
+    ) {
+        val context = activityProvider.applicationContext
 
         val earlyStatus = checkEarlyEnvironment(context, envChecker)
         if (earlyStatus != null) {
-            promise.resolve(earlyStatus)
-            return promise
+            onSuccess(earlyStatus)
+            return
         }
 
         val appUpdateManager = managerProvider.getManager(context!!)
@@ -113,7 +141,7 @@ class PlayCoreFlexibleUpdateService(
                     appUpdateManager.completeUpdate()
                         .addOnCompleteListener { task ->
                             if (task.isSuccessful) {
-                                promise.resolve(createStatus(
+                                onSuccess(createStatus(
                                     supported = true,
                                     updateAvailable = true,
                                     reason = "flexible-update-downloaded",
@@ -121,11 +149,11 @@ class PlayCoreFlexibleUpdateService(
                                     flexibleAllowed = true
                                 ))
                             } else {
-                                promise.reject(encodeTaskFailure(task.exception ?: Exception("completeUpdate failed")))
+                                onFailure(encodeTaskFailure(task.exception ?: Exception("completeUpdate failed")))
                             }
                         }
                 } else {
-                    promise.resolve(createStatus(
+                    onSuccess(createStatus(
                         supported = true,
                         updateAvailable = true,
                         reason = "update-not-allowed",
@@ -135,17 +163,16 @@ class PlayCoreFlexibleUpdateService(
                 }
             }
             .addOnFailureListener { error ->
-                promise.reject(encodeTaskFailure(error))
+                onFailure(encodeTaskFailure(error))
             }
-
-        return promise
     }
 
     private fun startUpdateFlow(
         appUpdateManager: AppUpdateManager,
         appUpdateInfo: com.google.android.play.core.appupdate.AppUpdateInfo,
         activity: Activity,
-        promise: Promise<UpdateStatusNative>,
+        onSuccess: (UpdateStatusNative) -> Unit,
+        onFailure: (Exception) -> Unit,
         immediateAllowed: Boolean,
         allowAssetPackDeletion: Boolean? = null
     ) {
@@ -155,7 +182,7 @@ class PlayCoreFlexibleUpdateService(
             buildAppUpdateOptions(AppUpdateType.FLEXIBLE, allowAssetPackDeletion)
         ).addOnCompleteListener { task ->
             if (task.isSuccessful) {
-                promise.resolve(createStatus(
+                onSuccess(createStatus(
                     supported = true,
                     updateAvailable = true,
                     reason = "update-available",
@@ -163,7 +190,7 @@ class PlayCoreFlexibleUpdateService(
                     flexibleAllowed = true
                 ))
             } else {
-                promise.reject(encodeTaskFailure(task.exception ?: Exception("Flexible update flow failed")))
+                onFailure(encodeTaskFailure(task.exception ?: Exception("Flexible update flow failed")))
             }
         }
     }

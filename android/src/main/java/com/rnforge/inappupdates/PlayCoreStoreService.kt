@@ -12,15 +12,28 @@ import com.margelo.nitro.rnforge_inappupdates.OpenStorePageOptionsNative
  * Tries market:// intent first, then falls back to https:// URL
  * if no Activity can handle the market scheme.
  */
-class PlayCoreStoreService {
+class PlayCoreStoreService(
+    private val activityProvider: ActivityProvider = DefaultActivityProvider
+) {
 
     fun openStorePage(options: OpenStorePageOptionsNative?): Promise<Unit> {
         val promise = Promise<Unit>()
-        val context = InAppUpdatesActivityProvider.applicationContext
+        openStorePage(
+            onSuccess = { promise.resolve(Unit) },
+            onFailure = { promise.reject(it) }
+        )
+        return promise
+    }
+
+    internal fun openStorePage(
+        onSuccess: () -> Unit,
+        onFailure: (Exception) -> Unit
+    ) {
+        val context = activityProvider.applicationContext
 
         if (context == null) {
-            promise.reject(Exception("Context not available"))
-            return promise
+            onFailure(Exception("Context not available"))
+            return
         }
 
         val packageName = context.packageName
@@ -38,11 +51,9 @@ class PlayCoreStoreService {
 
         try {
             context.startActivity(intent)
-            promise.resolve(Unit)
+            onSuccess()
         } catch (e: Exception) {
-            promise.reject(e)
+            onFailure(e)
         }
-
-        return promise
     }
 }

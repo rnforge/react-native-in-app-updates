@@ -1,4 +1,5 @@
 import { InAppUpdatesError } from '../types'
+import { normalizeNativeError } from '../internal/normalizeNativeError'
 
 describe('InAppUpdatesError', () => {
   it('sets message, code, and name via constructor', () => {
@@ -51,5 +52,64 @@ describe('InAppUpdatesError', () => {
     })
 
     expect(error.android?.playCore?.taskErrorCode).toBe(-1)
+  })
+
+  it('normalizes existing InAppUpdatesError without wrapping', () => {
+    const error = new InAppUpdatesError('Already normalized', 'bridge-error')
+
+    expect(normalizeNativeError(error)).toBe(error)
+  })
+
+  it('normalizes primitive native failures', () => {
+    const error = normalizeNativeError('Primitive failure')
+
+    expect(error).toMatchObject({
+      name: 'InAppUpdatesError',
+      code: 'native-error',
+      message: 'Primitive failure',
+    })
+  })
+
+  it('normalizes empty native failures to default message', () => {
+    const error = normalizeNativeError('')
+
+    expect(error).toMatchObject({
+      name: 'InAppUpdatesError',
+      code: 'native-error',
+      message: 'Native failure',
+    })
+  })
+
+  it('uses default invalid-input message when native payload has no message', () => {
+    const error = normalizeNativeError(new Error('INVALID_INPUT|code=bad'))
+
+    expect(error).toMatchObject({
+      name: 'InAppUpdatesError',
+      code: 'invalid-input',
+      message: 'Invalid input',
+    })
+  })
+
+  it('uses default Play Core message when native payload has no message', () => {
+    const error = normalizeNativeError(new Error('PLAY_CORE_TASK_FAILURE|taskErrorCode=7'))
+
+    expect(error).toMatchObject({
+      name: 'InAppUpdatesError',
+      code: 'native-error',
+      message: 'Play Core task failed',
+      android: {
+        playCore: {
+          taskErrorCode: 7,
+        },
+      },
+    })
+  })
+
+  it('ignores non-numeric Play Core task error code', () => {
+    const error = normalizeNativeError(
+      new Error('PLAY_CORE_TASK_FAILURE|message=Failed|taskErrorCode=abc')
+    )
+
+    expect(error.android?.playCore?.taskErrorCode).toBeUndefined()
   })
 })

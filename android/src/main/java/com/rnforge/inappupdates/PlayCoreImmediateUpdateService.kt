@@ -18,18 +18,32 @@ import com.margelo.nitro.rnforge_inappupdates.UpdateStatusNative
  */
 class PlayCoreImmediateUpdateService(
     private val managerProvider: AppUpdateManagerProvider = PlayCoreAppUpdateManagerProvider,
-    private val envChecker: EnvironmentChecker = DefaultEnvironmentChecker
+    private val envChecker: EnvironmentChecker = DefaultEnvironmentChecker,
+    private val activityProvider: ActivityProvider = DefaultActivityProvider
 ) {
 
     fun startImmediateUpdate(options: StartImmediateUpdateOptionsNative?): Promise<UpdateStatusNative> {
         val promise = Promise<UpdateStatusNative>()
+        startImmediateUpdate(
+            options = options,
+            onSuccess = { promise.resolve(it) },
+            onFailure = { promise.reject(it) }
+        )
+        return promise
+    }
+
+    internal fun startImmediateUpdate(
+        options: StartImmediateUpdateOptionsNative?,
+        onSuccess: (UpdateStatusNative) -> Unit,
+        onFailure: (Exception) -> Unit
+    ) {
         val allowAssetPackDeletion = options?.android?.allowAssetPackDeletion
-        val context = InAppUpdatesActivityProvider.applicationContext
+        val context = activityProvider.applicationContext
 
         val earlyStatus = checkEarlyEnvironment(context, envChecker)
         if (earlyStatus != null) {
-            promise.resolve(earlyStatus)
-            return promise
+            onSuccess(earlyStatus)
+            return
         }
 
         val appUpdateManager = managerProvider.getManager(context!!)
@@ -37,7 +51,7 @@ class PlayCoreImmediateUpdateService(
             .addOnSuccessListener { appUpdateInfo ->
                 when (appUpdateInfo.updateAvailability()) {
                     UpdateAvailability.UPDATE_NOT_AVAILABLE -> {
-                        promise.resolve(createStatus(
+                        onSuccess(createStatus(
                             supported = true,
                             updateAvailable = false,
                             reason = "no-update-available"
@@ -51,14 +65,19 @@ class PlayCoreImmediateUpdateService(
                             buildAppUpdateOptions(AppUpdateType.FLEXIBLE, allowAssetPackDeletion)
                         )
                         if (immediateAllowed) {
-                            val activity = InAppUpdatesActivityProvider.currentActivity
+                            val activity = activityProvider.currentActivity
                             if (activity != null) {
                                 startUpdateFlow(
-                                    appUpdateManager, appUpdateInfo, activity, promise,
-                                    flexibleAllowed, allowAssetPackDeletion
+                                    appUpdateManager = appUpdateManager,
+                                    appUpdateInfo = appUpdateInfo,
+                                    activity = activity,
+                                    onSuccess = onSuccess,
+                                    onFailure = onFailure,
+                                    flexibleAllowed = flexibleAllowed,
+                                    allowAssetPackDeletion = allowAssetPackDeletion
                                 )
                             } else {
-                                promise.resolve(createStatus(
+                                onSuccess(createStatus(
                                     supported = true,
                                     updateAvailable = true,
                                     reason = "update-not-allowed",
@@ -67,7 +86,7 @@ class PlayCoreImmediateUpdateService(
                                 ))
                             }
                         } else {
-                            promise.resolve(createStatus(
+                            onSuccess(createStatus(
                                 supported = true,
                                 updateAvailable = true,
                                 reason = "update-not-allowed",
@@ -77,29 +96,28 @@ class PlayCoreImmediateUpdateService(
                         }
                     }
                     UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS -> {
-                        promise.resolve(createStatus(
+                        onSuccess(createStatus(
                             supported = true,
                             updateAvailable = true,
                             reason = "developer-triggered-update-in-progress"
                         ))
                     }
                     else -> {
-                        promise.resolve(createUnsupportedStatus("unknown"))
+                        onSuccess(createUnsupportedStatus("unknown"))
                     }
                 }
             }
             .addOnFailureListener { error ->
-                promise.reject(encodeTaskFailure(error))
+                onFailure(encodeTaskFailure(error))
             }
-
-        return promise
     }
 
     private fun startUpdateFlow(
         appUpdateManager: AppUpdateManager,
         appUpdateInfo: com.google.android.play.core.appupdate.AppUpdateInfo,
         activity: Activity,
-        promise: Promise<UpdateStatusNative>,
+        onSuccess: (UpdateStatusNative) -> Unit,
+        onFailure: (Exception) -> Unit,
         flexibleAllowed: Boolean,
         allowAssetPackDeletion: Boolean? = null
     ) {
@@ -109,7 +127,7 @@ class PlayCoreImmediateUpdateService(
             buildAppUpdateOptions(AppUpdateType.IMMEDIATE, allowAssetPackDeletion)
         ).addOnCompleteListener { task ->
             if (task.isSuccessful) {
-                promise.resolve(createStatus(
+                onSuccess(createStatus(
                     supported = true,
                     updateAvailable = true,
                     reason = "update-available",
@@ -117,7 +135,7 @@ class PlayCoreImmediateUpdateService(
                     flexibleAllowed = flexibleAllowed
                 ))
             } else {
-                promise.reject(encodeTaskFailure(task.exception ?: Exception("Immediate update flow failed")))
+                onFailure(encodeTaskFailure(task.exception ?: Exception("Immediate update flow failed")))
             }
         }
     }

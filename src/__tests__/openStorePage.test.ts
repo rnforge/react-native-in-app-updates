@@ -121,6 +121,17 @@ describe('openStorePage', () => {
     })
   })
 
+  it('Android normalizes ios country when appStoreId is provided', async () => {
+    mockPlatformOS = 'android'
+    mockObject.openStorePage.mockResolvedValue(undefined)
+
+    await openStorePage({ ios: { appStoreId: '1234567890', country: ' US ' } })
+
+    expect(mockObject.openStorePage).toHaveBeenCalledWith({
+      ios: { appStoreId: '1234567890', country: 'us' },
+    })
+  })
+
   it('native failure rejects', async () => {
     mockPlatformOS = 'ios'
     mockObject.openStorePage.mockRejectedValue(new Error('Failed to open store'))

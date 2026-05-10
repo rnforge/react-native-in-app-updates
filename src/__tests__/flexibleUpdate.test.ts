@@ -126,6 +126,16 @@ describe('startFlexibleUpdate', () => {
 
     expect(mockObject.startFlexibleUpdate).toHaveBeenCalledWith(undefined)
   })
+
+  it('normalizes native failure', async () => {
+    mockObject.startFlexibleUpdate.mockRejectedValue(new Error('Flexible bridge failed'))
+
+    await expect(startFlexibleUpdate()).rejects.toMatchObject({
+      name: 'InAppUpdatesError',
+      code: 'native-error',
+      message: 'Flexible bridge failed',
+    })
+  })
 })
 
 describe('completeFlexibleUpdate', () => {
@@ -183,6 +193,16 @@ describe('completeFlexibleUpdate', () => {
 
     expect(result.supported).toBe(true)
     expect(result.reason).toBe('update-not-allowed')
+  })
+
+  it('normalizes native failure', async () => {
+    mockObject.completeFlexibleUpdate.mockRejectedValue(new Error('Complete bridge failed'))
+
+    await expect(completeFlexibleUpdate()).rejects.toMatchObject({
+      name: 'InAppUpdatesError',
+      code: 'native-error',
+      message: 'Complete bridge failed',
+    })
   })
 })
 

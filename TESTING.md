@@ -99,11 +99,14 @@ cd example/android
 # Verify the library module is autolinked
 ./gradlew projects
 
-# Run library unit tests (requires compilation to succeed)
+# Run library unit tests
 ./gradlew :rnforge_react-native-in-app-updates:testDebugUnitTest
+
+# Generate the Android JVM coverage report
+./gradlew :rnforge_react-native-in-app-updates:jacocoDebugUnitTestReport
 ```
 
-> **Status:** The Gradle harness is functional and the library module is autolinked (`:rnforge_react-native-in-app-updates`). The library compiles and the Android native test task runs successfully: **17 tests, 4 skipped, 0 failures**. Skipped tests are explicit JUnit assumptions (unmocked Android framework in JVM), not silent passes. Future Android native coverage can add `FakeAppUpdateManager` / Mockito / Robolectric tests.
+> **Status:** The Gradle harness runs the library module (`:rnforge_react-native-in-app-updates`). Last verified Android JVM result: 43 tests, 0 skipped, 0 failures. Last measured Android Jacoco app-package line coverage: 82.43%; generated Nitro bindings are not a useful coverage target and should be excluded from coverage interpretation.
 
 ### Testable seams
 
@@ -111,6 +114,7 @@ Play Core services accept injectable dependencies so tests can control behavior 
 
 - **`AppUpdateManagerProvider`** — abstracts `AppUpdateManager` creation. Production uses `PlayCoreAppUpdateManagerProvider` (shared singleton). Tests can inject a fake provider.
 - **`EnvironmentChecker`** — abstracts install-source and Google Play Services checks. Production uses `DefaultEnvironmentChecker`. Tests can inject a fake to control environment state.
+- **`ActivityProvider`** — abstracts application context and current activity lookup. Production uses `DefaultActivityProvider`. Tests can inject context/activity without shadowing Nitro internals.
 
 All services have constructor defaults, so production code (`HybridInAppUpdates`) is unchanged.
 
@@ -126,34 +130,37 @@ All services have constructor defaults, so production code (`HybridInAppUpdates`
 - **PlayCoreEnvironmentTest** — Early-return guard behavior:
   - `checkEarlyEnvironment()` returns `update-not-allowed` when context is `null`
 
-- **PlayCoreInstallStateListenerServiceTest** — Listener seam safety test sources exist:
+- **PlayCoreInstallStateListenerServiceTest** — Listener seam safety:
   - Null-context path does not invoke `AppUpdateManagerProvider`
   - Adding/removing listeners is safe when context is unavailable
-  - Currently skipped when NitroModules cannot load in the JVM test environment; future 0017 work should make these run under a Robolectric or instrumentation harness.
+- **PlayCoreStatusServiceFakeManagerTest** — FakeAppUpdateManager-backed status coverage:
+  - no update available
+  - update available with immediate/flexible allow flags
+- **PlayCoreEnvironmentAndListenerFakeManagerTest** — Environment and listener coverage:
+  - unsupported install source
+  - Play Services unavailable
+  - install-state listener progress and completion
+  - flexible update completion after download
+- **PlayCoreImmediateUpdateServiceFakeManagerTest** — Immediate flow coverage:
+  - no update available
+  - immediate flow starts when allowed and an Activity exists
+  - update-not-allowed when Activity is missing or immediate flow is not allowed
+  - unsupported install source
+- **PlayCoreFlexibleUpdateServiceFakeManagerTest** — Flexible flow coverage:
+  - no update available
+  - flexible flow starts when allowed and an Activity exists
+  - update-not-allowed when Activity is missing or flexible flow is not allowed
+  - complete without downloaded update
+  - Play Services unavailable
+- **PlayCoreServiceFailureTest** — Task failure coverage:
+  - `appUpdateInfo` failure is surfaced through the shared task-failure encoding path
+- **PlayCoreStoreServiceTest** — Android store-page coverage:
+  - null context failure
+  - Play Store/browser intent launch with `FLAG_ACTIVITY_NEW_TASK`
 
 ### What requires real Play Core or instrumentation
 
-Paths that interact with `AppUpdateInfo`, `Task<AppUpdateInfo>`, or `startUpdateFlow()` need either:
-
-- `com.google.android.play.core.appupdate.testing.FakeAppUpdateManager` (when available in the Play Core testing artifact)
-- Mockito + Robolectric for mocking Play Core classes and Android `Context`
-- Instrumentation tests on an emulator or physical device
-
-These paths are covered by design via the injected seams but are not exercised by the current test sources because they require a runnable Gradle harness with Play Core on the classpath:
-
-- `mapAppUpdateInfoToStatus()` — needs `AppUpdateInfo` (opaque Play Core object)
-- `PlayCoreStatusService` success paths — needs `AppUpdateInfo` from `appUpdateInfo()` task
-- `PlayCoreImmediateUpdateService` flow start — needs `Activity` and `AppUpdateInfo`
-- `PlayCoreFlexibleUpdateService` flow start and `completeFlexibleUpdate()` — needs `Activity` and download state
-- Install-state listener event mapping — needs real or fake `InstallState` objects
-
-### Expanding Android test coverage
-
-If you add Mockito and Robolectric to `android/build.gradle`, you can expand coverage to:
-
-- Service early-return paths with a mocked `Context`
-- `EnvironmentChecker` behavior with controlled `PackageManager` shadows
-- `PlayCoreInstallStateListenerService` registration with a fake `AppUpdateManager`
+The JVM suite uses `FakeAppUpdateManager`, Mockito, and Robolectric for Play Core service coverage. Real Play Store behavior still requires manual validation because Play Core update availability depends on a Play-distributed package and a physical/device environment.
 
 ## iOS native tests
 

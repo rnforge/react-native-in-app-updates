@@ -15,32 +15,44 @@ import com.margelo.nitro.rnforge_inappupdates.UpdateStatusNative
  */
 class PlayCoreStatusService(
     private val managerProvider: AppUpdateManagerProvider = PlayCoreAppUpdateManagerProvider,
-    private val envChecker: EnvironmentChecker = DefaultEnvironmentChecker
+    private val envChecker: EnvironmentChecker = DefaultEnvironmentChecker,
+    private val activityProvider: ActivityProvider = DefaultActivityProvider
 ) {
 
     fun getUpdateStatus(options: GetUpdateStatusOptionsNative?): Promise<UpdateStatusNative> {
         val promise = Promise<UpdateStatusNative>()
+        getUpdateStatus(
+            options = options,
+            onSuccess = { promise.resolve(it) },
+            onFailure = { promise.reject(it) }
+        )
+        return promise
+    }
+
+    internal fun getUpdateStatus(
+        options: GetUpdateStatusOptionsNative?,
+        onSuccess: (UpdateStatusNative) -> Unit,
+        onFailure: (Exception) -> Unit
+    ) {
         val allowAssetPackDeletion = options?.android?.allowAssetPackDeletion
-        val context = InAppUpdatesActivityProvider.applicationContext
+        val context = activityProvider.applicationContext
 
         val earlyStatus = checkEarlyEnvironment(context, envChecker)
         if (earlyStatus != null) {
-            promise.resolve(earlyStatus)
-            return promise
+            onSuccess(earlyStatus)
+            return
         }
 
         val appUpdateManager = managerProvider.getManager(context!!)
         appUpdateManager.appUpdateInfo
             .addOnSuccessListener { appUpdateInfo ->
-                promise.resolve(
+                onSuccess(
                     mapAppUpdateInfoToStatus(appUpdateInfo, context, allowAssetPackDeletion)
                 )
             }
             .addOnFailureListener { error ->
-                promise.reject(encodeTaskFailure(error))
+                onFailure(encodeTaskFailure(error))
             }
-
-        return promise
     }
 }
 

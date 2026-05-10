@@ -17,7 +17,8 @@ import java.util.UUID
  * used for register/unregister operations.
  */
 class PlayCoreInstallStateListenerService(
-    private val managerProvider: AppUpdateManagerProvider = PlayCoreAppUpdateManagerProvider
+    private val managerProvider: AppUpdateManagerProvider = PlayCoreAppUpdateManagerProvider,
+    private val activityProvider: ActivityProvider = DefaultActivityProvider
 ) {
 
     private data class ListenerRegistration(
@@ -29,7 +30,7 @@ class PlayCoreInstallStateListenerService(
 
     fun addInstallStateListener(callback: (event: InstallStateEventNative) -> Unit): String {
         val listenerId = UUID.randomUUID().toString()
-        val context = InAppUpdatesActivityProvider.applicationContext
+        val context = activityProvider.applicationContext
 
         val listener = InstallStateUpdatedListener { state ->
             val bytesDownloaded = state.bytesDownloaded().toDouble()

@@ -3,10 +3,11 @@ package com.rnforge.inappupdates
 import android.net.Uri
 import com.google.android.play.core.install.InstallException
 import com.google.android.play.core.install.model.InstallStatus
-import org.junit.Assume.assumeFalse
 import org.junit.Assume.assumeNotNull
 import org.junit.Assert.*
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
 
 /**
  * Tests for mapping functions in PlayCoreMapping.kt.
@@ -15,20 +16,8 @@ import org.junit.Test
  * an emulator, or instrumentation. They still require the Android/Play Core/
  * Nitro test classpath from a Gradle harness.
  */
+@RunWith(RobolectricTestRunner::class)
 class PlayCoreMappingTest {
-
-    /**
-     * Returns true if the JVM test environment cannot run Android framework
-     * methods (e.g. android.net.Uri.encode is not mocked).
-     */
-    private fun isAndroidFrameworkUnavailable(): Boolean {
-        return try {
-            Uri.encode("test")
-            false
-        } catch (_: RuntimeException) {
-            true
-        }
-    }
 
     @Test
     fun mapInstallStatus_knownStatuses() {
@@ -86,8 +75,6 @@ class PlayCoreMappingTest {
 
     @Test
     fun encodeTaskFailure_installException() {
-        assumeFalse("Android framework Uri not available in this JVM environment", isAndroidFrameworkUnavailable())
-
         // InstallException constructor is package-private in some Play Core versions;
         // we construct via reflection to keep the test stable.
         val installException = try {

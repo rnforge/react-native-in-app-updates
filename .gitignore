@@ -64,6 +64,9 @@ node_modules/
 npm-debug.log
 yarn-debug.log
 yarn-error.log
+coverage/
+*.tgz
+example/package-lock.json
 
 # BUCK
 buck-out/

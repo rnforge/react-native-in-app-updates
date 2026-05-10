@@ -1,6 +1,5 @@
 package com.rnforge.inappupdates
 
-import com.google.android.gms.common.ConnectionResult
 import org.junit.Assert.*
 import org.junit.Test
 
@@ -12,14 +11,6 @@ import org.junit.Test
  * and are not covered here.
  */
 class PlayCoreEnvironmentTest {
-
-    private class FakeEnvironmentChecker(
-        private val installSourceResult: String? = null,
-        private val playServicesResult: Int = ConnectionResult.SUCCESS
-    ) : EnvironmentChecker {
-        override fun getInstallSource(context: android.content.Context): String? = installSourceResult
-        override fun isGooglePlayServicesAvailable(context: android.content.Context): Int = playServicesResult
-    }
 
     @Test
     fun checkEarlyEnvironment_nullContext_returnsUpdateNotAllowed() {
