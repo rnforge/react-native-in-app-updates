@@ -189,7 +189,7 @@ dependencies {
   testImplementation "com.google.android.play:app-update:2.1.0"
 
   // Google Play Services (for GoogleApiAvailability)
-  implementation "com.google.android.gms:play-services-base:18.5.0"
+  implementation "com.google.android.gms:play-services-base:18.10.0"
 
   // Testing
   testImplementation 'junit:junit:4.13.2'
