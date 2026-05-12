@@ -1,4 +1,4 @@
-package com.rnforge.inappupdates
+package dev.rnforge.inappupdates
 
 import android.net.Uri
 import com.google.android.play.core.install.InstallException

@@ -1,4 +1,4 @@
-package com.rnforge.inappupdates
+package dev.rnforge.inappupdates
 
 import android.content.Context
 import com.google.android.gms.common.ConnectionResult
@@ -20,7 +20,7 @@ interface EnvironmentChecker {
  */
 object DefaultEnvironmentChecker : EnvironmentChecker {
     override fun getInstallSource(context: Context): String? {
-        return com.rnforge.inappupdates.getInstallSource(context)
+        return dev.rnforge.inappupdates.getInstallSource(context)
     }
 
     override fun isGooglePlayServicesAvailable(context: Context): Int {

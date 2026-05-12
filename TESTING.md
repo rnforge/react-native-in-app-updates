@@ -89,7 +89,7 @@ iOS builds require macOS and Xcode. On non-Mac environments, iOS verification is
 
 ## Android native tests
 
-Android native test sources exist under `android/src/test/java/com/rnforge/inappupdates/` and use JUnit 4. The example app provides a runnable Gradle harness.
+Android native test sources exist under `android/src/test/java/dev/rnforge/inappupdates/` and use JUnit 4. The example app provides a runnable Gradle harness.
 
 ### Running from the example app
 

@@ -37,7 +37,7 @@ def getExtOrIntegerDefault(name) {
 }
 
 android {
-  namespace "com.rnforge.inappupdates"
+  namespace "dev.rnforge.inappupdates"
 
   ndkVersion getExtOrDefault("ndkVersion")
   compileSdkVersion getExtOrIntegerDefault("compileSdkVersion")
@@ -202,6 +202,6 @@ if (isNewArchitectureEnabled()) {
   react {
     jsRootDir = file("../src/")
     libraryName = "InAppUpdates"
-    codegenJavaPackageName = "com.rnforge.inappupdates"
+    codegenJavaPackageName = "dev.rnforge.inappupdates"
   }
 }

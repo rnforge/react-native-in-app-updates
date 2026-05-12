@@ -1,4 +1,4 @@
-package com.rnforge.inappupdates
+package dev.rnforge.inappupdates
 
 import android.app.Activity
 import com.google.android.play.core.appupdate.AppUpdateManager

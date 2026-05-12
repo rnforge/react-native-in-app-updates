@@ -1,4 +1,4 @@
-package com.rnforge.inappupdates
+package dev.rnforge.inappupdates
 
 import com.google.android.play.core.install.InstallStateUpdatedListener
 import com.google.android.play.core.install.model.InstallStatus

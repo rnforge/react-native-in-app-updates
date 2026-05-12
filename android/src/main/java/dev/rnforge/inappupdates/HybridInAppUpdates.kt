@@ -1,4 +1,4 @@
-package com.rnforge.inappupdates
+package dev.rnforge.inappupdates
 
 import com.margelo.nitro.rnforge_inappupdates.HybridInAppUpdatesSpec
 import com.margelo.nitro.core.Promise
