@@ -342,9 +342,7 @@ Real Android Play behavior must be validated on a physical device with a Play-di
 
 ## Example
 
-See [`example/App.tsx`](./example/App.tsx) for a minimal integration reference. The example demonstrates all v1 APIs with a simple log UI.
-
-> Note: `example/` is a source scaffold, not a fully generated React Native app. It does not include `android/` or `ios/` project files.
+See [`example/src/App.tsx`](./example/src/App.tsx) for a minimal integration reference. The example is a runnable React Native app with Android and iOS project files, and demonstrates all v1 APIs with a simple log UI.
 
 ## Troubleshooting
 
