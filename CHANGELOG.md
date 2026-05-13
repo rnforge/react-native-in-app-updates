@@ -1,3 +1,9 @@
+## [1.0.0-next.2](https://github.com/rnforge/react-native-in-app-updates/compare/v1.0.0-next.1...v1.0.0-next.2) (2026-05-13)
+
+### 📚 Documentation
+
+* align README with current platform behavior ([9fc6620](https://github.com/rnforge/react-native-in-app-updates/commit/9fc662074777fe86364eb90bcb9ae66252656140))
+
 ## 1.0.0-next.1 (2026-05-13)
 
 ### ✨ Features

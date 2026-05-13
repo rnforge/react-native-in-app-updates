@@ -1,6 +1,6 @@
 {
   "name": "@rnforge/react-native-in-app-updates",
-  "version": "1.0.0-next.1",
+  "version": "1.0.0-next.2",
   "description": "RNForge React Native In-App Updates — capability-first cross-platform update flow API",
   "main": "./lib/commonjs/index.js",
   "module": "./lib/module/index.js",
