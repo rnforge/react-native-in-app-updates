@@ -32,7 +32,7 @@
 
 
 
-namespace margelo::nitro::rnforge_inappupdates {
+namespace margelo::nitro::rnforge::inappupdates {
 
   /**
    * A struct which can be represented as a JavaScript object (AllowedFlowsNative).
@@ -50,21 +50,21 @@ namespace margelo::nitro::rnforge_inappupdates {
     friend bool operator==(const AllowedFlowsNative& lhs, const AllowedFlowsNative& rhs) = default;
   };
 
-} // namespace margelo::nitro::rnforge_inappupdates
+} // namespace margelo::nitro::rnforge::inappupdates
 
 namespace margelo::nitro {
 
   // C++ AllowedFlowsNative <> JS AllowedFlowsNative (object)
   template <>
-  struct JSIConverter<margelo::nitro::rnforge_inappupdates::AllowedFlowsNative> final {
-    static inline margelo::nitro::rnforge_inappupdates::AllowedFlowsNative fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
+  struct JSIConverter<margelo::nitro::rnforge::inappupdates::AllowedFlowsNative> final {
+    static inline margelo::nitro::rnforge::inappupdates::AllowedFlowsNative fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
       jsi::Object obj = arg.asObject(runtime);
-      return margelo::nitro::rnforge_inappupdates::AllowedFlowsNative(
+      return margelo::nitro::rnforge::inappupdates::AllowedFlowsNative(
         JSIConverter<bool>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "immediate"))),
         JSIConverter<bool>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "flexible")))
       );
     }
-    static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::rnforge_inappupdates::AllowedFlowsNative& arg) {
+    static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::rnforge::inappupdates::AllowedFlowsNative& arg) {
       jsi::Object obj(runtime);
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "immediate"), JSIConverter<bool>::toJSI(runtime, arg.immediate));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "flexible"), JSIConverter<bool>::toJSI(runtime, arg.flexible));

@@ -10,10 +10,10 @@ import NitroModules
 /**
  * Represents an instance of `OpenStorePageOptionsNative`, backed by a C++ struct.
  */
-public typealias OpenStorePageOptionsNative = margelo.nitro.rnforge_inappupdates.OpenStorePageOptionsNative
+public typealias OpenStorePageOptionsNative = margelo.nitro.rnforge.inappupdates.OpenStorePageOptionsNative
 
 public extension OpenStorePageOptionsNative {
-  private typealias bridge = margelo.nitro.rnforge_inappupdates.bridge.swift
+  private typealias bridge = margelo.nitro.rnforge.inappupdates.bridge.swift
 
   /**
    * Create a new instance of `OpenStorePageOptionsNative`.

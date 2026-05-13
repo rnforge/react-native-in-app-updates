@@ -7,7 +7,7 @@
 
 #include "JVariant_NullType_Boolean.hpp"
 
-namespace margelo::nitro::rnforge_inappupdates {
+namespace margelo::nitro::rnforge::inappupdates {
   /**
    * Converts JVariant_NullType_Boolean to std::variant<nitro::NullType, bool>
    */
@@ -23,4 +23,4 @@ namespace margelo::nitro::rnforge_inappupdates {
     }
     throw std::invalid_argument("Variant is unknown Kotlin instance!");
   }
-} // namespace margelo::nitro::rnforge_inappupdates
+} // namespace margelo::nitro::rnforge::inappupdates

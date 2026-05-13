@@ -1,13 +1,13 @@
 package dev.rnforge.inappupdates
 
-import com.margelo.nitro.rnforge_inappupdates.HybridInAppUpdatesSpec
+import com.margelo.nitro.rnforge.inappupdates.HybridInAppUpdatesSpec
 import com.margelo.nitro.core.Promise
-import com.margelo.nitro.rnforge_inappupdates.GetUpdateStatusOptionsNative
-import com.margelo.nitro.rnforge_inappupdates.InstallStateEventNative
-import com.margelo.nitro.rnforge_inappupdates.OpenStorePageOptionsNative
-import com.margelo.nitro.rnforge_inappupdates.StartFlexibleUpdateOptionsNative
-import com.margelo.nitro.rnforge_inappupdates.StartImmediateUpdateOptionsNative
-import com.margelo.nitro.rnforge_inappupdates.UpdateStatusNative
+import com.margelo.nitro.rnforge.inappupdates.GetUpdateStatusOptionsNative
+import com.margelo.nitro.rnforge.inappupdates.InstallStateEventNative
+import com.margelo.nitro.rnforge.inappupdates.OpenStorePageOptionsNative
+import com.margelo.nitro.rnforge.inappupdates.StartFlexibleUpdateOptionsNative
+import com.margelo.nitro.rnforge.inappupdates.StartImmediateUpdateOptionsNative
+import com.margelo.nitro.rnforge.inappupdates.UpdateStatusNative
 
 class HybridInAppUpdates: HybridInAppUpdatesSpec() {
     private val immediateUpdateService = PlayCoreImmediateUpdateService()

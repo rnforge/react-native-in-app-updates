@@ -10,10 +10,10 @@ import NitroModules
 /**
  * Represents an instance of `CapabilitiesNative`, backed by a C++ struct.
  */
-public typealias CapabilitiesNative = margelo.nitro.rnforge_inappupdates.CapabilitiesNative
+public typealias CapabilitiesNative = margelo.nitro.rnforge.inappupdates.CapabilitiesNative
 
 public extension CapabilitiesNative {
-  private typealias bridge = margelo.nitro.rnforge_inappupdates.bridge.swift
+  private typealias bridge = margelo.nitro.rnforge.inappupdates.bridge.swift
 
   /**
    * Create a new instance of `CapabilitiesNative`.

@@ -15,7 +15,7 @@
 #include <optional>
 #include <string>
 
-namespace margelo::nitro::rnforge_inappupdates {
+namespace margelo::nitro::rnforge::inappupdates {
 
   using namespace facebook;
 
@@ -24,7 +24,7 @@ namespace margelo::nitro::rnforge_inappupdates {
    */
   struct JOpenStorePageOptionsNative final: public jni::JavaClass<JOpenStorePageOptionsNative> {
   public:
-    static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/rnforge_inappupdates/OpenStorePageOptionsNative;";
+    static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/rnforge/inappupdates/OpenStorePageOptionsNative;";
 
   public:
     /**
@@ -57,4 +57,4 @@ namespace margelo::nitro::rnforge_inappupdates {
     }
   };
 
-} // namespace margelo::nitro::rnforge_inappupdates
+} // namespace margelo::nitro::rnforge::inappupdates

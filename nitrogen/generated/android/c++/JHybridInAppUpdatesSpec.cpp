@@ -8,35 +8,35 @@
 #include "JHybridInAppUpdatesSpec.hpp"
 
 // Forward declaration of `UpdateStatusNative` to properly resolve imports.
-namespace margelo::nitro::rnforge_inappupdates { struct UpdateStatusNative; }
+namespace margelo::nitro::rnforge::inappupdates { struct UpdateStatusNative; }
 // Forward declaration of `CapabilitiesNative` to properly resolve imports.
-namespace margelo::nitro::rnforge_inappupdates { struct CapabilitiesNative; }
+namespace margelo::nitro::rnforge::inappupdates { struct CapabilitiesNative; }
 // Forward declaration of `AllowedFlowsNative` to properly resolve imports.
-namespace margelo::nitro::rnforge_inappupdates { struct AllowedFlowsNative; }
+namespace margelo::nitro::rnforge::inappupdates { struct AllowedFlowsNative; }
 // Forward declaration of `AndroidDetailsNative` to properly resolve imports.
-namespace margelo::nitro::rnforge_inappupdates { struct AndroidDetailsNative; }
+namespace margelo::nitro::rnforge::inappupdates { struct AndroidDetailsNative; }
 // Forward declaration of `PlayCoreDetailsNative` to properly resolve imports.
-namespace margelo::nitro::rnforge_inappupdates { struct PlayCoreDetailsNative; }
+namespace margelo::nitro::rnforge::inappupdates { struct PlayCoreDetailsNative; }
 // Forward declaration of `IosDetailsNative` to properly resolve imports.
-namespace margelo::nitro::rnforge_inappupdates { struct IosDetailsNative; }
+namespace margelo::nitro::rnforge::inappupdates { struct IosDetailsNative; }
 // Forward declaration of `IosAppStoreDetailsNative` to properly resolve imports.
-namespace margelo::nitro::rnforge_inappupdates { struct IosAppStoreDetailsNative; }
+namespace margelo::nitro::rnforge::inappupdates { struct IosAppStoreDetailsNative; }
 // Forward declaration of `GetUpdateStatusOptionsNative` to properly resolve imports.
-namespace margelo::nitro::rnforge_inappupdates { struct GetUpdateStatusOptionsNative; }
+namespace margelo::nitro::rnforge::inappupdates { struct GetUpdateStatusOptionsNative; }
 // Forward declaration of `IosGetUpdateStatusOptionsNative` to properly resolve imports.
-namespace margelo::nitro::rnforge_inappupdates { struct IosGetUpdateStatusOptionsNative; }
+namespace margelo::nitro::rnforge::inappupdates { struct IosGetUpdateStatusOptionsNative; }
 // Forward declaration of `AndroidUpdateOptionsNative` to properly resolve imports.
-namespace margelo::nitro::rnforge_inappupdates { struct AndroidUpdateOptionsNative; }
+namespace margelo::nitro::rnforge::inappupdates { struct AndroidUpdateOptionsNative; }
 // Forward declaration of `StartImmediateUpdateOptionsNative` to properly resolve imports.
-namespace margelo::nitro::rnforge_inappupdates { struct StartImmediateUpdateOptionsNative; }
+namespace margelo::nitro::rnforge::inappupdates { struct StartImmediateUpdateOptionsNative; }
 // Forward declaration of `StartFlexibleUpdateOptionsNative` to properly resolve imports.
-namespace margelo::nitro::rnforge_inappupdates { struct StartFlexibleUpdateOptionsNative; }
+namespace margelo::nitro::rnforge::inappupdates { struct StartFlexibleUpdateOptionsNative; }
 // Forward declaration of `OpenStorePageOptionsNative` to properly resolve imports.
-namespace margelo::nitro::rnforge_inappupdates { struct OpenStorePageOptionsNative; }
+namespace margelo::nitro::rnforge::inappupdates { struct OpenStorePageOptionsNative; }
 // Forward declaration of `IosOpenStorePageOptionsNative` to properly resolve imports.
-namespace margelo::nitro::rnforge_inappupdates { struct IosOpenStorePageOptionsNative; }
+namespace margelo::nitro::rnforge::inappupdates { struct IosOpenStorePageOptionsNative; }
 // Forward declaration of `InstallStateEventNative` to properly resolve imports.
-namespace margelo::nitro::rnforge_inappupdates { struct InstallStateEventNative; }
+namespace margelo::nitro::rnforge::inappupdates { struct InstallStateEventNative; }
 
 #include "UpdateStatusNative.hpp"
 #include <NitroModules/Promise.hpp>
@@ -83,7 +83,7 @@ namespace margelo::nitro::rnforge_inappupdates { struct InstallStateEventNative;
 #include <NitroModules/JNICallable.hpp>
 #include "JInstallStateEventNative.hpp"
 
-namespace margelo::nitro::rnforge_inappupdates {
+namespace margelo::nitro::rnforge::inappupdates {
 
   std::shared_ptr<JHybridInAppUpdatesSpec> JHybridInAppUpdatesSpec::JavaPart::getJHybridInAppUpdatesSpec() {
     auto hybridObject = JHybridObject::JavaPart::getJHybridObject();
@@ -205,4 +205,4 @@ namespace margelo::nitro::rnforge_inappupdates {
     method(_javaPart, jni::make_jstring(listenerId));
   }
 
-} // namespace margelo::nitro::rnforge_inappupdates
+} // namespace margelo::nitro::rnforge::inappupdates

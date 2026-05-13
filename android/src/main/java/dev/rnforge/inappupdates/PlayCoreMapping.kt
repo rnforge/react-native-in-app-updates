@@ -9,11 +9,11 @@ import com.google.android.play.core.appupdate.AppUpdateOptions
 import com.google.android.play.core.install.InstallException
 import com.google.android.play.core.install.model.InstallStatus
 import com.margelo.nitro.core.NullType
-import com.margelo.nitro.rnforge_inappupdates.AllowedFlowsNative
-import com.margelo.nitro.rnforge_inappupdates.AndroidDetailsNative
-import com.margelo.nitro.rnforge_inappupdates.CapabilitiesNative
-import com.margelo.nitro.rnforge_inappupdates.UpdateStatusNative
-import com.margelo.nitro.rnforge_inappupdates.Variant_NullType_Boolean
+import com.margelo.nitro.rnforge.inappupdates.AllowedFlowsNative
+import com.margelo.nitro.rnforge.inappupdates.AndroidDetailsNative
+import com.margelo.nitro.rnforge.inappupdates.CapabilitiesNative
+import com.margelo.nitro.rnforge.inappupdates.UpdateStatusNative
+import com.margelo.nitro.rnforge.inappupdates.Variant_NullType_Boolean
 
 fun getInstallSource(context: Context): String? {
     return try {

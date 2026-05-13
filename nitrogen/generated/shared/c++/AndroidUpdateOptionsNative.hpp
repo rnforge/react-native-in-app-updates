@@ -32,7 +32,7 @@
 
 #include <optional>
 
-namespace margelo::nitro::rnforge_inappupdates {
+namespace margelo::nitro::rnforge::inappupdates {
 
   /**
    * A struct which can be represented as a JavaScript object (AndroidUpdateOptionsNative).
@@ -49,20 +49,20 @@ namespace margelo::nitro::rnforge_inappupdates {
     friend bool operator==(const AndroidUpdateOptionsNative& lhs, const AndroidUpdateOptionsNative& rhs) = default;
   };
 
-} // namespace margelo::nitro::rnforge_inappupdates
+} // namespace margelo::nitro::rnforge::inappupdates
 
 namespace margelo::nitro {
 
   // C++ AndroidUpdateOptionsNative <> JS AndroidUpdateOptionsNative (object)
   template <>
-  struct JSIConverter<margelo::nitro::rnforge_inappupdates::AndroidUpdateOptionsNative> final {
-    static inline margelo::nitro::rnforge_inappupdates::AndroidUpdateOptionsNative fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
+  struct JSIConverter<margelo::nitro::rnforge::inappupdates::AndroidUpdateOptionsNative> final {
+    static inline margelo::nitro::rnforge::inappupdates::AndroidUpdateOptionsNative fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
       jsi::Object obj = arg.asObject(runtime);
-      return margelo::nitro::rnforge_inappupdates::AndroidUpdateOptionsNative(
+      return margelo::nitro::rnforge::inappupdates::AndroidUpdateOptionsNative(
         JSIConverter<std::optional<bool>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "allowAssetPackDeletion")))
       );
     }
-    static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::rnforge_inappupdates::AndroidUpdateOptionsNative& arg) {
+    static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::rnforge::inappupdates::AndroidUpdateOptionsNative& arg) {
       jsi::Object obj(runtime);
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "allowAssetPackDeletion"), JSIConverter<std::optional<bool>>::toJSI(runtime, arg.allowAssetPackDeletion));
       return obj;

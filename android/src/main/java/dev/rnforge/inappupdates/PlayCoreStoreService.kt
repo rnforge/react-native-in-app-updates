@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import com.margelo.nitro.core.Promise
-import com.margelo.nitro.rnforge_inappupdates.OpenStorePageOptionsNative
+import com.margelo.nitro.rnforge.inappupdates.OpenStorePageOptionsNative
 
 /**
  * Opens the Play Store page for the current app.

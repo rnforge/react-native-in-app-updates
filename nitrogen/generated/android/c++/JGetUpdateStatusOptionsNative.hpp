@@ -17,7 +17,7 @@
 #include <optional>
 #include <string>
 
-namespace margelo::nitro::rnforge_inappupdates {
+namespace margelo::nitro::rnforge::inappupdates {
 
   using namespace facebook;
 
@@ -26,7 +26,7 @@ namespace margelo::nitro::rnforge_inappupdates {
    */
   struct JGetUpdateStatusOptionsNative final: public jni::JavaClass<JGetUpdateStatusOptionsNative> {
   public:
-    static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/rnforge_inappupdates/GetUpdateStatusOptionsNative;";
+    static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/rnforge/inappupdates/GetUpdateStatusOptionsNative;";
 
   public:
     /**
@@ -63,4 +63,4 @@ namespace margelo::nitro::rnforge_inappupdates {
     }
   };
 
-} // namespace margelo::nitro::rnforge_inappupdates
+} // namespace margelo::nitro::rnforge::inappupdates

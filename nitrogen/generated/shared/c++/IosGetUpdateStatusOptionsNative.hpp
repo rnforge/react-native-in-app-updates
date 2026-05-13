@@ -33,7 +33,7 @@
 #include <string>
 #include <optional>
 
-namespace margelo::nitro::rnforge_inappupdates {
+namespace margelo::nitro::rnforge::inappupdates {
 
   /**
    * A struct which can be represented as a JavaScript object (IosGetUpdateStatusOptionsNative).
@@ -51,21 +51,21 @@ namespace margelo::nitro::rnforge_inappupdates {
     friend bool operator==(const IosGetUpdateStatusOptionsNative& lhs, const IosGetUpdateStatusOptionsNative& rhs) = default;
   };
 
-} // namespace margelo::nitro::rnforge_inappupdates
+} // namespace margelo::nitro::rnforge::inappupdates
 
 namespace margelo::nitro {
 
   // C++ IosGetUpdateStatusOptionsNative <> JS IosGetUpdateStatusOptionsNative (object)
   template <>
-  struct JSIConverter<margelo::nitro::rnforge_inappupdates::IosGetUpdateStatusOptionsNative> final {
-    static inline margelo::nitro::rnforge_inappupdates::IosGetUpdateStatusOptionsNative fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
+  struct JSIConverter<margelo::nitro::rnforge::inappupdates::IosGetUpdateStatusOptionsNative> final {
+    static inline margelo::nitro::rnforge::inappupdates::IosGetUpdateStatusOptionsNative fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
       jsi::Object obj = arg.asObject(runtime);
-      return margelo::nitro::rnforge_inappupdates::IosGetUpdateStatusOptionsNative(
+      return margelo::nitro::rnforge::inappupdates::IosGetUpdateStatusOptionsNative(
         JSIConverter<std::optional<std::string>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "appStoreId"))),
         JSIConverter<std::optional<std::string>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "country")))
       );
     }
-    static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::rnforge_inappupdates::IosGetUpdateStatusOptionsNative& arg) {
+    static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::rnforge::inappupdates::IosGetUpdateStatusOptionsNative& arg) {
       jsi::Object obj(runtime);
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "appStoreId"), JSIConverter<std::optional<std::string>>::toJSI(runtime, arg.appStoreId));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "country"), JSIConverter<std::optional<std::string>>::toJSI(runtime, arg.country));

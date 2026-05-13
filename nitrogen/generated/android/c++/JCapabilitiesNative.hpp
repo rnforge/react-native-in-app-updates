@@ -12,7 +12,7 @@
 
 
 
-namespace margelo::nitro::rnforge_inappupdates {
+namespace margelo::nitro::rnforge::inappupdates {
 
   using namespace facebook;
 
@@ -21,7 +21,7 @@ namespace margelo::nitro::rnforge_inappupdates {
    */
   struct JCapabilitiesNative final: public jni::JavaClass<JCapabilitiesNative> {
   public:
-    static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/rnforge_inappupdates/CapabilitiesNative;";
+    static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/rnforge/inappupdates/CapabilitiesNative;";
 
   public:
     /**
@@ -70,4 +70,4 @@ namespace margelo::nitro::rnforge_inappupdates {
     }
   };
 
-} // namespace margelo::nitro::rnforge_inappupdates
+} // namespace margelo::nitro::rnforge::inappupdates

@@ -10,10 +10,10 @@ import NitroModules
 /**
  * Represents an instance of `InstallStateEventNative`, backed by a C++ struct.
  */
-public typealias InstallStateEventNative = margelo.nitro.rnforge_inappupdates.InstallStateEventNative
+public typealias InstallStateEventNative = margelo.nitro.rnforge.inappupdates.InstallStateEventNative
 
 public extension InstallStateEventNative {
-  private typealias bridge = margelo.nitro.rnforge_inappupdates.bridge.swift
+  private typealias bridge = margelo.nitro.rnforge.inappupdates.bridge.swift
 
   /**
    * Create a new instance of `InstallStateEventNative`.

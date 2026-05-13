@@ -22,7 +22,7 @@
 #include "JPlayCoreDetailsNative.hpp"
 #include <vector>
 
-namespace margelo::nitro::rnforge_inappupdates {
+namespace margelo::nitro::rnforge::inappupdates {
 
   using namespace facebook;
 
@@ -32,7 +32,7 @@ namespace margelo::nitro::rnforge_inappupdates {
    */
   struct JFunc_void_InstallStateEventNative: public jni::JavaClass<JFunc_void_InstallStateEventNative> {
   public:
-    static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/rnforge_inappupdates/Func_void_InstallStateEventNative;";
+    static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/rnforge/inappupdates/Func_void_InstallStateEventNative;";
 
   public:
     /**
@@ -68,7 +68,7 @@ namespace margelo::nitro::rnforge_inappupdates {
     }
 
   public:
-    static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/rnforge_inappupdates/Func_void_InstallStateEventNative_cxx;";
+    static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/rnforge/inappupdates/Func_void_InstallStateEventNative_cxx;";
     static void registerNatives() {
       registerHybrid({makeNativeMethod("invoke_cxx", JFunc_void_InstallStateEventNative_cxx::invoke_cxx)});
     }
@@ -81,4 +81,4 @@ namespace margelo::nitro::rnforge_inappupdates {
     std::function<void(const InstallStateEventNative& /* event */)> _func;
   };
 
-} // namespace margelo::nitro::rnforge_inappupdates
+} // namespace margelo::nitro::rnforge::inappupdates

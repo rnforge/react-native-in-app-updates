@@ -19,7 +19,7 @@
 
 + (void) load {
   using namespace margelo::nitro;
-  using namespace margelo::nitro::rnforge_inappupdates;
+  using namespace margelo::nitro::rnforge::inappupdates;
 
   HybridObjectRegistry::registerHybridObjectConstructor(
     "InAppUpdates",

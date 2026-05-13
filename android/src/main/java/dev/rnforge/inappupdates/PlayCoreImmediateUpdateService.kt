@@ -6,8 +6,8 @@ import com.google.android.play.core.appupdate.AppUpdateOptions
 import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.install.model.UpdateAvailability
 import com.margelo.nitro.core.Promise
-import com.margelo.nitro.rnforge_inappupdates.StartImmediateUpdateOptionsNative
-import com.margelo.nitro.rnforge_inappupdates.UpdateStatusNative
+import com.margelo.nitro.rnforge.inappupdates.StartImmediateUpdateOptionsNative
+import com.margelo.nitro.rnforge.inappupdates.UpdateStatusNative
 
 /**
  * Handles Play Core immediate update flow.

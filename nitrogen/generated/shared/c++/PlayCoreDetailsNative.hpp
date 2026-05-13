@@ -34,7 +34,7 @@
 #include <vector>
 #include <optional>
 
-namespace margelo::nitro::rnforge_inappupdates {
+namespace margelo::nitro::rnforge::inappupdates {
 
   /**
    * A struct which can be represented as a JavaScript object (PlayCoreDetailsNative).
@@ -63,16 +63,16 @@ namespace margelo::nitro::rnforge_inappupdates {
     friend bool operator==(const PlayCoreDetailsNative& lhs, const PlayCoreDetailsNative& rhs) = default;
   };
 
-} // namespace margelo::nitro::rnforge_inappupdates
+} // namespace margelo::nitro::rnforge::inappupdates
 
 namespace margelo::nitro {
 
   // C++ PlayCoreDetailsNative <> JS PlayCoreDetailsNative (object)
   template <>
-  struct JSIConverter<margelo::nitro::rnforge_inappupdates::PlayCoreDetailsNative> final {
-    static inline margelo::nitro::rnforge_inappupdates::PlayCoreDetailsNative fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
+  struct JSIConverter<margelo::nitro::rnforge::inappupdates::PlayCoreDetailsNative> final {
+    static inline margelo::nitro::rnforge::inappupdates::PlayCoreDetailsNative fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
       jsi::Object obj = arg.asObject(runtime);
-      return margelo::nitro::rnforge_inappupdates::PlayCoreDetailsNative(
+      return margelo::nitro::rnforge::inappupdates::PlayCoreDetailsNative(
         JSIConverter<std::optional<std::vector<std::string>>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "immediateFailedPreconditions"))),
         JSIConverter<std::optional<std::vector<std::string>>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "flexibleFailedPreconditions"))),
         JSIConverter<std::optional<double>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "installErrorCode"))),
@@ -88,7 +88,7 @@ namespace margelo::nitro {
         JSIConverter<std::optional<bool>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "flexibleAllowed")))
       );
     }
-    static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::rnforge_inappupdates::PlayCoreDetailsNative& arg) {
+    static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::rnforge::inappupdates::PlayCoreDetailsNative& arg) {
       jsi::Object obj(runtime);
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "immediateFailedPreconditions"), JSIConverter<std::optional<std::vector<std::string>>>::toJSI(runtime, arg.immediateFailedPreconditions));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "flexibleFailedPreconditions"), JSIConverter<std::optional<std::vector<std::string>>>::toJSI(runtime, arg.flexibleFailedPreconditions));

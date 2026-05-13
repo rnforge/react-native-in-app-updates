@@ -10,10 +10,10 @@ import NitroModules
 /**
  * Represents an instance of `IosDetailsNative`, backed by a C++ struct.
  */
-public typealias IosDetailsNative = margelo.nitro.rnforge_inappupdates.IosDetailsNative
+public typealias IosDetailsNative = margelo.nitro.rnforge.inappupdates.IosDetailsNative
 
 public extension IosDetailsNative {
-  private typealias bridge = margelo.nitro.rnforge_inappupdates.bridge.swift
+  private typealias bridge = margelo.nitro.rnforge.inappupdates.bridge.swift
 
   /**
    * Create a new instance of `IosDetailsNative`.

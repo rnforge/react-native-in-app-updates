@@ -13,7 +13,7 @@
 #include <optional>
 #include <string>
 
-namespace margelo::nitro::rnforge_inappupdates {
+namespace margelo::nitro::rnforge::inappupdates {
 
   using namespace facebook;
 
@@ -22,7 +22,7 @@ namespace margelo::nitro::rnforge_inappupdates {
    */
   struct JIosAppStoreDetailsNative final: public jni::JavaClass<JIosAppStoreDetailsNative> {
   public:
-    static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/rnforge_inappupdates/IosAppStoreDetailsNative;";
+    static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/rnforge/inappupdates/IosAppStoreDetailsNative;";
 
   public:
     /**
@@ -95,4 +95,4 @@ namespace margelo::nitro::rnforge_inappupdates {
     }
   };
 
-} // namespace margelo::nitro::rnforge_inappupdates
+} // namespace margelo::nitro::rnforge::inappupdates

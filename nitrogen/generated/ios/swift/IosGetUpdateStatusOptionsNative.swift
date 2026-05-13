@@ -10,10 +10,10 @@ import NitroModules
 /**
  * Represents an instance of `IosGetUpdateStatusOptionsNative`, backed by a C++ struct.
  */
-public typealias IosGetUpdateStatusOptionsNative = margelo.nitro.rnforge_inappupdates.IosGetUpdateStatusOptionsNative
+public typealias IosGetUpdateStatusOptionsNative = margelo.nitro.rnforge.inappupdates.IosGetUpdateStatusOptionsNative
 
 public extension IosGetUpdateStatusOptionsNative {
-  private typealias bridge = margelo.nitro.rnforge_inappupdates.bridge.swift
+  private typealias bridge = margelo.nitro.rnforge.inappupdates.bridge.swift
 
   /**
    * Create a new instance of `IosGetUpdateStatusOptionsNative`.

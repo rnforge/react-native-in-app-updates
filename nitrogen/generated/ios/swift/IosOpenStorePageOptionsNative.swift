@@ -10,10 +10,10 @@ import NitroModules
 /**
  * Represents an instance of `IosOpenStorePageOptionsNative`, backed by a C++ struct.
  */
-public typealias IosOpenStorePageOptionsNative = margelo.nitro.rnforge_inappupdates.IosOpenStorePageOptionsNative
+public typealias IosOpenStorePageOptionsNative = margelo.nitro.rnforge.inappupdates.IosOpenStorePageOptionsNative
 
 public extension IosOpenStorePageOptionsNative {
-  private typealias bridge = margelo.nitro.rnforge_inappupdates.bridge.swift
+  private typealias bridge = margelo.nitro.rnforge.inappupdates.bridge.swift
 
   /**
    * Create a new instance of `IosOpenStorePageOptionsNative`.

@@ -29,12 +29,12 @@
 #endif
 
 // Forward declaration of `IosOpenStorePageOptionsNative` to properly resolve imports.
-namespace margelo::nitro::rnforge_inappupdates { struct IosOpenStorePageOptionsNative; }
+namespace margelo::nitro::rnforge::inappupdates { struct IosOpenStorePageOptionsNative; }
 
 #include "IosOpenStorePageOptionsNative.hpp"
 #include <optional>
 
-namespace margelo::nitro::rnforge_inappupdates {
+namespace margelo::nitro::rnforge::inappupdates {
 
   /**
    * A struct which can be represented as a JavaScript object (OpenStorePageOptionsNative).
@@ -51,22 +51,22 @@ namespace margelo::nitro::rnforge_inappupdates {
     friend bool operator==(const OpenStorePageOptionsNative& lhs, const OpenStorePageOptionsNative& rhs) = default;
   };
 
-} // namespace margelo::nitro::rnforge_inappupdates
+} // namespace margelo::nitro::rnforge::inappupdates
 
 namespace margelo::nitro {
 
   // C++ OpenStorePageOptionsNative <> JS OpenStorePageOptionsNative (object)
   template <>
-  struct JSIConverter<margelo::nitro::rnforge_inappupdates::OpenStorePageOptionsNative> final {
-    static inline margelo::nitro::rnforge_inappupdates::OpenStorePageOptionsNative fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
+  struct JSIConverter<margelo::nitro::rnforge::inappupdates::OpenStorePageOptionsNative> final {
+    static inline margelo::nitro::rnforge::inappupdates::OpenStorePageOptionsNative fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
       jsi::Object obj = arg.asObject(runtime);
-      return margelo::nitro::rnforge_inappupdates::OpenStorePageOptionsNative(
-        JSIConverter<std::optional<margelo::nitro::rnforge_inappupdates::IosOpenStorePageOptionsNative>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "ios")))
+      return margelo::nitro::rnforge::inappupdates::OpenStorePageOptionsNative(
+        JSIConverter<std::optional<margelo::nitro::rnforge::inappupdates::IosOpenStorePageOptionsNative>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "ios")))
       );
     }
-    static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::rnforge_inappupdates::OpenStorePageOptionsNative& arg) {
+    static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::rnforge::inappupdates::OpenStorePageOptionsNative& arg) {
       jsi::Object obj(runtime);
-      obj.setProperty(runtime, PropNameIDCache::get(runtime, "ios"), JSIConverter<std::optional<margelo::nitro::rnforge_inappupdates::IosOpenStorePageOptionsNative>>::toJSI(runtime, arg.ios));
+      obj.setProperty(runtime, PropNameIDCache::get(runtime, "ios"), JSIConverter<std::optional<margelo::nitro::rnforge::inappupdates::IosOpenStorePageOptionsNative>>::toJSI(runtime, arg.ios));
       return obj;
     }
     static inline bool canConvert(jsi::Runtime& runtime, const jsi::Value& value) {
@@ -77,7 +77,7 @@ namespace margelo::nitro {
       if (!nitro::isPlainObject(runtime, obj)) {
         return false;
       }
-      if (!JSIConverter<std::optional<margelo::nitro::rnforge_inappupdates::IosOpenStorePageOptionsNative>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "ios")))) return false;
+      if (!JSIConverter<std::optional<margelo::nitro::rnforge::inappupdates::IosOpenStorePageOptionsNative>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "ios")))) return false;
       return true;
     }
   };

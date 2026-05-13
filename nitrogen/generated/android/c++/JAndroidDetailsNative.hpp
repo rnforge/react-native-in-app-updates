@@ -16,7 +16,7 @@
 #include <string>
 #include <vector>
 
-namespace margelo::nitro::rnforge_inappupdates {
+namespace margelo::nitro::rnforge::inappupdates {
 
   using namespace facebook;
 
@@ -25,7 +25,7 @@ namespace margelo::nitro::rnforge_inappupdates {
    */
   struct JAndroidDetailsNative final: public jni::JavaClass<JAndroidDetailsNative> {
   public:
-    static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/rnforge_inappupdates/AndroidDetailsNative;";
+    static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/rnforge/inappupdates/AndroidDetailsNative;";
 
   public:
     /**
@@ -62,4 +62,4 @@ namespace margelo::nitro::rnforge_inappupdates {
     }
   };
 
-} // namespace margelo::nitro::rnforge_inappupdates
+} // namespace margelo::nitro::rnforge::inappupdates

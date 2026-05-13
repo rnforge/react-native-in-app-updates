@@ -14,17 +14,17 @@
 #endif
 
 // Forward declaration of `UpdateStatusNative` to properly resolve imports.
-namespace margelo::nitro::rnforge_inappupdates { struct UpdateStatusNative; }
+namespace margelo::nitro::rnforge::inappupdates { struct UpdateStatusNative; }
 // Forward declaration of `GetUpdateStatusOptionsNative` to properly resolve imports.
-namespace margelo::nitro::rnforge_inappupdates { struct GetUpdateStatusOptionsNative; }
+namespace margelo::nitro::rnforge::inappupdates { struct GetUpdateStatusOptionsNative; }
 // Forward declaration of `StartImmediateUpdateOptionsNative` to properly resolve imports.
-namespace margelo::nitro::rnforge_inappupdates { struct StartImmediateUpdateOptionsNative; }
+namespace margelo::nitro::rnforge::inappupdates { struct StartImmediateUpdateOptionsNative; }
 // Forward declaration of `StartFlexibleUpdateOptionsNative` to properly resolve imports.
-namespace margelo::nitro::rnforge_inappupdates { struct StartFlexibleUpdateOptionsNative; }
+namespace margelo::nitro::rnforge::inappupdates { struct StartFlexibleUpdateOptionsNative; }
 // Forward declaration of `OpenStorePageOptionsNative` to properly resolve imports.
-namespace margelo::nitro::rnforge_inappupdates { struct OpenStorePageOptionsNative; }
+namespace margelo::nitro::rnforge::inappupdates { struct OpenStorePageOptionsNative; }
 // Forward declaration of `InstallStateEventNative` to properly resolve imports.
-namespace margelo::nitro::rnforge_inappupdates { struct InstallStateEventNative; }
+namespace margelo::nitro::rnforge::inappupdates { struct InstallStateEventNative; }
 
 #include "UpdateStatusNative.hpp"
 #include <NitroModules/Promise.hpp>
@@ -37,7 +37,7 @@ namespace margelo::nitro::rnforge_inappupdates { struct InstallStateEventNative;
 #include "InstallStateEventNative.hpp"
 #include <functional>
 
-namespace margelo::nitro::rnforge_inappupdates {
+namespace margelo::nitro::rnforge::inappupdates {
 
   using namespace margelo::nitro;
 
@@ -85,4 +85,4 @@ namespace margelo::nitro::rnforge_inappupdates {
       static constexpr auto TAG = "InAppUpdates";
   };
 
-} // namespace margelo::nitro::rnforge_inappupdates
+} // namespace margelo::nitro::rnforge::inappupdates

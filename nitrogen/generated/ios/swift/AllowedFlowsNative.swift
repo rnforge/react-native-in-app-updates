@@ -10,10 +10,10 @@ import NitroModules
 /**
  * Represents an instance of `AllowedFlowsNative`, backed by a C++ struct.
  */
-public typealias AllowedFlowsNative = margelo.nitro.rnforge_inappupdates.AllowedFlowsNative
+public typealias AllowedFlowsNative = margelo.nitro.rnforge.inappupdates.AllowedFlowsNative
 
 public extension AllowedFlowsNative {
-  private typealias bridge = margelo.nitro.rnforge_inappupdates.bridge.swift
+  private typealias bridge = margelo.nitro.rnforge.inappupdates.bridge.swift
 
   /**
    * Create a new instance of `AllowedFlowsNative`.

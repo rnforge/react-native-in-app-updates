@@ -19,11 +19,11 @@
 #include "JFunc_void_InstallStateEventNative.hpp"
 #include <NitroModules/DefaultConstructableObject.hpp>
 
-namespace margelo::nitro::rnforge_inappupdates {
+namespace margelo::nitro::rnforge::inappupdates {
 
 int initialize(JavaVM* vm) {
   return facebook::jni::initialize(vm, []() {
-    ::margelo::nitro::rnforge_inappupdates::registerAllNatives();
+    ::margelo::nitro::rnforge::inappupdates::registerAllNatives();
   });
 }
 
@@ -38,11 +38,11 @@ struct JHybridInAppUpdatesSpecImpl: public jni::JavaClass<JHybridInAppUpdatesSpe
 
 void registerAllNatives() {
   using namespace margelo::nitro;
-  using namespace margelo::nitro::rnforge_inappupdates;
+  using namespace margelo::nitro::rnforge::inappupdates;
 
   // Register native JNI methods
-  margelo::nitro::rnforge_inappupdates::JHybridInAppUpdatesSpec::CxxPart::registerNatives();
-  margelo::nitro::rnforge_inappupdates::JFunc_void_InstallStateEventNative_cxx::registerNatives();
+  margelo::nitro::rnforge::inappupdates::JHybridInAppUpdatesSpec::CxxPart::registerNatives();
+  margelo::nitro::rnforge::inappupdates::JFunc_void_InstallStateEventNative_cxx::registerNatives();
 
   // Register Nitro Hybrid Objects
   HybridObjectRegistry::registerHybridObjectConstructor(
@@ -53,4 +53,4 @@ void registerAllNatives() {
   );
 }
 
-} // namespace margelo::nitro::rnforge_inappupdates
+} // namespace margelo::nitro::rnforge::inappupdates

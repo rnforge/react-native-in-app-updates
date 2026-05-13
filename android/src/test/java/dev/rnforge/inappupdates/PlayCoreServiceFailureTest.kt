@@ -120,7 +120,7 @@ class PlayCoreServiceFailureTest {
 
     private fun awaitFailure(
         call: (
-            onSuccess: (com.margelo.nitro.rnforge_inappupdates.UpdateStatusNative) -> Unit,
+            onSuccess: (com.margelo.nitro.rnforge.inappupdates.UpdateStatusNative) -> Unit,
             onFailure: (Exception) -> Unit
         ) -> Unit
     ): Exception {

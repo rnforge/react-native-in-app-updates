@@ -33,7 +33,7 @@
 #include <string>
 #include <optional>
 
-namespace margelo::nitro::rnforge_inappupdates {
+namespace margelo::nitro::rnforge::inappupdates {
 
   /**
    * A struct which can be represented as a JavaScript object (IosAppStoreDetailsNative).
@@ -60,16 +60,16 @@ namespace margelo::nitro::rnforge_inappupdates {
     friend bool operator==(const IosAppStoreDetailsNative& lhs, const IosAppStoreDetailsNative& rhs) = default;
   };
 
-} // namespace margelo::nitro::rnforge_inappupdates
+} // namespace margelo::nitro::rnforge::inappupdates
 
 namespace margelo::nitro {
 
   // C++ IosAppStoreDetailsNative <> JS IosAppStoreDetailsNative (object)
   template <>
-  struct JSIConverter<margelo::nitro::rnforge_inappupdates::IosAppStoreDetailsNative> final {
-    static inline margelo::nitro::rnforge_inappupdates::IosAppStoreDetailsNative fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
+  struct JSIConverter<margelo::nitro::rnforge::inappupdates::IosAppStoreDetailsNative> final {
+    static inline margelo::nitro::rnforge::inappupdates::IosAppStoreDetailsNative fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
       jsi::Object obj = arg.asObject(runtime);
-      return margelo::nitro::rnforge_inappupdates::IosAppStoreDetailsNative(
+      return margelo::nitro::rnforge::inappupdates::IosAppStoreDetailsNative(
         JSIConverter<std::optional<std::string>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "version"))),
         JSIConverter<std::optional<std::string>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "trackViewUrl"))),
         JSIConverter<std::optional<std::string>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "trackName"))),
@@ -83,7 +83,7 @@ namespace margelo::nitro {
         JSIConverter<std::optional<std::string>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "artworkUrl512")))
       );
     }
-    static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::rnforge_inappupdates::IosAppStoreDetailsNative& arg) {
+    static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::rnforge::inappupdates::IosAppStoreDetailsNative& arg) {
       jsi::Object obj(runtime);
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "version"), JSIConverter<std::optional<std::string>>::toJSI(runtime, arg.version));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "trackViewUrl"), JSIConverter<std::optional<std::string>>::toJSI(runtime, arg.trackViewUrl));

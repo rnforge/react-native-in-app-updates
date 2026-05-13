@@ -29,13 +29,13 @@
 #endif
 
 // Forward declaration of `CapabilitiesNative` to properly resolve imports.
-namespace margelo::nitro::rnforge_inappupdates { struct CapabilitiesNative; }
+namespace margelo::nitro::rnforge::inappupdates { struct CapabilitiesNative; }
 // Forward declaration of `AllowedFlowsNative` to properly resolve imports.
-namespace margelo::nitro::rnforge_inappupdates { struct AllowedFlowsNative; }
+namespace margelo::nitro::rnforge::inappupdates { struct AllowedFlowsNative; }
 // Forward declaration of `AndroidDetailsNative` to properly resolve imports.
-namespace margelo::nitro::rnforge_inappupdates { struct AndroidDetailsNative; }
+namespace margelo::nitro::rnforge::inappupdates { struct AndroidDetailsNative; }
 // Forward declaration of `IosDetailsNative` to properly resolve imports.
-namespace margelo::nitro::rnforge_inappupdates { struct IosDetailsNative; }
+namespace margelo::nitro::rnforge::inappupdates { struct IosDetailsNative; }
 
 #include <string>
 #include <NitroModules/Null.hpp>
@@ -46,7 +46,7 @@ namespace margelo::nitro::rnforge_inappupdates { struct IosDetailsNative; }
 #include "AndroidDetailsNative.hpp"
 #include "IosDetailsNative.hpp"
 
-namespace margelo::nitro::rnforge_inappupdates {
+namespace margelo::nitro::rnforge::inappupdates {
 
   /**
    * A struct which can be represented as a JavaScript object (UpdateStatusNative).
@@ -75,46 +75,46 @@ namespace margelo::nitro::rnforge_inappupdates {
     friend bool operator==(const UpdateStatusNative& lhs, const UpdateStatusNative& rhs) = default;
   };
 
-} // namespace margelo::nitro::rnforge_inappupdates
+} // namespace margelo::nitro::rnforge::inappupdates
 
 namespace margelo::nitro {
 
   // C++ UpdateStatusNative <> JS UpdateStatusNative (object)
   template <>
-  struct JSIConverter<margelo::nitro::rnforge_inappupdates::UpdateStatusNative> final {
-    static inline margelo::nitro::rnforge_inappupdates::UpdateStatusNative fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
+  struct JSIConverter<margelo::nitro::rnforge::inappupdates::UpdateStatusNative> final {
+    static inline margelo::nitro::rnforge::inappupdates::UpdateStatusNative fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
       jsi::Object obj = arg.asObject(runtime);
-      return margelo::nitro::rnforge_inappupdates::UpdateStatusNative(
+      return margelo::nitro::rnforge::inappupdates::UpdateStatusNative(
         JSIConverter<std::string>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "platform"))),
         JSIConverter<bool>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "supported"))),
         JSIConverter<std::optional<std::variant<nitro::NullType, bool>>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "updateAvailable"))),
-        JSIConverter<margelo::nitro::rnforge_inappupdates::CapabilitiesNative>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "capabilities"))),
-        JSIConverter<margelo::nitro::rnforge_inappupdates::AllowedFlowsNative>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "allowed"))),
+        JSIConverter<margelo::nitro::rnforge::inappupdates::CapabilitiesNative>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "capabilities"))),
+        JSIConverter<margelo::nitro::rnforge::inappupdates::AllowedFlowsNative>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "allowed"))),
         JSIConverter<std::string>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "reason"))),
         JSIConverter<std::optional<std::string>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "currentVersion"))),
         JSIConverter<std::optional<std::variant<std::string, double>>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "currentBuild"))),
         JSIConverter<std::optional<std::string>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "latestStoreVersion"))),
         JSIConverter<std::optional<std::variant<std::string, double>>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "latestStoreBuild"))),
         JSIConverter<std::optional<std::string>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "installStatus"))),
-        JSIConverter<std::optional<margelo::nitro::rnforge_inappupdates::AndroidDetailsNative>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "android"))),
-        JSIConverter<std::optional<margelo::nitro::rnforge_inappupdates::IosDetailsNative>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "ios")))
+        JSIConverter<std::optional<margelo::nitro::rnforge::inappupdates::AndroidDetailsNative>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "android"))),
+        JSIConverter<std::optional<margelo::nitro::rnforge::inappupdates::IosDetailsNative>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "ios")))
       );
     }
-    static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::rnforge_inappupdates::UpdateStatusNative& arg) {
+    static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::rnforge::inappupdates::UpdateStatusNative& arg) {
       jsi::Object obj(runtime);
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "platform"), JSIConverter<std::string>::toJSI(runtime, arg.platform));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "supported"), JSIConverter<bool>::toJSI(runtime, arg.supported));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "updateAvailable"), JSIConverter<std::optional<std::variant<nitro::NullType, bool>>>::toJSI(runtime, arg.updateAvailable));
-      obj.setProperty(runtime, PropNameIDCache::get(runtime, "capabilities"), JSIConverter<margelo::nitro::rnforge_inappupdates::CapabilitiesNative>::toJSI(runtime, arg.capabilities));
-      obj.setProperty(runtime, PropNameIDCache::get(runtime, "allowed"), JSIConverter<margelo::nitro::rnforge_inappupdates::AllowedFlowsNative>::toJSI(runtime, arg.allowed));
+      obj.setProperty(runtime, PropNameIDCache::get(runtime, "capabilities"), JSIConverter<margelo::nitro::rnforge::inappupdates::CapabilitiesNative>::toJSI(runtime, arg.capabilities));
+      obj.setProperty(runtime, PropNameIDCache::get(runtime, "allowed"), JSIConverter<margelo::nitro::rnforge::inappupdates::AllowedFlowsNative>::toJSI(runtime, arg.allowed));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "reason"), JSIConverter<std::string>::toJSI(runtime, arg.reason));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "currentVersion"), JSIConverter<std::optional<std::string>>::toJSI(runtime, arg.currentVersion));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "currentBuild"), JSIConverter<std::optional<std::variant<std::string, double>>>::toJSI(runtime, arg.currentBuild));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "latestStoreVersion"), JSIConverter<std::optional<std::string>>::toJSI(runtime, arg.latestStoreVersion));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "latestStoreBuild"), JSIConverter<std::optional<std::variant<std::string, double>>>::toJSI(runtime, arg.latestStoreBuild));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "installStatus"), JSIConverter<std::optional<std::string>>::toJSI(runtime, arg.installStatus));
-      obj.setProperty(runtime, PropNameIDCache::get(runtime, "android"), JSIConverter<std::optional<margelo::nitro::rnforge_inappupdates::AndroidDetailsNative>>::toJSI(runtime, arg.android));
-      obj.setProperty(runtime, PropNameIDCache::get(runtime, "ios"), JSIConverter<std::optional<margelo::nitro::rnforge_inappupdates::IosDetailsNative>>::toJSI(runtime, arg.ios));
+      obj.setProperty(runtime, PropNameIDCache::get(runtime, "android"), JSIConverter<std::optional<margelo::nitro::rnforge::inappupdates::AndroidDetailsNative>>::toJSI(runtime, arg.android));
+      obj.setProperty(runtime, PropNameIDCache::get(runtime, "ios"), JSIConverter<std::optional<margelo::nitro::rnforge::inappupdates::IosDetailsNative>>::toJSI(runtime, arg.ios));
       return obj;
     }
     static inline bool canConvert(jsi::Runtime& runtime, const jsi::Value& value) {
@@ -128,16 +128,16 @@ namespace margelo::nitro {
       if (!JSIConverter<std::string>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "platform")))) return false;
       if (!JSIConverter<bool>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "supported")))) return false;
       if (!JSIConverter<std::optional<std::variant<nitro::NullType, bool>>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "updateAvailable")))) return false;
-      if (!JSIConverter<margelo::nitro::rnforge_inappupdates::CapabilitiesNative>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "capabilities")))) return false;
-      if (!JSIConverter<margelo::nitro::rnforge_inappupdates::AllowedFlowsNative>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "allowed")))) return false;
+      if (!JSIConverter<margelo::nitro::rnforge::inappupdates::CapabilitiesNative>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "capabilities")))) return false;
+      if (!JSIConverter<margelo::nitro::rnforge::inappupdates::AllowedFlowsNative>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "allowed")))) return false;
       if (!JSIConverter<std::string>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "reason")))) return false;
       if (!JSIConverter<std::optional<std::string>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "currentVersion")))) return false;
       if (!JSIConverter<std::optional<std::variant<std::string, double>>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "currentBuild")))) return false;
       if (!JSIConverter<std::optional<std::string>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "latestStoreVersion")))) return false;
       if (!JSIConverter<std::optional<std::variant<std::string, double>>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "latestStoreBuild")))) return false;
       if (!JSIConverter<std::optional<std::string>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "installStatus")))) return false;
-      if (!JSIConverter<std::optional<margelo::nitro::rnforge_inappupdates::AndroidDetailsNative>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "android")))) return false;
-      if (!JSIConverter<std::optional<margelo::nitro::rnforge_inappupdates::IosDetailsNative>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "ios")))) return false;
+      if (!JSIConverter<std::optional<margelo::nitro::rnforge::inappupdates::AndroidDetailsNative>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "android")))) return false;
+      if (!JSIConverter<std::optional<margelo::nitro::rnforge::inappupdates::IosDetailsNative>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "ios")))) return false;
       return true;
     }
   };

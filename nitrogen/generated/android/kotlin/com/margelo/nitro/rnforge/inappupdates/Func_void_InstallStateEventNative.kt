@@ -5,7 +5,7 @@
 /// Copyright © Marc Rousavy @ Margelo
 ///
 
-package com.margelo.nitro.rnforge_inappupdates
+package com.margelo.nitro.rnforge.inappupdates
 
 import androidx.annotation.Keep
 import com.facebook.jni.HybridData

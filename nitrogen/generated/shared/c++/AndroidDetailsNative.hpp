@@ -29,13 +29,13 @@
 #endif
 
 // Forward declaration of `PlayCoreDetailsNative` to properly resolve imports.
-namespace margelo::nitro::rnforge_inappupdates { struct PlayCoreDetailsNative; }
+namespace margelo::nitro::rnforge::inappupdates { struct PlayCoreDetailsNative; }
 
 #include <string>
 #include <optional>
 #include "PlayCoreDetailsNative.hpp"
 
-namespace margelo::nitro::rnforge_inappupdates {
+namespace margelo::nitro::rnforge::inappupdates {
 
   /**
    * A struct which can be represented as a JavaScript object (AndroidDetailsNative).
@@ -53,24 +53,24 @@ namespace margelo::nitro::rnforge_inappupdates {
     friend bool operator==(const AndroidDetailsNative& lhs, const AndroidDetailsNative& rhs) = default;
   };
 
-} // namespace margelo::nitro::rnforge_inappupdates
+} // namespace margelo::nitro::rnforge::inappupdates
 
 namespace margelo::nitro {
 
   // C++ AndroidDetailsNative <> JS AndroidDetailsNative (object)
   template <>
-  struct JSIConverter<margelo::nitro::rnforge_inappupdates::AndroidDetailsNative> final {
-    static inline margelo::nitro::rnforge_inappupdates::AndroidDetailsNative fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
+  struct JSIConverter<margelo::nitro::rnforge::inappupdates::AndroidDetailsNative> final {
+    static inline margelo::nitro::rnforge::inappupdates::AndroidDetailsNative fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
       jsi::Object obj = arg.asObject(runtime);
-      return margelo::nitro::rnforge_inappupdates::AndroidDetailsNative(
+      return margelo::nitro::rnforge::inappupdates::AndroidDetailsNative(
         JSIConverter<std::optional<std::string>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "packageName"))),
-        JSIConverter<std::optional<margelo::nitro::rnforge_inappupdates::PlayCoreDetailsNative>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "playCore")))
+        JSIConverter<std::optional<margelo::nitro::rnforge::inappupdates::PlayCoreDetailsNative>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "playCore")))
       );
     }
-    static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::rnforge_inappupdates::AndroidDetailsNative& arg) {
+    static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::rnforge::inappupdates::AndroidDetailsNative& arg) {
       jsi::Object obj(runtime);
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "packageName"), JSIConverter<std::optional<std::string>>::toJSI(runtime, arg.packageName));
-      obj.setProperty(runtime, PropNameIDCache::get(runtime, "playCore"), JSIConverter<std::optional<margelo::nitro::rnforge_inappupdates::PlayCoreDetailsNative>>::toJSI(runtime, arg.playCore));
+      obj.setProperty(runtime, PropNameIDCache::get(runtime, "playCore"), JSIConverter<std::optional<margelo::nitro::rnforge::inappupdates::PlayCoreDetailsNative>>::toJSI(runtime, arg.playCore));
       return obj;
     }
     static inline bool canConvert(jsi::Runtime& runtime, const jsi::Value& value) {
@@ -82,7 +82,7 @@ namespace margelo::nitro {
         return false;
       }
       if (!JSIConverter<std::optional<std::string>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "packageName")))) return false;
-      if (!JSIConverter<std::optional<margelo::nitro::rnforge_inappupdates::PlayCoreDetailsNative>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "playCore")))) return false;
+      if (!JSIConverter<std::optional<margelo::nitro::rnforge::inappupdates::PlayCoreDetailsNative>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "playCore")))) return false;
       return true;
     }
   };

@@ -9,37 +9,37 @@
 
 // Forward declarations of C++ defined types
 // Forward declaration of `AllowedFlowsNative` to properly resolve imports.
-namespace margelo::nitro::rnforge_inappupdates { struct AllowedFlowsNative; }
+namespace margelo::nitro::rnforge::inappupdates { struct AllowedFlowsNative; }
 // Forward declaration of `AndroidDetailsNative` to properly resolve imports.
-namespace margelo::nitro::rnforge_inappupdates { struct AndroidDetailsNative; }
+namespace margelo::nitro::rnforge::inappupdates { struct AndroidDetailsNative; }
 // Forward declaration of `AndroidUpdateOptionsNative` to properly resolve imports.
-namespace margelo::nitro::rnforge_inappupdates { struct AndroidUpdateOptionsNative; }
+namespace margelo::nitro::rnforge::inappupdates { struct AndroidUpdateOptionsNative; }
 // Forward declaration of `CapabilitiesNative` to properly resolve imports.
-namespace margelo::nitro::rnforge_inappupdates { struct CapabilitiesNative; }
+namespace margelo::nitro::rnforge::inappupdates { struct CapabilitiesNative; }
 // Forward declaration of `GetUpdateStatusOptionsNative` to properly resolve imports.
-namespace margelo::nitro::rnforge_inappupdates { struct GetUpdateStatusOptionsNative; }
+namespace margelo::nitro::rnforge::inappupdates { struct GetUpdateStatusOptionsNative; }
 // Forward declaration of `HybridInAppUpdatesSpec` to properly resolve imports.
-namespace margelo::nitro::rnforge_inappupdates { class HybridInAppUpdatesSpec; }
+namespace margelo::nitro::rnforge::inappupdates { class HybridInAppUpdatesSpec; }
 // Forward declaration of `InstallStateEventNative` to properly resolve imports.
-namespace margelo::nitro::rnforge_inappupdates { struct InstallStateEventNative; }
+namespace margelo::nitro::rnforge::inappupdates { struct InstallStateEventNative; }
 // Forward declaration of `IosAppStoreDetailsNative` to properly resolve imports.
-namespace margelo::nitro::rnforge_inappupdates { struct IosAppStoreDetailsNative; }
+namespace margelo::nitro::rnforge::inappupdates { struct IosAppStoreDetailsNative; }
 // Forward declaration of `IosDetailsNative` to properly resolve imports.
-namespace margelo::nitro::rnforge_inappupdates { struct IosDetailsNative; }
+namespace margelo::nitro::rnforge::inappupdates { struct IosDetailsNative; }
 // Forward declaration of `IosGetUpdateStatusOptionsNative` to properly resolve imports.
-namespace margelo::nitro::rnforge_inappupdates { struct IosGetUpdateStatusOptionsNative; }
+namespace margelo::nitro::rnforge::inappupdates { struct IosGetUpdateStatusOptionsNative; }
 // Forward declaration of `IosOpenStorePageOptionsNative` to properly resolve imports.
-namespace margelo::nitro::rnforge_inappupdates { struct IosOpenStorePageOptionsNative; }
+namespace margelo::nitro::rnforge::inappupdates { struct IosOpenStorePageOptionsNative; }
 // Forward declaration of `OpenStorePageOptionsNative` to properly resolve imports.
-namespace margelo::nitro::rnforge_inappupdates { struct OpenStorePageOptionsNative; }
+namespace margelo::nitro::rnforge::inappupdates { struct OpenStorePageOptionsNative; }
 // Forward declaration of `PlayCoreDetailsNative` to properly resolve imports.
-namespace margelo::nitro::rnforge_inappupdates { struct PlayCoreDetailsNative; }
+namespace margelo::nitro::rnforge::inappupdates { struct PlayCoreDetailsNative; }
 // Forward declaration of `StartFlexibleUpdateOptionsNative` to properly resolve imports.
-namespace margelo::nitro::rnforge_inappupdates { struct StartFlexibleUpdateOptionsNative; }
+namespace margelo::nitro::rnforge::inappupdates { struct StartFlexibleUpdateOptionsNative; }
 // Forward declaration of `StartImmediateUpdateOptionsNative` to properly resolve imports.
-namespace margelo::nitro::rnforge_inappupdates { struct StartImmediateUpdateOptionsNative; }
+namespace margelo::nitro::rnforge::inappupdates { struct StartImmediateUpdateOptionsNative; }
 // Forward declaration of `UpdateStatusNative` to properly resolve imports.
-namespace margelo::nitro::rnforge_inappupdates { struct UpdateStatusNative; }
+namespace margelo::nitro::rnforge::inappupdates { struct UpdateStatusNative; }
 
 // Forward declarations of Swift defined types
 // Forward declaration of `HybridInAppUpdatesSpec_cxx` to properly resolve imports.
@@ -78,7 +78,7 @@ namespace InAppUpdates { class HybridInAppUpdatesSpec_cxx; }
  * Contains specialized versions of C++ templated types so they can be accessed from Swift,
  * as well as helper functions to interact with those C++ types from Swift.
  */
-namespace margelo::nitro::rnforge_inappupdates::bridge::swift {
+namespace margelo::nitro::rnforge::inappupdates::bridge::swift {
 
   // pragma MARK: std::variant<nitro::NullType, bool>
   /**
@@ -564,4 +564,4 @@ namespace margelo::nitro::rnforge_inappupdates::bridge::swift {
     return Result<void>::withError(error);
   }
 
-} // namespace margelo::nitro::rnforge_inappupdates::bridge::swift
+} // namespace margelo::nitro::rnforge::inappupdates::bridge::swift

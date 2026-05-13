@@ -10,10 +10,10 @@ import NitroModules
 /**
  * Represents an instance of `AndroidUpdateOptionsNative`, backed by a C++ struct.
  */
-public typealias AndroidUpdateOptionsNative = margelo.nitro.rnforge_inappupdates.AndroidUpdateOptionsNative
+public typealias AndroidUpdateOptionsNative = margelo.nitro.rnforge.inappupdates.AndroidUpdateOptionsNative
 
 public extension AndroidUpdateOptionsNative {
-  private typealias bridge = margelo.nitro.rnforge_inappupdates.bridge.swift
+  private typealias bridge = margelo.nitro.rnforge.inappupdates.bridge.swift
 
   /**
    * Create a new instance of `AndroidUpdateOptionsNative`.

@@ -14,18 +14,18 @@
 
 
 
-namespace margelo::nitro::rnforge_inappupdates {
+namespace margelo::nitro::rnforge::inappupdates {
 
   using namespace facebook;
 
   class JHybridInAppUpdatesSpec: public virtual HybridInAppUpdatesSpec, public virtual JHybridObject {
   public:
     struct JavaPart: public jni::JavaClass<JavaPart, JHybridObject::JavaPart> {
-      static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/rnforge_inappupdates/HybridInAppUpdatesSpec;";
+      static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/rnforge/inappupdates/HybridInAppUpdatesSpec;";
       std::shared_ptr<JHybridInAppUpdatesSpec> getJHybridInAppUpdatesSpec();
     };
     struct CxxPart: public jni::HybridClass<CxxPart, JHybridObject::CxxPart> {
-      static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/rnforge_inappupdates/HybridInAppUpdatesSpec$CxxPart;";
+      static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/rnforge/inappupdates/HybridInAppUpdatesSpec$CxxPart;";
       static jni::local_ref<jhybriddata> initHybrid(jni::alias_ref<jhybridobject> jThis);
       static void registerNatives();
       using HybridBase::HybridBase;
@@ -66,4 +66,4 @@ namespace margelo::nitro::rnforge_inappupdates {
     jni::global_ref<JHybridInAppUpdatesSpec::JavaPart> _javaPart;
   };
 
-} // namespace margelo::nitro::rnforge_inappupdates
+} // namespace margelo::nitro::rnforge::inappupdates

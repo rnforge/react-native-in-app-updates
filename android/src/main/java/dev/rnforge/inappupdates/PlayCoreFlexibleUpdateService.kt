@@ -6,8 +6,8 @@ import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.install.model.InstallStatus
 import com.google.android.play.core.install.model.UpdateAvailability
 import com.margelo.nitro.core.Promise
-import com.margelo.nitro.rnforge_inappupdates.StartFlexibleUpdateOptionsNative
-import com.margelo.nitro.rnforge_inappupdates.UpdateStatusNative
+import com.margelo.nitro.rnforge.inappupdates.StartFlexibleUpdateOptionsNative
+import com.margelo.nitro.rnforge.inappupdates.UpdateStatusNative
 
 /**
  * Handles Play Core flexible update flow.

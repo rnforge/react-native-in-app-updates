@@ -12,7 +12,7 @@ import NitroModules
  * This class can be used from C++, e.g. to wrap the Swift closure as a `std::function`.
  */
 public final class Func_void_InstallStateEventNative {
-  public typealias bridge = margelo.nitro.rnforge_inappupdates.bridge.swift
+  public typealias bridge = margelo.nitro.rnforge.inappupdates.bridge.swift
 
   private let closure: (_ event: InstallStateEventNative) -> Void
 

@@ -29,13 +29,13 @@
 #endif
 
 // Forward declaration of `IosAppStoreDetailsNative` to properly resolve imports.
-namespace margelo::nitro::rnforge_inappupdates { struct IosAppStoreDetailsNative; }
+namespace margelo::nitro::rnforge::inappupdates { struct IosAppStoreDetailsNative; }
 
 #include <string>
 #include <optional>
 #include "IosAppStoreDetailsNative.hpp"
 
-namespace margelo::nitro::rnforge_inappupdates {
+namespace margelo::nitro::rnforge::inappupdates {
 
   /**
    * A struct which can be represented as a JavaScript object (IosDetailsNative).
@@ -55,28 +55,28 @@ namespace margelo::nitro::rnforge_inappupdates {
     friend bool operator==(const IosDetailsNative& lhs, const IosDetailsNative& rhs) = default;
   };
 
-} // namespace margelo::nitro::rnforge_inappupdates
+} // namespace margelo::nitro::rnforge::inappupdates
 
 namespace margelo::nitro {
 
   // C++ IosDetailsNative <> JS IosDetailsNative (object)
   template <>
-  struct JSIConverter<margelo::nitro::rnforge_inappupdates::IosDetailsNative> final {
-    static inline margelo::nitro::rnforge_inappupdates::IosDetailsNative fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
+  struct JSIConverter<margelo::nitro::rnforge::inappupdates::IosDetailsNative> final {
+    static inline margelo::nitro::rnforge::inappupdates::IosDetailsNative fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
       jsi::Object obj = arg.asObject(runtime);
-      return margelo::nitro::rnforge_inappupdates::IosDetailsNative(
+      return margelo::nitro::rnforge::inappupdates::IosDetailsNative(
         JSIConverter<std::optional<std::string>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "bundleIdentifier"))),
         JSIConverter<std::optional<std::string>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "appStoreId"))),
         JSIConverter<std::optional<std::string>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "storeUrl"))),
-        JSIConverter<std::optional<margelo::nitro::rnforge_inappupdates::IosAppStoreDetailsNative>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "appStore")))
+        JSIConverter<std::optional<margelo::nitro::rnforge::inappupdates::IosAppStoreDetailsNative>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "appStore")))
       );
     }
-    static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::rnforge_inappupdates::IosDetailsNative& arg) {
+    static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::rnforge::inappupdates::IosDetailsNative& arg) {
       jsi::Object obj(runtime);
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "bundleIdentifier"), JSIConverter<std::optional<std::string>>::toJSI(runtime, arg.bundleIdentifier));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "appStoreId"), JSIConverter<std::optional<std::string>>::toJSI(runtime, arg.appStoreId));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "storeUrl"), JSIConverter<std::optional<std::string>>::toJSI(runtime, arg.storeUrl));
-      obj.setProperty(runtime, PropNameIDCache::get(runtime, "appStore"), JSIConverter<std::optional<margelo::nitro::rnforge_inappupdates::IosAppStoreDetailsNative>>::toJSI(runtime, arg.appStore));
+      obj.setProperty(runtime, PropNameIDCache::get(runtime, "appStore"), JSIConverter<std::optional<margelo::nitro::rnforge::inappupdates::IosAppStoreDetailsNative>>::toJSI(runtime, arg.appStore));
       return obj;
     }
     static inline bool canConvert(jsi::Runtime& runtime, const jsi::Value& value) {
@@ -90,7 +90,7 @@ namespace margelo::nitro {
       if (!JSIConverter<std::optional<std::string>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "bundleIdentifier")))) return false;
       if (!JSIConverter<std::optional<std::string>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "appStoreId")))) return false;
       if (!JSIConverter<std::optional<std::string>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "storeUrl")))) return false;
-      if (!JSIConverter<std::optional<margelo::nitro::rnforge_inappupdates::IosAppStoreDetailsNative>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "appStore")))) return false;
+      if (!JSIConverter<std::optional<margelo::nitro::rnforge::inappupdates::IosAppStoreDetailsNative>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "appStore")))) return false;
       return true;
     }
   };

@@ -3,8 +3,8 @@ package dev.rnforge.inappupdates
 import android.content.Context
 import com.google.android.gms.common.ConnectionResult
 import com.margelo.nitro.core.Promise
-import com.margelo.nitro.rnforge_inappupdates.GetUpdateStatusOptionsNative
-import com.margelo.nitro.rnforge_inappupdates.UpdateStatusNative
+import com.margelo.nitro.rnforge.inappupdates.GetUpdateStatusOptionsNative
+import com.margelo.nitro.rnforge.inappupdates.UpdateStatusNative
 
 /**
  * Handles Play Core status snapshot for getUpdateStatus().

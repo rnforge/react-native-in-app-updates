@@ -3,8 +3,8 @@ package dev.rnforge.inappupdates
 import android.content.Context
 import com.google.android.play.core.appupdate.AppUpdateInfo
 import com.google.android.play.core.install.model.AppUpdateType
-import com.margelo.nitro.rnforge_inappupdates.PlayCoreDetailsNative
-import com.margelo.nitro.rnforge_inappupdates.UpdateStatusNative
+import com.margelo.nitro.rnforge.inappupdates.PlayCoreDetailsNative
+import com.margelo.nitro.rnforge.inappupdates.UpdateStatusNative
 
 /**
  * Pure mapping from Play Core [AppUpdateInfo] to RNForge [UpdateStatusNative].
@@ -63,7 +63,7 @@ fun mapAppUpdateInfoToStatus(
         immediateAllowed = immediateAllowed,
         flexibleAllowed = flexibleAllowed,
         installStatus = installStatus,
-        android = com.margelo.nitro.rnforge_inappupdates.AndroidDetailsNative(
+        android = com.margelo.nitro.rnforge.inappupdates.AndroidDetailsNative(
             packageName = context.packageName,
             playCore = playCoreDetails
         )

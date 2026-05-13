@@ -7,5 +7,5 @@
 
 #include "HybridInAppUpdatesSpecSwift.hpp"
 
-namespace margelo::nitro::rnforge_inappupdates {
-} // namespace margelo::nitro::rnforge_inappupdates
+namespace margelo::nitro::rnforge::inappupdates {
+} // namespace margelo::nitro::rnforge::inappupdates

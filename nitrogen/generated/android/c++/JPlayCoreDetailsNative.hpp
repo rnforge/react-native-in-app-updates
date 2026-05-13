@@ -14,7 +14,7 @@
 #include <string>
 #include <vector>
 
-namespace margelo::nitro::rnforge_inappupdates {
+namespace margelo::nitro::rnforge::inappupdates {
 
   using namespace facebook;
 
@@ -23,7 +23,7 @@ namespace margelo::nitro::rnforge_inappupdates {
    */
   struct JPlayCoreDetailsNative final: public jni::JavaClass<JPlayCoreDetailsNative> {
   public:
-    static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/rnforge_inappupdates/PlayCoreDetailsNative;";
+    static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/rnforge/inappupdates/PlayCoreDetailsNative;";
 
   public:
     /**
@@ -140,4 +140,4 @@ namespace margelo::nitro::rnforge_inappupdates {
     }
   };
 
-} // namespace margelo::nitro::rnforge_inappupdates
+} // namespace margelo::nitro::rnforge::inappupdates

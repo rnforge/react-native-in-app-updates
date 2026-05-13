@@ -12,7 +12,7 @@
 #include "InAppUpdates-Swift-Cxx-Umbrella.hpp"
 #include <NitroModules/NitroDefines.hpp>
 
-namespace margelo::nitro::rnforge_inappupdates::bridge::swift {
+namespace margelo::nitro::rnforge::inappupdates::bridge::swift {
 
   // pragma MARK: std::function<void(const UpdateStatusNative& /* result */)>
   Func_void_UpdateStatusNative create_Func_void_UpdateStatusNative(void* NON_NULL swiftClosureWrapper) noexcept {
@@ -49,10 +49,10 @@ namespace margelo::nitro::rnforge_inappupdates::bridge::swift {
   // pragma MARK: std::shared_ptr<HybridInAppUpdatesSpec>
   std::shared_ptr<HybridInAppUpdatesSpec> create_std__shared_ptr_HybridInAppUpdatesSpec_(void* NON_NULL swiftUnsafePointer) noexcept {
     InAppUpdates::HybridInAppUpdatesSpec_cxx swiftPart = InAppUpdates::HybridInAppUpdatesSpec_cxx::fromUnsafe(swiftUnsafePointer);
-    return std::make_shared<margelo::nitro::rnforge_inappupdates::HybridInAppUpdatesSpecSwift>(swiftPart);
+    return std::make_shared<margelo::nitro::rnforge::inappupdates::HybridInAppUpdatesSpecSwift>(swiftPart);
   }
   void* NON_NULL get_std__shared_ptr_HybridInAppUpdatesSpec_(std__shared_ptr_HybridInAppUpdatesSpec_ cppType) {
-    std::shared_ptr<margelo::nitro::rnforge_inappupdates::HybridInAppUpdatesSpecSwift> swiftWrapper = std::dynamic_pointer_cast<margelo::nitro::rnforge_inappupdates::HybridInAppUpdatesSpecSwift>(cppType);
+    std::shared_ptr<margelo::nitro::rnforge::inappupdates::HybridInAppUpdatesSpecSwift> swiftWrapper = std::dynamic_pointer_cast<margelo::nitro::rnforge::inappupdates::HybridInAppUpdatesSpecSwift>(cppType);
     #ifdef NITRO_DEBUG
     if (swiftWrapper == nullptr) [[unlikely]] {
       throw std::runtime_error("Class \"HybridInAppUpdatesSpec\" is not implemented in Swift!");
@@ -62,4 +62,4 @@ namespace margelo::nitro::rnforge_inappupdates::bridge::swift {
     return swiftPart.toUnsafe();
   }
 
-} // namespace margelo::nitro::rnforge_inappupdates::bridge::swift
+} // namespace margelo::nitro::rnforge::inappupdates::bridge::swift

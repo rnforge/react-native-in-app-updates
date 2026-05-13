@@ -10,7 +10,7 @@ import NitroModules
 // TODO: Use empty enums once Swift supports exporting them as namespaces
 //       See: https://github.com/swiftlang/swift/pull/83616
 public final class InAppUpdatesAutolinking {
-  public typealias bridge = margelo.nitro.rnforge_inappupdates.bridge.swift
+  public typealias bridge = margelo.nitro.rnforge.inappupdates.bridge.swift
 
   public static func createInAppUpdates() -> bridge.std__shared_ptr_HybridInAppUpdatesSpec_ {
     let hybridObject = HybridInAppUpdates()

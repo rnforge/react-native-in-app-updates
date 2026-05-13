@@ -9,7 +9,7 @@
 #include <functional>
 #include <NitroModules/NitroDefines.hpp>
 
-namespace margelo::nitro::rnforge_inappupdates {
+namespace margelo::nitro::rnforge::inappupdates {
 
   [[deprecated("Use registerNatives() instead.")]]
   int initialize(JavaVM* vm);
@@ -23,7 +23,7 @@ namespace margelo::nitro::rnforge_inappupdates {
    * JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void*) {
    *   return facebook::jni::initialize(vm, []() {
    *     // register all InAppUpdates HybridObjects
-   *     margelo::nitro::rnforge_inappupdates::registerNatives();
+   *     margelo::nitro::rnforge::inappupdates::registerNatives();
    *     // any other custom registrations go here.
    *   });
    * }
@@ -31,4 +31,4 @@ namespace margelo::nitro::rnforge_inappupdates {
    */
   void registerAllNatives();
 
-} // namespace margelo::nitro::rnforge_inappupdates
+} // namespace margelo::nitro::rnforge::inappupdates

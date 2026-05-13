@@ -18,7 +18,7 @@
 #include <string>
 #include <vector>
 
-namespace margelo::nitro::rnforge_inappupdates {
+namespace margelo::nitro::rnforge::inappupdates {
 
   using namespace facebook;
 
@@ -27,7 +27,7 @@ namespace margelo::nitro::rnforge_inappupdates {
    */
   struct JInstallStateEventNative final: public jni::JavaClass<JInstallStateEventNative> {
   public:
-    static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/rnforge_inappupdates/InstallStateEventNative;";
+    static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/rnforge/inappupdates/InstallStateEventNative;";
 
   public:
     /**
@@ -96,4 +96,4 @@ namespace margelo::nitro::rnforge_inappupdates {
     }
   };
 
-} // namespace margelo::nitro::rnforge_inappupdates
+} // namespace margelo::nitro::rnforge::inappupdates

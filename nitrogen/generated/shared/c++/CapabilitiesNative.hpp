@@ -32,7 +32,7 @@
 
 
 
-namespace margelo::nitro::rnforge_inappupdates {
+namespace margelo::nitro::rnforge::inappupdates {
 
   /**
    * A struct which can be represented as a JavaScript object (CapabilitiesNative).
@@ -53,16 +53,16 @@ namespace margelo::nitro::rnforge_inappupdates {
     friend bool operator==(const CapabilitiesNative& lhs, const CapabilitiesNative& rhs) = default;
   };
 
-} // namespace margelo::nitro::rnforge_inappupdates
+} // namespace margelo::nitro::rnforge::inappupdates
 
 namespace margelo::nitro {
 
   // C++ CapabilitiesNative <> JS CapabilitiesNative (object)
   template <>
-  struct JSIConverter<margelo::nitro::rnforge_inappupdates::CapabilitiesNative> final {
-    static inline margelo::nitro::rnforge_inappupdates::CapabilitiesNative fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
+  struct JSIConverter<margelo::nitro::rnforge::inappupdates::CapabilitiesNative> final {
+    static inline margelo::nitro::rnforge::inappupdates::CapabilitiesNative fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
       jsi::Object obj = arg.asObject(runtime);
-      return margelo::nitro::rnforge_inappupdates::CapabilitiesNative(
+      return margelo::nitro::rnforge::inappupdates::CapabilitiesNative(
         JSIConverter<bool>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "immediate"))),
         JSIConverter<bool>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "flexible"))),
         JSIConverter<bool>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "storePage"))),
@@ -70,7 +70,7 @@ namespace margelo::nitro {
         JSIConverter<bool>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "installStateListener")))
       );
     }
-    static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::rnforge_inappupdates::CapabilitiesNative& arg) {
+    static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::rnforge::inappupdates::CapabilitiesNative& arg) {
       jsi::Object obj(runtime);
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "immediate"), JSIConverter<bool>::toJSI(runtime, arg.immediate));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "flexible"), JSIConverter<bool>::toJSI(runtime, arg.flexible));

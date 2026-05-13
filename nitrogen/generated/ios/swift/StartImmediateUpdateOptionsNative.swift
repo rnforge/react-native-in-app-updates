@@ -10,10 +10,10 @@ import NitroModules
 /**
  * Represents an instance of `StartImmediateUpdateOptionsNative`, backed by a C++ struct.
  */
-public typealias StartImmediateUpdateOptionsNative = margelo.nitro.rnforge_inappupdates.StartImmediateUpdateOptionsNative
+public typealias StartImmediateUpdateOptionsNative = margelo.nitro.rnforge.inappupdates.StartImmediateUpdateOptionsNative
 
 public extension StartImmediateUpdateOptionsNative {
-  private typealias bridge = margelo.nitro.rnforge_inappupdates.bridge.swift
+  private typealias bridge = margelo.nitro.rnforge.inappupdates.bridge.swift
 
   /**
    * Create a new instance of `StartImmediateUpdateOptionsNative`.

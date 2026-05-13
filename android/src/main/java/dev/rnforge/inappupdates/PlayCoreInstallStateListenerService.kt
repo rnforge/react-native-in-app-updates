@@ -2,9 +2,9 @@ package dev.rnforge.inappupdates
 
 import com.google.android.play.core.install.InstallStateUpdatedListener
 import com.google.android.play.core.install.model.InstallStatus
-import com.margelo.nitro.rnforge_inappupdates.AndroidDetailsNative
-import com.margelo.nitro.rnforge_inappupdates.InstallStateEventNative
-import com.margelo.nitro.rnforge_inappupdates.PlayCoreDetailsNative
+import com.margelo.nitro.rnforge.inappupdates.AndroidDetailsNative
+import com.margelo.nitro.rnforge.inappupdates.InstallStateEventNative
+import com.margelo.nitro.rnforge.inappupdates.PlayCoreDetailsNative
 import java.util.UUID
 
 /**

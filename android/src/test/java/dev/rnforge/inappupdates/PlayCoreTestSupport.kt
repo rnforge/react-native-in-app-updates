@@ -5,7 +5,7 @@ import android.content.Context
 import android.os.Looper
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.play.core.appupdate.AppUpdateManager
-import com.margelo.nitro.rnforge_inappupdates.UpdateStatusNative
+import com.margelo.nitro.rnforge.inappupdates.UpdateStatusNative
 import org.junit.Assert.assertTrue
 import org.robolectric.Shadows.shadowOf
 import java.util.concurrent.CountDownLatch

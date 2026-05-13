@@ -14,7 +14,7 @@
 #include <variant>
 #include <NitroModules/JNull.hpp>
 
-namespace margelo::nitro::rnforge_inappupdates {
+namespace margelo::nitro::rnforge::inappupdates {
 
   using namespace facebook;
 
@@ -23,7 +23,7 @@ namespace margelo::nitro::rnforge_inappupdates {
    */
   class JVariant_NullType_Boolean: public jni::JavaClass<JVariant_NullType_Boolean> {
   public:
-    static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/rnforge_inappupdates/Variant_NullType_Boolean;";
+    static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/rnforge/inappupdates/Variant_NullType_Boolean;";
 
     static jni::local_ref<JVariant_NullType_Boolean> create_0(jni::alias_ref<JNull> value) {
       static const auto method = javaClassStatic()->getStaticMethod<JVariant_NullType_Boolean(jni::alias_ref<JNull>)>("create");
@@ -48,7 +48,7 @@ namespace margelo::nitro::rnforge_inappupdates {
   namespace JVariant_NullType_Boolean_impl {
     class First final: public jni::JavaClass<First, JVariant_NullType_Boolean> {
     public:
-      static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/rnforge_inappupdates/Variant_NullType_Boolean$First;";
+      static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/rnforge/inappupdates/Variant_NullType_Boolean$First;";
     
       [[nodiscard]] jni::local_ref<JNull> getValue() const {
         static const auto field = javaClassStatic()->getField<JNull>("value");
@@ -58,7 +58,7 @@ namespace margelo::nitro::rnforge_inappupdates {
     
     class Second final: public jni::JavaClass<Second, JVariant_NullType_Boolean> {
     public:
-      static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/rnforge_inappupdates/Variant_NullType_Boolean$Second;";
+      static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/rnforge/inappupdates/Variant_NullType_Boolean$Second;";
     
       [[nodiscard]] jboolean getValue() const {
         static const auto field = javaClassStatic()->getField<jboolean>("value");
@@ -66,4 +66,4 @@ namespace margelo::nitro::rnforge_inappupdates {
       }
     };
   } // namespace JVariant_NullType_Boolean_impl
-} // namespace margelo::nitro::rnforge_inappupdates
+} // namespace margelo::nitro::rnforge::inappupdates

@@ -29,13 +29,13 @@
 #endif
 
 // Forward declaration of `AndroidDetailsNative` to properly resolve imports.
-namespace margelo::nitro::rnforge_inappupdates { struct AndroidDetailsNative; }
+namespace margelo::nitro::rnforge::inappupdates { struct AndroidDetailsNative; }
 
 #include <string>
 #include <optional>
 #include "AndroidDetailsNative.hpp"
 
-namespace margelo::nitro::rnforge_inappupdates {
+namespace margelo::nitro::rnforge::inappupdates {
 
   /**
    * A struct which can be represented as a JavaScript object (InstallStateEventNative).
@@ -61,16 +61,16 @@ namespace margelo::nitro::rnforge_inappupdates {
     friend bool operator==(const InstallStateEventNative& lhs, const InstallStateEventNative& rhs) = default;
   };
 
-} // namespace margelo::nitro::rnforge_inappupdates
+} // namespace margelo::nitro::rnforge::inappupdates
 
 namespace margelo::nitro {
 
   // C++ InstallStateEventNative <> JS InstallStateEventNative (object)
   template <>
-  struct JSIConverter<margelo::nitro::rnforge_inappupdates::InstallStateEventNative> final {
-    static inline margelo::nitro::rnforge_inappupdates::InstallStateEventNative fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
+  struct JSIConverter<margelo::nitro::rnforge::inappupdates::InstallStateEventNative> final {
+    static inline margelo::nitro::rnforge::inappupdates::InstallStateEventNative fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
       jsi::Object obj = arg.asObject(runtime);
-      return margelo::nitro::rnforge_inappupdates::InstallStateEventNative(
+      return margelo::nitro::rnforge::inappupdates::InstallStateEventNative(
         JSIConverter<std::string>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "platform"))),
         JSIConverter<bool>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "supported"))),
         JSIConverter<std::string>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "installStatus"))),
@@ -80,10 +80,10 @@ namespace margelo::nitro {
         JSIConverter<std::optional<double>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "progress"))),
         JSIConverter<std::optional<std::string>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "errorCode"))),
         JSIConverter<std::optional<std::string>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "message"))),
-        JSIConverter<std::optional<margelo::nitro::rnforge_inappupdates::AndroidDetailsNative>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "android")))
+        JSIConverter<std::optional<margelo::nitro::rnforge::inappupdates::AndroidDetailsNative>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "android")))
       );
     }
-    static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::rnforge_inappupdates::InstallStateEventNative& arg) {
+    static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::rnforge::inappupdates::InstallStateEventNative& arg) {
       jsi::Object obj(runtime);
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "platform"), JSIConverter<std::string>::toJSI(runtime, arg.platform));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "supported"), JSIConverter<bool>::toJSI(runtime, arg.supported));
@@ -94,7 +94,7 @@ namespace margelo::nitro {
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "progress"), JSIConverter<std::optional<double>>::toJSI(runtime, arg.progress));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "errorCode"), JSIConverter<std::optional<std::string>>::toJSI(runtime, arg.errorCode));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "message"), JSIConverter<std::optional<std::string>>::toJSI(runtime, arg.message));
-      obj.setProperty(runtime, PropNameIDCache::get(runtime, "android"), JSIConverter<std::optional<margelo::nitro::rnforge_inappupdates::AndroidDetailsNative>>::toJSI(runtime, arg.android));
+      obj.setProperty(runtime, PropNameIDCache::get(runtime, "android"), JSIConverter<std::optional<margelo::nitro::rnforge::inappupdates::AndroidDetailsNative>>::toJSI(runtime, arg.android));
       return obj;
     }
     static inline bool canConvert(jsi::Runtime& runtime, const jsi::Value& value) {
@@ -114,7 +114,7 @@ namespace margelo::nitro {
       if (!JSIConverter<std::optional<double>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "progress")))) return false;
       if (!JSIConverter<std::optional<std::string>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "errorCode")))) return false;
       if (!JSIConverter<std::optional<std::string>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "message")))) return false;
-      if (!JSIConverter<std::optional<margelo::nitro::rnforge_inappupdates::AndroidDetailsNative>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "android")))) return false;
+      if (!JSIConverter<std::optional<margelo::nitro::rnforge::inappupdates::AndroidDetailsNative>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "android")))) return false;
       return true;
     }
   };

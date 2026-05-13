@@ -14,7 +14,7 @@
 #include "JAndroidUpdateOptionsNative.hpp"
 #include <optional>
 
-namespace margelo::nitro::rnforge_inappupdates {
+namespace margelo::nitro::rnforge::inappupdates {
 
   using namespace facebook;
 
@@ -23,7 +23,7 @@ namespace margelo::nitro::rnforge_inappupdates {
    */
   struct JStartFlexibleUpdateOptionsNative final: public jni::JavaClass<JStartFlexibleUpdateOptionsNative> {
   public:
-    static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/rnforge_inappupdates/StartFlexibleUpdateOptionsNative;";
+    static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/rnforge/inappupdates/StartFlexibleUpdateOptionsNative;";
 
   public:
     /**
@@ -56,4 +56,4 @@ namespace margelo::nitro::rnforge_inappupdates {
     }
   };
 
-} // namespace margelo::nitro::rnforge_inappupdates
+} // namespace margelo::nitro::rnforge::inappupdates

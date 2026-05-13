@@ -10,10 +10,10 @@ import NitroModules
 /**
  * Represents an instance of `PlayCoreDetailsNative`, backed by a C++ struct.
  */
-public typealias PlayCoreDetailsNative = margelo.nitro.rnforge_inappupdates.PlayCoreDetailsNative
+public typealias PlayCoreDetailsNative = margelo.nitro.rnforge.inappupdates.PlayCoreDetailsNative
 
 public extension PlayCoreDetailsNative {
-  private typealias bridge = margelo.nitro.rnforge_inappupdates.bridge.swift
+  private typealias bridge = margelo.nitro.rnforge.inappupdates.bridge.swift
 
   /**
    * Create a new instance of `PlayCoreDetailsNative`.
