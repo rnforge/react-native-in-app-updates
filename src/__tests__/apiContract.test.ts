@@ -24,6 +24,10 @@ describe('v1 public API exports', () => {
   it('exports addInstallStateListener', () => {
     expect(typeof api.addInstallStateListener).toBe('function')
   })
+
+  it('does NOT export raw InAppUpdates hybrid object', () => {
+    expect(api).not.toHaveProperty('InAppUpdates')
+  })
 })
 
 describe('UpdateStatus contract', () => {

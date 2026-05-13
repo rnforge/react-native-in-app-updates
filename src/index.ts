@@ -1,4 +1,3 @@
-export * from './native'
 export * from './types'
 export { getUpdateStatus } from './getUpdateStatus'
 export { startImmediateUpdate } from './startImmediateUpdate'
