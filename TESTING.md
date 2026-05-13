@@ -89,7 +89,7 @@ iOS builds require macOS and Xcode. On non-Mac environments, iOS verification is
 
 ## Android native tests
 
-Android native test sources exist under `android/src/test/java/dev/rnforge/inappupdates/` and use JUnit 4. The example app provides a runnable Gradle harness.
+Android native test sources exist under `android/src/test/java/dev/rnforge/inappupdates/playcore/` and use JUnit 4. The example app provides a runnable Gradle harness.
 
 ### Running from the example app
 
@@ -172,7 +172,12 @@ SwiftPM tests cover pure iOS lookup core logic:
 swift test
 ```
 
-The iOS lookup logic is split into seam-friendly Swift helpers in `ios/Core/AppStoreLookupCore.swift` so SwiftPM and future XCTest/Xcode coverage can target:
+The iOS lookup logic is split into seam-friendly Swift helpers:
+
+- `ios/Core/AppStoreLookupCore.swift` — pure Foundation lookup logic (URL construction, iTunes response parsing, dotted version comparison)
+- `ios/Support/AppStoreLookupSupport.swift` — Nitro adapter glue (bridges Core helpers to the Nitro native module)
+
+SwiftPM and future XCTest/Xcode coverage target the Core helpers for:
 
 - lookup URL construction
 - iTunes response parsing
@@ -184,3 +189,41 @@ The iOS lookup logic is split into seam-friendly Swift helpers in `ios/Core/AppS
 Real Play in-app update flow verification (immediate and flexible) requires a Google Play-distributed app, internal test track, and a physical device.
 
 See [`docs/manual-play-validation.md`](./docs/manual-play-validation.md) for the full release gate checklist.
+
+## Source layout
+
+```
+android/src/main/java/dev/rnforge/inappupdates/
+  HybridInAppUpdates.kt          # Nitro native module (bridge)
+  InAppUpdatesPackage.kt         # Nitro package registration
+  ActivityProvider.kt            # Activity/context seam
+  InAppUpdatesActivityProvider.kt
+  EnvironmentChecker.kt          # install-source guard
+  playcore/                      # Play Core implementation
+    AppUpdateManagerProvider.kt
+    PlayCoreAppUpdateManager.kt
+    PlayCoreFlexibleUpdateService.kt
+    PlayCoreImmediateUpdateService.kt
+    PlayCoreInstallStateListenerService.kt
+    PlayCoreMapping.kt
+    PlayCoreStatusMapping.kt
+    PlayCoreStatusService.kt
+    PlayCoreStoreService.kt
+
+android/src/test/java/dev/rnforge/inappupdates/playcore/
+  10 test files + PlayCoreTestSupport.kt
+
+android/src/main/cpp/cpp-adapter.cpp  # C++ bridge adapter
+
+ios/
+  Bridge.h                       # Obj-C bridge header
+  HybridInAppUpdates.swift       # Nitro native module (bridge)
+  Core/                          # Pure Foundation lookup logic
+    AppStoreLookupCore.swift
+    AppStoreLookupHTTPClient.swift
+  Support/                       # Nitro adapter glue
+    AppStoreLookupSupport.swift
+  CoreTests/                     # SwiftPM tests
+    AppStoreLookupCoreTests.swift
+    AppStoreLookupHTTPClientTests.swift
+```
