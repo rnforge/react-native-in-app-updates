@@ -56,6 +56,7 @@ import { getUpdateStatus } from '@rnforge/react-native-in-app-updates'
 const status = await getUpdateStatus({
   ios: {
     appStoreId: '1234567890',
+    country: 'us',
   },
 })
 
@@ -67,6 +68,13 @@ console.log(status.capabilities)      // { immediate, flexible, storePage, ... }
 console.log(status.allowed)           // { immediate, flexible }
 console.log(status.android?.playCore) // raw Play Core details (Android only)
 ```
+
+**iOS options:**
+
+| Option | Type | Default | Description |
+|---|---|---|---|
+| `ios.appStoreId` | `string` | — | Numeric Apple App Store ID. Required for iOS store lookup. |
+| `ios.country` | `string` | — | Optional two-letter country code (e.g. `'us'`, `'gb'`) to localize the App Store lookup URL. |
 
 **Android options:**
 
@@ -188,10 +196,11 @@ Open the platform store page for the current app.
 ```typescript
 import { openStorePage } from '@rnforge/react-native-in-app-updates'
 
-// iOS — requires appStoreId
+// iOS — requires appStoreId, optional country
 await openStorePage({
   ios: {
     appStoreId: '1234567890',
+    country: 'us',
   },
 })
 
@@ -200,7 +209,7 @@ await openStorePage()
 ```
 
 - **Android**: opens `market://details?id=<packageName>` with a browser fallback to the Play Store web URL.
-- **iOS**: opens `https://apps.apple.com/app/id<appStoreId>`. Throws `InAppUpdatesError('invalid-input')` if `appStoreId` is missing.
+- **iOS**: opens `https://apps.apple.com/app/id<appStoreId>`, or `https://apps.apple.com/<country>/app/id<appStoreId>` when `country` is provided. Throws `InAppUpdatesError('invalid-input')` if `appStoreId` is missing, non-digits, or `country` is invalid.
 
 ## iOS Behavior
 
@@ -208,14 +217,19 @@ iOS does **not** support Google Play-style immediate or flexible in-app updates.
 
 Instead, iOS APIs return **explicit typed status**:
 
+`getUpdateStatus()` has two iOS modes:
+
+- With a valid `appStoreId`, it performs an App Store lookup. Successful lookups return `supported: true`, `latestVersionLookup: true`, `updateAvailable: true/false/null`, `currentVersion`, `latestStoreVersion`, and populated `ios.appStore` metadata.
+- Without `appStoreId`, or when lookup fails, it returns `supported: false` with `reason: 'missing-app-store-id'` or `'store-lookup-unavailable'`.
+
 | API | iOS Result |
 |---|---|
-| `getUpdateStatus()` | `supported: false`, `reason: 'store-lookup-unavailable'` or `'missing-app-store-id'` |
+| `getUpdateStatus()` | App Store lookup when `appStoreId` is provided; typed unsupported lookup status otherwise |
 | `startImmediateUpdate()` | `supported: false`, `reason: 'unsupported-platform'` |
 | `startFlexibleUpdate()` | `supported: false`, `reason: 'unsupported-platform'` |
 | `completeFlexibleUpdate()` | `supported: false`, `reason: 'unsupported-platform'` |
 | `addInstallStateListener()` | One event: `supported: false`, `reason: 'unsupported-platform'`, noop subscription |
-| `openStorePage()` | Opens App Store if `appStoreId` provided; throws if missing |
+| `openStorePage()` | Opens App Store if `appStoreId` provided; throws if missing or invalid |
 
 Use `openStorePage()` on iOS to direct users to the App Store for manual updates.
 
@@ -234,18 +248,25 @@ Real in-app update flows require **all** of the following:
 
 1. The app is installed from **Google Play** (not sideloaded, not debug builds from Android Studio).
 2. Google Play Services are available and up to date.
-3. A newer `versionCode` is available on Play than the one currently installed.
-4. The installed build is signed with the **same certificate** as the Play track build.
+3. The installed build is signed with the **same certificate** as the Play track build.
 
-If any of these are not met, the package returns `supported: false` with a typed reason instead of throwing:
+If any of these environment requirements are not met, the package returns `supported: false` with a typed reason:
 
 | Condition | Reason |
 |---|---|
 | Sideloaded / debug install | `'unsupported-install-source'` |
 | Play Core unavailable | `'play-core-unavailable'` |
-| APK expansion-file apps | `'apk-expansion-files-unsupported'` (if explicitly detectable) or surfaced as Play Core failure |
-| No update available | `'no-update-available'` |
-| Update available but not allowed by policy | `'update-not-allowed'` |
+
+When the environment supports in-app updates, the package returns `supported: true`. The update result then depends on Play availability and policy:
+
+| Condition | Reason | updateAvailable |
+|---|---|---|
+| Newer version available on Play | `'update-available'` | `true` |
+| Installed version is latest | `'no-update-available'` | `false` |
+| Developer-triggered update in progress | `'developer-triggered-update-in-progress'` | `true` |
+| Update available but not allowed by policy | `'update-not-allowed'` | varies |
+
+The `'apk-expansion-files-unsupported'` reason is reserved in the type system for future detection. The current Android implementation does not emit it.
 
 ## Helper Predicates
 
@@ -363,10 +384,10 @@ Play policy has decided the update is not allowed at this time (e.g. too soon af
 
 ### iOS `openStorePage()` throws `InAppUpdatesError('invalid-input')`
 
-You must provide an explicit `appStoreId`:
+You must provide a valid `appStoreId` (digits-only) and optionally a two-letter `country` code:
 
 ```typescript
-await openStorePage({ ios: { appStoreId: '1234567890' } })
+await openStorePage({ ios: { appStoreId: '1234567890', country: 'us' } })
 ```
 
 ### Listener events stop firing or show stale progress
