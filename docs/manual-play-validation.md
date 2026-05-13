@@ -291,4 +291,4 @@ The `@rnforge/react-native-in-app-updates` v1 package is **release-ready** only 
 ## Related Documents
 
 - [`TESTING.md`](../TESTING.md) — Automated test and local verification commands
-- [`example/App.tsx`](../example/App.tsx) — Minimal example source for running the validation steps
+- [`example/src/App.tsx`](../example/src/App.tsx) — Minimal example source for running the validation steps
