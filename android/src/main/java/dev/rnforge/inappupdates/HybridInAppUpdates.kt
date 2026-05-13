@@ -1,5 +1,11 @@
 package dev.rnforge.inappupdates
 
+import dev.rnforge.inappupdates.playcore.PlayCoreImmediateUpdateService
+import dev.rnforge.inappupdates.playcore.PlayCoreFlexibleUpdateService
+import dev.rnforge.inappupdates.playcore.PlayCoreInstallStateListenerService
+import dev.rnforge.inappupdates.playcore.PlayCoreStatusService
+import dev.rnforge.inappupdates.playcore.PlayCoreStoreService
+
 import com.margelo.nitro.rnforge.inappupdates.HybridInAppUpdatesSpec
 import com.margelo.nitro.core.Promise
 import com.margelo.nitro.rnforge.inappupdates.GetUpdateStatusOptionsNative

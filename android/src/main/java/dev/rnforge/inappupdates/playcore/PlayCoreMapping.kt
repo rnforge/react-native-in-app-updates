@@ -1,4 +1,4 @@
-package dev.rnforge.inappupdates
+package dev.rnforge.inappupdates.playcore
 
 import android.content.Context
 import android.content.pm.PackageManager

@@ -1,4 +1,9 @@
-package dev.rnforge.inappupdates
+package dev.rnforge.inappupdates.playcore
+
+import dev.rnforge.inappupdates.ActivityProvider
+import dev.rnforge.inappupdates.DefaultActivityProvider
+import dev.rnforge.inappupdates.EnvironmentChecker
+import dev.rnforge.inappupdates.DefaultEnvironmentChecker
 
 import android.content.Context
 import com.google.android.gms.common.ConnectionResult

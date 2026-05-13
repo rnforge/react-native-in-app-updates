@@ -1,4 +1,6 @@
-package dev.rnforge.inappupdates
+package dev.rnforge.inappupdates.playcore
+
+import dev.rnforge.inappupdates.ActivityProvider
 
 import com.google.android.play.core.appupdate.testing.FakeAppUpdateManager
 import com.google.android.play.core.install.model.AppUpdateType

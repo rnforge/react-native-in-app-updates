@@ -1,4 +1,9 @@
-package dev.rnforge.inappupdates
+package dev.rnforge.inappupdates.playcore
+
+import dev.rnforge.inappupdates.ActivityProvider
+import dev.rnforge.inappupdates.DefaultActivityProvider
+
+
 
 import android.content.Context
 import android.content.Intent

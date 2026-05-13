@@ -37,7 +37,7 @@
     "ios/**/*.m",
     "ios/**/*.mm",
     "ios/**/*.cpp",
-    "ios/AppStoreLookupSupport.swift",
+    "ios/Support/AppStoreLookupSupport.swift",
     "ios/HybridInAppUpdates.swift",
     "ios/Core/**/*.swift",
     "*.podspec",

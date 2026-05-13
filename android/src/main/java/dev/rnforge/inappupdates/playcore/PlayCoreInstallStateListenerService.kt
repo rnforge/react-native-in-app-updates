@@ -1,4 +1,7 @@
-package dev.rnforge.inappupdates
+package dev.rnforge.inappupdates.playcore
+
+import dev.rnforge.inappupdates.ActivityProvider
+import dev.rnforge.inappupdates.DefaultActivityProvider
 
 import com.google.android.play.core.install.InstallStateUpdatedListener
 import com.google.android.play.core.install.model.InstallStatus

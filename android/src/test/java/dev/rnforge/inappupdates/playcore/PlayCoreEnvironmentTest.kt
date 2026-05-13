@@ -1,4 +1,4 @@
-package dev.rnforge.inappupdates
+package dev.rnforge.inappupdates.playcore
 
 import org.junit.Assert.*
 import org.junit.Test

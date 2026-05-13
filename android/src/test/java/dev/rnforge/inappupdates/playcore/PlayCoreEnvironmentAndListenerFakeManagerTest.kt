@@ -1,4 +1,4 @@
-package dev.rnforge.inappupdates
+package dev.rnforge.inappupdates.playcore
 
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.play.core.appupdate.testing.FakeAppUpdateManager
