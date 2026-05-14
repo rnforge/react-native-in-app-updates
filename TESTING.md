@@ -48,6 +48,40 @@ The `.github/workflows/ci.yml` workflow runs on every push to `main` and every p
 
 Native Android/iOS example builds are **not in CI** because they require Android SDK / Xcode and are too heavy for standard CI runners. Manual Play Console validation remains a separate release gate.
 
+## Nitro/native release gate
+
+Any change to the Nitro spec, `nitro.json` namespace, generated native files, or handwritten native bridge code must run both Android and iOS native build verification before publish. TypeScript, Jest, `bun run build`, `npm pack --dry-run`, and Android-only verification are not sufficient for this class of change.
+
+Minimum required checks before publishing a release or prerelease with Nitro/native bridge changes:
+
+```bash
+bun run typecheck
+bun run typecheck:example
+bunx jest --runInBand
+bun run build
+npm pack --dry-run
+```
+
+Android native verification:
+
+```bash
+cd example/android
+./gradlew :rnforge_react-native-in-app-updates:testDebugUnitTest
+./gradlew assembleDebug
+```
+
+iOS native verification on macOS/Xcode:
+
+```bash
+cd example/ios
+bundle install
+bundle exec pod install
+cd ..
+bun ios
+```
+
+For release-blocking native fixes, also install the packed tarball or published `@next` package into a clean consumer app and verify it runs without any local `node_modules` patch.
+
 ## Example app
 
 The `example/` directory is a **real runnable React Native app** generated with React Native CLI (RN 0.84.1). It includes native Android and iOS project files and demonstrates all v1 public APIs.

@@ -3,6 +3,8 @@
 This document is the release gate checklist for validating real Android Play in-app update behavior before declaring the `@rnforge/react-native-in-app-updates` package release-ready.
 
 > **Important:** Automated unit tests and TypeScript type checking do **not** prove that Play Core returns real update availability on a Play-distributed device. This checklist must be completed manually on a physical Android device with a Google Play-distributed build.
+>
+> **Native integration gate:** If the release includes Nitro spec, `nitro.json`, generated native files, or handwritten native bridge changes, complete both Android and iOS native build verification from `TESTING.md` before running this Play validation. Do not validate a locally patched `node_modules` install as release-ready.
 
 ---
 
@@ -32,6 +34,8 @@ Before starting validation, confirm all of the following are available:
 - [ ] **versionCode strategy** — you have two builds ready:
   - An **older** build (lower `versionCode`) to install on the device
   - A **newer** build (higher `versionCode`) uploaded to the internal testing track
+- [ ] **Package install is unpatched** — validation uses the packed tarball or published package version directly, with no local `node_modules` patch script
+- [ ] **Native build gate complete** — if Nitro/generated/native bridge code changed, Android and iOS native builds passed before this Play run
 
 ---
 
