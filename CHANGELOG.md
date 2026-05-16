@@ -1,3 +1,13 @@
+## [1.0.0-next.3](https://github.com/rnforge/react-native-in-app-updates/compare/v1.0.0-next.2...v1.0.0-next.3) (2026-05-16)
+
+### 🐛 Bug Fixes
+
+* correct native integration crash blockers ([e8f07f1](https://github.com/rnforge/react-native-in-app-updates/commit/e8f07f1c684d5a466d30718366e0c91fc6719f1f))
+
+### 📚 Documentation
+
+* require native builds for Nitro changes ([2271a5c](https://github.com/rnforge/react-native-in-app-updates/commit/2271a5c530bf725c1291cabbdcc5495449510b09))
+
 ## [1.0.0-next.2](https://github.com/rnforge/react-native-in-app-updates/compare/v1.0.0-next.1...v1.0.0-next.2) (2026-05-13)
 
 ### 📚 Documentation
