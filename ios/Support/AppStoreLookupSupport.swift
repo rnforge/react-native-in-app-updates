@@ -34,6 +34,12 @@ enum AppStoreLookupSupport {
                 flexible: false
             ),
             reason: reason,
+            currentVersion: nil,
+            currentBuild: nil,
+            latestStoreVersion: nil,
+            latestStoreBuild: nil,
+            installStatus: nil,
+            android: nil,
             ios: iosDetails
         )
     }
@@ -96,7 +102,11 @@ enum AppStoreLookupSupport {
             ),
             reason: reason,
             currentVersion: currentVersion,
+            currentBuild: nil,
             latestStoreVersion: metadata.version,
+            latestStoreBuild: nil,
+            installStatus: nil,
+            android: nil,
             ios: iosDetails
         )
     }

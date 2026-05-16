@@ -22,7 +22,7 @@ interface EnvironmentChecker {
  */
 object DefaultEnvironmentChecker : EnvironmentChecker {
     override fun getInstallSource(context: Context): String? {
-        return getInstallSource(context)
+        return dev.rnforge.inappupdates.playcore.getInstallSource(context)
     }
 
     override fun isGooglePlayServicesAvailable(context: Context): Int {
