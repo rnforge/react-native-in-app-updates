@@ -13,13 +13,13 @@ import org.junit.Test
 class PlayCoreEnvironmentTest {
 
     @Test
-    fun checkEarlyEnvironment_nullContext_returnsUpdateNotAllowed() {
+    fun checkEarlyEnvironment_nullContext_returnsContextUnavailable() {
         val checker = FakeEnvironmentChecker()
         val status = checkEarlyEnvironment(null, checker)
 
         assertNotNull(status)
         assertTrue(status!!.supported)
         assertTrue(status.updateAvailable?.isFirst ?: false)
-        assertEquals("update-not-allowed", status.reason)
+        assertEquals("context-unavailable", status.reason)
     }
 }

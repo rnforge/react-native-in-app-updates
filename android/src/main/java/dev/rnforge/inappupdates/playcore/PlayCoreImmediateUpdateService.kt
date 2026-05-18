@@ -91,7 +91,7 @@ class PlayCoreImmediateUpdateService(
                                     info = appUpdateInfo,
                                     supported = true,
                                     updateAvailable = true,
-                                    reason = "update-not-allowed",
+                                    reason = "activity-unavailable",
                                     immediateAllowed = immediateAllowed,
                                     flexibleAllowed = flexibleAllowed
                                 ))

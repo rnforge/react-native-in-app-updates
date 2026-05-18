@@ -74,7 +74,7 @@ class PlayCoreFlexibleUpdateServiceFakeManagerTest {
     }
 
     @Test
-    fun startFlexibleUpdate_updateAvailableWithoutActivity_returnsUpdateNotAllowed() {
+    fun startFlexibleUpdate_updateAvailableWithoutActivity_returnsActivityUnavailable() {
         fakeManager.setUpdateAvailable(UpdateAvailability.UPDATE_AVAILABLE)
         val service = service(activity = null)
 
@@ -82,7 +82,7 @@ class PlayCoreFlexibleUpdateServiceFakeManagerTest {
             service.startFlexibleUpdate(null, onSuccess, onFailure)
         }
 
-        assertEquals("update-not-allowed", status.reason)
+        assertEquals("activity-unavailable", status.reason)
         assertTrue(status.updateAvailable!!.asSecondOrNull() ?: false)
     }
 

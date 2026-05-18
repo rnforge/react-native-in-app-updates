@@ -252,11 +252,13 @@ describe('AvailabilityReason union', () => {
       'developer-triggered-update-in-progress',
       'flexible-update-downloaded',
       'update-not-allowed',
+      'context-unavailable',
+      'activity-unavailable',
       'unknown',
     ]
 
-    expect(reasons).toHaveLength(6)
-    expect(new Set(reasons).size).toBe(6)
+    expect(reasons).toHaveLength(8)
+    expect(new Set(reasons).size).toBe(8)
   })
 })
 

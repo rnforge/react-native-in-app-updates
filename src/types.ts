@@ -15,6 +15,8 @@ export type AvailabilityReason =
   | 'developer-triggered-update-in-progress'
   | 'flexible-update-downloaded'
   | 'update-not-allowed'
+  | 'context-unavailable'
+  | 'activity-unavailable'
   | 'unknown'
 
 export type InstallStatus =

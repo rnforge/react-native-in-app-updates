@@ -112,7 +112,7 @@ Starts an Android immediate update flow. Presents a full-screen Play Core dialog
 import { startImmediateUpdate } from '@rnforge/react-native-in-app-updates'
 
 const result = await startImmediateUpdate()
-console.log(result.reason) // 'update-available', 'update-not-allowed', 'unsupported-install-source', etc.
+console.log(result.reason) // 'update-available', 'activity-unavailable', 'update-not-allowed', 'unsupported-install-source', etc.
 ```
 
 - On Android Play installs: triggers the Play immediate UI. App may restart if the user accepts.
@@ -137,7 +137,7 @@ Starts an Android flexible update flow. Presents a non-blocking Play Core snackb
 import { startFlexibleUpdate } from '@rnforge/react-native-in-app-updates'
 
 const result = await startFlexibleUpdate()
-console.log(result.reason) // 'update-available', 'update-not-allowed', etc.
+console.log(result.reason) // 'update-available', 'activity-unavailable', 'update-not-allowed', etc.
 ```
 
 - On Android Play installs: triggers the Play flexible UI. Download proceeds in the background.
@@ -270,7 +270,9 @@ When the environment supports in-app updates, the package returns `supported: tr
 | Newer version available on Play | `'update-available'` | `true` |
 | Installed version is latest | `'no-update-available'` | `false` |
 | Developer-triggered update in progress | `'developer-triggered-update-in-progress'` | `true` |
-| Update available but not allowed by policy | `'update-not-allowed'` | varies |
+| Update available but Play Core disallows the flow | `'update-not-allowed'` | varies |
+| Update available but no foreground Activity to launch UI | `'activity-unavailable'` | `true` |
+| Android application context unavailable | `'context-unavailable'` | `null` |
 
 The `'unsupported-os-version'` and `'apk-expansion-files-unsupported'` checks are Android-only environment gates. APK expansion detection is based on `.obb` files in the app's OBB directories; Play Asset Delivery is handled separately by the `android.allowAssetPackDeletion` option.
 
@@ -383,6 +385,14 @@ Your app is not installed from Google Play. Play in-app updates require a Play-d
 - The installed `versionCode` may already match the latest Play track version.
 - The device account may not be enrolled as an internal tester.
 - The signing certificate of the installed build may not match the Play track build.
+
+### `startImmediateUpdate()` / `startFlexibleUpdate()` returns `'activity-unavailable'`
+
+An update is available and Play Core permits the requested flow, but there is no foreground Activity to launch the Play update UI. This can happen when the app is in the background or during early lifecycle before any Activity is attached. The app should wait until a foreground Activity is available before retrying.
+
+### `getUpdateStatus()` / `startImmediateUpdate()` / `startFlexibleUpdate()` returns `'context-unavailable'`
+
+The Android application context is not available. This is a rare lifecycle edge case where the package cannot access the app's Context to query Play Core. The app should retry when the context becomes available.
 
 ### `startImmediateUpdate()` / `startFlexibleUpdate()` returns `'update-not-allowed'`
 

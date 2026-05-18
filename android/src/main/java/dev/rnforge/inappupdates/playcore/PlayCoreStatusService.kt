@@ -74,7 +74,7 @@ internal fun checkEarlyEnvironment(
         return createStatus(
             supported = true,
             updateAvailable = null,
-            reason = "update-not-allowed"
+            reason = "context-unavailable"
         )
     }
 

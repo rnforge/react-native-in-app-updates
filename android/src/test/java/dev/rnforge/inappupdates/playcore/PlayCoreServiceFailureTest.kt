@@ -24,7 +24,7 @@ import java.util.concurrent.atomic.AtomicReference
 class PlayCoreServiceFailureTest {
 
     @Test
-    fun statusService_nullContext_returnsTypedStatusWithoutManager() {
+    fun statusService_nullContext_returnsTypedContextUnavailable() {
         val service = PlayCoreStatusService(
             managerProvider = ThrowingManagerProvider(),
             envChecker = FakeEnvironmentChecker(),
@@ -37,7 +37,7 @@ class PlayCoreServiceFailureTest {
 
         assertTrue(status.supported)
         assertTrue(status.updateAvailable?.isFirst ?: false)
-        assertEquals("update-not-allowed", status.reason)
+        assertEquals("context-unavailable", status.reason)
     }
 
     @Test
