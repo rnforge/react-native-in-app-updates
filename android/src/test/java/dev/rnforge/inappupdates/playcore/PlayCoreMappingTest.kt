@@ -2,6 +2,7 @@ package dev.rnforge.inappupdates.playcore
 
 import android.net.Uri
 import com.google.android.play.core.install.InstallException
+import com.google.android.play.core.install.model.InstallErrorCode
 import com.google.android.play.core.install.model.InstallStatus
 import org.junit.Assume.assumeNotNull
 import org.junit.Assert.*
@@ -93,16 +94,53 @@ class PlayCoreMappingTest {
     }
 
     @Test
-    fun mapInstallErrorCodeLabel_failedStatus() {
-        assertEquals("INSTALL_ERROR_1", mapInstallErrorCodeLabel(InstallStatus.FAILED, 1))
-        assertEquals("INSTALL_ERROR_42", mapInstallErrorCodeLabel(InstallStatus.FAILED, 42))
+    fun mapInstallErrorCodeLabel_failedStatus_knownCodes() {
+        assertEquals("error-unknown", mapInstallErrorCodeLabel(InstallStatus.FAILED, InstallErrorCode.ERROR_UNKNOWN))
+        assertEquals("error-api-not-available", mapInstallErrorCodeLabel(InstallStatus.FAILED, InstallErrorCode.ERROR_API_NOT_AVAILABLE))
+        assertEquals("error-app-not-owned", mapInstallErrorCodeLabel(InstallStatus.FAILED, InstallErrorCode.ERROR_APP_NOT_OWNED))
+        assertEquals("error-download-not-present", mapInstallErrorCodeLabel(InstallStatus.FAILED, InstallErrorCode.ERROR_DOWNLOAD_NOT_PRESENT))
+        assertEquals("error-install-in-progress", mapInstallErrorCodeLabel(InstallStatus.FAILED, -8))
+        assertEquals("error-install-not-allowed", mapInstallErrorCodeLabel(InstallStatus.FAILED, InstallErrorCode.ERROR_INSTALL_NOT_ALLOWED))
+        assertEquals("error-install-unavailable", mapInstallErrorCodeLabel(InstallStatus.FAILED, InstallErrorCode.ERROR_INSTALL_UNAVAILABLE))
+        assertEquals("error-internal-error", mapInstallErrorCodeLabel(InstallStatus.FAILED, InstallErrorCode.ERROR_INTERNAL_ERROR))
+        assertEquals("error-invalid-request", mapInstallErrorCodeLabel(InstallStatus.FAILED, InstallErrorCode.ERROR_INVALID_REQUEST))
+        assertEquals("error-play-store-not-found", mapInstallErrorCodeLabel(InstallStatus.FAILED, InstallErrorCode.ERROR_PLAY_STORE_NOT_FOUND))
+    }
+
+    @Test
+    fun mapInstallErrorCodeLabel_failedStatus_unknownCode() {
+        assertEquals("install-error-42", mapInstallErrorCodeLabel(InstallStatus.FAILED, 42))
+        assertEquals("install-error--99", mapInstallErrorCodeLabel(InstallStatus.FAILED, -99))
+    }
+
+    @Test
+    @Suppress("DEPRECATION")
+    fun mapInstallErrorCodeLabel_failedStatus_noError() {
+        assertNull(mapInstallErrorCodeLabel(InstallStatus.FAILED, InstallErrorCode.NO_ERROR))
+        assertNull(mapInstallErrorCodeLabel(InstallStatus.FAILED, InstallErrorCode.NO_ERROR_PARTIALLY_ALLOWED))
     }
 
     @Test
     fun mapInstallErrorCodeLabel_nonFailedStatus() {
-        assertNull(mapInstallErrorCodeLabel(InstallStatus.DOWNLOADING, 1))
-        assertNull(mapInstallErrorCodeLabel(InstallStatus.INSTALLED, 42))
-        assertNull(mapInstallErrorCodeLabel(InstallStatus.UNKNOWN, 0))
+        assertNull(mapInstallErrorCodeLabel(InstallStatus.DOWNLOADING, InstallErrorCode.ERROR_UNKNOWN))
+        assertNull(mapInstallErrorCodeLabel(InstallStatus.INSTALLED, InstallErrorCode.ERROR_INTERNAL_ERROR))
+        assertNull(mapInstallErrorCodeLabel(InstallStatus.UNKNOWN, InstallErrorCode.NO_ERROR))
+    }
+
+    @Test
+    fun mapUpdatePrecondition_knownValues() {
+        assertEquals("unknown", mapUpdatePrecondition(0))
+        assertEquals("cannot-display", mapUpdatePrecondition(1))
+        assertEquals("need-store-to-proceed", mapUpdatePrecondition(2))
+        assertEquals("insufficient-storage", mapUpdatePrecondition(3))
+        assertEquals("device-status", mapUpdatePrecondition(4))
+        assertEquals("app-version-fresh", mapUpdatePrecondition(5))
+    }
+
+    @Test
+    fun mapUpdatePrecondition_unknownValue() {
+        assertEquals("unknown-99", mapUpdatePrecondition(99))
+        assertEquals("unknown--1", mapUpdatePrecondition(-1))
     }
 
     @Test
