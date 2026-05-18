@@ -52,13 +52,21 @@ enum AppStoreLookupSupport {
         makeStatus(reason: "store-lookup-unavailable", appStoreId: appStoreId, storePage: true)
     }
 
-    static func makeLookupFailedStatus(appStoreId: String, country: String? = nil) -> UpdateStatusNative {
+    static func makeLookupFailedStatus(reason: String = "store-lookup-unavailable", appStoreId: String, country: String? = nil) -> UpdateStatusNative {
         let storeUrl = storePageURL(appStoreId: appStoreId, country: country)?.absoluteString
-        return makeStatus(reason: "store-lookup-unavailable", appStoreId: appStoreId, storeUrl: storeUrl, storePage: true)
+        return makeStatus(reason: reason, appStoreId: appStoreId, storeUrl: storeUrl, storePage: true)
+    }
+
+    static func makeLookupFailedStatus(error: LookupHTTPError, appStoreId: String, country: String? = nil) -> UpdateStatusNative {
+        makeLookupFailedStatus(reason: reason(for: error), appStoreId: appStoreId, country: country)
+    }
+
+    static func makeLookupFailedStatus(parseResult: AppStoreLookupParseResult, appStoreId: String, country: String? = nil) -> UpdateStatusNative {
+        makeLookupFailedStatus(reason: reason(for: parseResult), appStoreId: appStoreId, country: country)
     }
 
     static func makeSuccessStatus(metadata: AppStoreLookupMetadata, currentVersion: String?, appStoreId: String) -> UpdateStatusNative {
-        let (updateAvailable, reason) = determineUpdateAvailability(
+        let (supported, updateAvailable, reason) = determineUpdateAvailability(
             currentVersion: currentVersion,
             latestVersion: metadata.version,
             minimumOsVersion: metadata.minimumOsVersion
@@ -89,7 +97,7 @@ enum AppStoreLookupSupport {
 
         return UpdateStatusNative(
             platform: "ios",
-            supported: true,
+            supported: supported,
             updateAvailable: updateAvailable,
             capabilities: CapabilitiesNative(
                 immediate: false,
@@ -117,17 +125,17 @@ enum AppStoreLookupSupport {
         currentVersion: String?,
         latestVersion: String?,
         minimumOsVersion: String?
-    ) -> (Variant_NullType_Bool, String) {
+    ) -> (Bool, Variant_NullType_Bool, String) {
         // Check minimum OS first, before version comparison
         if let minimumOsVersion = minimumOsVersion {
             let currentOS = UIDevice.current.systemVersion
             if let osComparison = AppStoreLookupCore.compareDottedNumericVersions(currentOS, minimumOsVersion) {
                 if osComparison == .orderedAscending {
-                    return (.first(NullType.null), "update-not-allowed")
+                    return (false, .first(NullType.null), "unsupported-os-version")
                 }
             } else {
                 // Ambiguous OS comparison → conservative
-                return (.first(NullType.null), "update-not-allowed")
+                return (true, .first(NullType.null), "update-not-allowed")
             }
         }
 
@@ -135,17 +143,17 @@ enum AppStoreLookupSupport {
             if let comparison = AppStoreLookupCore.compareDottedNumericVersions(currentVersion, latestVersion) {
                 switch comparison {
                 case .orderedAscending:
-                    return (.second(true), "update-available")
+                    return (true, .second(true), "update-available")
                 case .orderedSame, .orderedDescending:
-                    return (.second(false), "no-update-available")
+                    return (true, .second(false), "no-update-available")
                 @unknown default:
-                    return (.first(NullType.null), "update-not-allowed")
+                    return (true, .first(NullType.null), "update-not-allowed")
                 }
             } else {
-                return (.first(NullType.null), "update-not-allowed")
+                return (true, .first(NullType.null), "update-not-allowed")
             }
         } else {
-            return (.first(NullType.null), "update-not-allowed")
+            return (true, .first(NullType.null), "update-not-allowed")
         }
     }
 
@@ -166,11 +174,39 @@ enum AppStoreLookupSupport {
         }
     }
 
+    static func parseLookupResult(data: Data) -> AppStoreLookupParseResult {
+        AppStoreLookupCore.parseLookupResult(data: data)
+    }
+
     static func compareDottedNumericVersions(_ lhs: String, _ rhs: String) -> ComparisonResult? {
         AppStoreLookupCore.compareDottedNumericVersions(lhs, rhs)
     }
 
     static func validateLookupInput(appStoreId: String, country: String?) -> AppStoreLookupValidation {
         AppStoreLookupCore.validateLookupInput(appStoreId: appStoreId, country: country)
+    }
+
+    private static func reason(for error: LookupHTTPError) -> String {
+        switch error {
+        case .timeout:
+            return "store-lookup-timeout"
+        case .networkError:
+            return "store-lookup-network-error"
+        case .noData:
+            return "store-lookup-invalid-response"
+        case .httpError:
+            return "store-lookup-http-error"
+        }
+    }
+
+    private static func reason(for parseResult: AppStoreLookupParseResult) -> String {
+        switch parseResult {
+        case .metadata:
+            return "store-lookup-unavailable"
+        case .noResult:
+            return "store-lookup-not-found"
+        case .malformedJSON:
+            return "store-lookup-invalid-response"
+        }
     }
 }

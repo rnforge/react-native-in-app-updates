@@ -235,8 +235,10 @@ Instead, iOS APIs return **explicit typed status**:
 
 `getUpdateStatus()` has two iOS modes:
 
-- With a valid `appStoreId`, it performs an App Store lookup. Successful lookups return `supported: true`, `latestVersionLookup: true`, `updateAvailable: true/false/null`, `currentVersion`, `currentBuild`, `latestStoreVersion`, and populated `ios.appStore` metadata.
-- Without `appStoreId`, or when lookup fails, it returns `supported: false` with `reason: 'missing-app-store-id'` or `'store-lookup-unavailable'`.
+- With a valid `appStoreId`, it performs an App Store lookup. Successful lookups return `latestVersionLookup: true`, `updateAvailable: true/false/null`, `currentVersion`, `currentBuild`, `latestStoreVersion`, and populated `ios.appStore` metadata.
+- If App Store metadata says the current device OS is below `minimumOsVersion`, lookup still succeeds but the status returns `supported: false`, `updateAvailable: null`, and `reason: 'unsupported-os-version'`.
+- Without `appStoreId`, it returns `supported: false` with `reason: 'missing-app-store-id'`.
+- Lookup failures return `supported: false` with a precise reason when the native source can distinguish it: `'store-lookup-timeout'`, `'store-lookup-network-error'`, `'store-lookup-http-error'`, `'store-lookup-not-found'`, or `'store-lookup-invalid-response'`. `'store-lookup-unavailable'` remains the generic fallback.
 
 | API | iOS Result |
 |---|---|
@@ -417,6 +419,19 @@ You must provide a valid `appStoreId` (digits-only) and optionally a two-letter 
 ```typescript
 await openStorePage({ ios: { appStoreId: '1234567890', country: 'us' } })
 ```
+
+### iOS `getUpdateStatus()` returns a `store-lookup-*` reason
+
+The App Store lookup did not produce usable metadata. The reason is source-backed where possible:
+
+| Reason | Meaning |
+|---|---|
+| `'store-lookup-timeout'` | The lookup request timed out |
+| `'store-lookup-network-error'` | The lookup failed before an HTTP response was available |
+| `'store-lookup-http-error'` | iTunes Lookup returned a non-2xx HTTP response |
+| `'store-lookup-not-found'` | iTunes Lookup returned no app result for the provided `appStoreId` / `country` |
+| `'store-lookup-invalid-response'` | The response was empty or could not be parsed |
+| `'store-lookup-unavailable'` | Generic fallback when the native source cannot classify the failure |
 
 ### Listener events stop firing or show stale progress
 
