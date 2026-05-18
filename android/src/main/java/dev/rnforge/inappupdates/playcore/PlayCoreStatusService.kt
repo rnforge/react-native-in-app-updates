@@ -78,6 +78,14 @@ internal fun checkEarlyEnvironment(
         )
     }
 
+    if (!envChecker.isSupportedOsVersion()) {
+        return createUnsupportedStatus("unsupported-os-version")
+    }
+
+    if (envChecker.hasApkExpansionFiles(context)) {
+        return createUnsupportedStatus("apk-expansion-files-unsupported")
+    }
+
     val installSource = envChecker.getInstallSource(context)
     if (installSource != "com.android.vending") {
         return createUnsupportedStatus("unsupported-install-source")

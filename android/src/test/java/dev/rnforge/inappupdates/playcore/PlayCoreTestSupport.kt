@@ -22,8 +22,12 @@ internal data class FakeActivityProvider(
 
 internal class FakeEnvironmentChecker(
     private val installSource: String? = "com.android.vending",
-    private val playServicesResult: Int = ConnectionResult.SUCCESS
+    private val playServicesResult: Int = ConnectionResult.SUCCESS,
+    private val supportedOsVersion: Boolean = true,
+    private val apkExpansionFiles: Boolean = false
 ) : EnvironmentChecker {
+    override fun isSupportedOsVersion(): Boolean = supportedOsVersion
+    override fun hasApkExpansionFiles(context: Context): Boolean = apkExpansionFiles
     override fun getInstallSource(context: Context): String? = installSource
     override fun isGooglePlayServicesAvailable(context: Context): Int = playServicesResult
 }

@@ -259,6 +259,8 @@ If any of these environment requirements are not met, the package returns `suppo
 | Condition | Reason |
 |---|---|
 | Sideloaded / debug install | `'unsupported-install-source'` |
+| Android OS version below the package support floor | `'unsupported-os-version'` |
+| Legacy APK expansion (`.obb`) files detected | `'apk-expansion-files-unsupported'` |
 | Play Core unavailable | `'play-core-unavailable'` |
 
 When the environment supports in-app updates, the package returns `supported: true`. The update result then depends on Play availability and policy:
@@ -270,7 +272,7 @@ When the environment supports in-app updates, the package returns `supported: tr
 | Developer-triggered update in progress | `'developer-triggered-update-in-progress'` | `true` |
 | Update available but not allowed by policy | `'update-not-allowed'` | varies |
 
-The `'apk-expansion-files-unsupported'` reason is reserved in the type system for future detection. The current Android implementation does not emit it.
+The `'unsupported-os-version'` and `'apk-expansion-files-unsupported'` checks are Android-only environment gates. APK expansion detection is based on `.obb` files in the app's OBB directories; Play Asset Delivery is handled separately by the `android.allowAssetPackDeletion` option.
 
 ## Helper Predicates
 
