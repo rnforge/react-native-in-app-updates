@@ -188,4 +188,44 @@ class PlayCoreMappingTest {
         assertTrue(status.updateAvailable?.isFirst ?: false)
         assertEquals("update-not-allowed", status.reason)
     }
+
+    @Test
+    fun createStatus_withBuildFields() {
+        val status = createStatus(
+            supported = true,
+            updateAvailable = true,
+            reason = "update-available",
+            currentVersion = "1.2.3",
+            currentBuild = "42",
+            latestStoreBuild = "43"
+        )
+        assertEquals("1.2.3", status.currentVersion)
+        assertEquals("42", status.currentBuild?.asFirstOrNull())
+        assertEquals("43", status.latestStoreBuild?.asFirstOrNull())
+    }
+
+    @Test
+    fun createStatus_buildFieldsDefaultToNull() {
+        val status = createStatus(
+            supported = true,
+            updateAvailable = true,
+            reason = "update-available"
+        )
+        assertNull(status.currentVersion)
+        assertNull(status.currentBuild)
+        assertNull(status.latestStoreBuild)
+    }
+
+    @Test
+    fun createStatus_currentVersionWithoutBuildFields() {
+        val status = createStatus(
+            supported = true,
+            updateAvailable = true,
+            reason = "update-available",
+            currentVersion = "2.0.0"
+        )
+        assertEquals("2.0.0", status.currentVersion)
+        assertNull(status.currentBuild)
+        assertNull(status.latestStoreBuild)
+    }
 }

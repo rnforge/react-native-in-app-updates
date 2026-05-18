@@ -1,10 +1,66 @@
 package dev.rnforge.inappupdates.playcore
 
 import android.content.Context
+import android.content.pm.PackageManager
+import android.os.Build
 import com.google.android.play.core.appupdate.AppUpdateInfo
 import com.google.android.play.core.install.model.AppUpdateType
+import com.margelo.nitro.rnforge.inappupdates.AndroidDetailsNative
 import com.margelo.nitro.rnforge.inappupdates.PlayCoreDetailsNative
 import com.margelo.nitro.rnforge.inappupdates.UpdateStatusNative
+
+/**
+ * Builds a status result from an [AppUpdateInfo] with consistent version fields.
+ *
+ * Used by all service paths that have both [context] and [info].
+ * Populates:
+ * - `currentVersion` from installed app `PackageInfo.versionName`
+ * - `currentBuild` from installed app version code (longVersionCode on API 28+)
+ * - `latestStoreBuild` from `availableVersionCode()` only when update is available or in progress
+ * - `latestStoreVersion` remains null (Play Core does not expose store versionName)
+ */
+internal fun buildUpdateStatusFromInfo(
+    context: Context,
+    info: AppUpdateInfo,
+    supported: Boolean,
+    updateAvailable: Boolean?,
+    reason: String,
+    immediateAllowed: Boolean? = null,
+    flexibleAllowed: Boolean? = null,
+    installStatus: String? = null,
+    additionalPlayCore: PlayCoreDetailsNative? = null
+): UpdateStatusNative {
+    val currentVersion = getAppVersionName(context)
+    val currentBuild = getAppVersionCode(context)
+
+    // availableVersionCode() is only meaningful when an update is available or in progress.
+    // Android docs: returns arbitrary value otherwise.
+    val hasUpdateInfo = info.updateAvailability() ==
+        com.google.android.play.core.install.model.UpdateAvailability.UPDATE_AVAILABLE ||
+        info.updateAvailability() ==
+        com.google.android.play.core.install.model.UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS
+    val latestStoreBuild = if (hasUpdateInfo) info.availableVersionCode().toString() else null
+
+    val androidDetails = additionalPlayCore?.let {
+        AndroidDetailsNative(
+            packageName = context.packageName,
+            playCore = it
+        )
+    }
+
+    return createStatus(
+        supported = supported,
+        updateAvailable = updateAvailable,
+        reason = reason,
+        immediateAllowed = immediateAllowed,
+        flexibleAllowed = flexibleAllowed,
+        installStatus = installStatus,
+        android = androidDetails,
+        currentVersion = currentVersion,
+        currentBuild = currentBuild,
+        latestStoreBuild = latestStoreBuild
+    )
+}
 
 /**
  * Pure mapping from Play Core [AppUpdateInfo] to RNForge [UpdateStatusNative].
@@ -47,7 +103,9 @@ fun mapAppUpdateInfoToStatus(
         flexibleAllowed = flexibleAllowed
     )
 
-    return createStatus(
+    return buildUpdateStatusFromInfo(
+        context = context,
+        info = info,
         supported = true,
         updateAvailable = when (info.updateAvailability()) {
             com.google.android.play.core.install.model.UpdateAvailability.UPDATE_AVAILABLE -> true
@@ -63,11 +121,49 @@ fun mapAppUpdateInfoToStatus(
         immediateAllowed = immediateAllowed,
         flexibleAllowed = flexibleAllowed,
         installStatus = installStatus,
-        android = com.margelo.nitro.rnforge.inappupdates.AndroidDetailsNative(
-            packageName = context.packageName,
-            playCore = playCoreDetails
-        )
+        additionalPlayCore = playCoreDetails
     )
+}
+
+/**
+ * Returns the installed app's versionName.
+ * Uses the modern API on Android Tiramisu+, falls back on older versions.
+ */
+internal fun getAppVersionName(context: Context): String? {
+    return try {
+        val packageInfo = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            context.packageManager.getPackageInfo(context.packageName, PackageManager.PackageInfoFlags.of(0))
+        } else {
+            @Suppress("DEPRECATION")
+            context.packageManager.getPackageInfo(context.packageName, 0)
+        }
+        packageInfo.versionName
+    } catch (_: Exception) {
+        null
+    }
+}
+
+/**
+ * Returns the installed app's version code as a string.
+ * Uses `longVersionCode` on API 28+ (Pie), falls back to deprecated `versionCode` below.
+ */
+internal fun getAppVersionCode(context: Context): String? {
+    return try {
+        val packageInfo = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            context.packageManager.getPackageInfo(context.packageName, PackageManager.PackageInfoFlags.of(0))
+        } else {
+            @Suppress("DEPRECATION")
+            context.packageManager.getPackageInfo(context.packageName, 0)
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            packageInfo.longVersionCode.toString()
+        } else {
+            @Suppress("DEPRECATION")
+            packageInfo.versionCode.toString()
+        }
+    } catch (_: Exception) {
+        null
+    }
 }
 
 private fun mapUpdateAvailability(availability: Int): String {

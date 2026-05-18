@@ -85,6 +85,8 @@ enum AppStoreLookupSupport {
             appStore: appStoreDetails
         )
 
+        let currentBuild = Bundle.main.infoDictionary?["CFBundleVersion"] as? String
+
         return UpdateStatusNative(
             platform: "ios",
             supported: true,
@@ -102,7 +104,7 @@ enum AppStoreLookupSupport {
             ),
             reason: reason,
             currentVersion: currentVersion,
-            currentBuild: nil,
+            currentBuild: currentBuild.map { .first($0) },
             latestStoreVersion: metadata.version,
             latestStoreBuild: nil,
             installStatus: nil,

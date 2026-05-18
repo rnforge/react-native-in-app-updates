@@ -6,6 +6,7 @@ import dev.rnforge.inappupdates.EnvironmentChecker
 import dev.rnforge.inappupdates.DefaultEnvironmentChecker
 
 import android.app.Activity
+import android.content.Context
 import com.google.android.play.core.appupdate.AppUpdateManager
 import com.google.android.play.core.appupdate.AppUpdateOptions
 import com.google.android.play.core.install.model.AppUpdateType
@@ -56,7 +57,9 @@ class PlayCoreImmediateUpdateService(
             .addOnSuccessListener { appUpdateInfo ->
                 when (appUpdateInfo.updateAvailability()) {
                     UpdateAvailability.UPDATE_NOT_AVAILABLE -> {
-                        onSuccess(createStatus(
+                        onSuccess(buildUpdateStatusFromInfo(
+                            context = context,
+                            info = appUpdateInfo,
                             supported = true,
                             updateAvailable = false,
                             reason = "no-update-available"
@@ -73,6 +76,7 @@ class PlayCoreImmediateUpdateService(
                             val activity = activityProvider.currentActivity
                             if (activity != null) {
                                 startUpdateFlow(
+                                    context = context,
                                     appUpdateManager = appUpdateManager,
                                     appUpdateInfo = appUpdateInfo,
                                     activity = activity,
@@ -82,7 +86,9 @@ class PlayCoreImmediateUpdateService(
                                     allowAssetPackDeletion = allowAssetPackDeletion
                                 )
                             } else {
-                                onSuccess(createStatus(
+                                onSuccess(buildUpdateStatusFromInfo(
+                                    context = context,
+                                    info = appUpdateInfo,
                                     supported = true,
                                     updateAvailable = true,
                                     reason = "update-not-allowed",
@@ -91,7 +97,9 @@ class PlayCoreImmediateUpdateService(
                                 ))
                             }
                         } else {
-                            onSuccess(createStatus(
+                            onSuccess(buildUpdateStatusFromInfo(
+                                context = context,
+                                info = appUpdateInfo,
                                 supported = true,
                                 updateAvailable = true,
                                 reason = "update-not-allowed",
@@ -101,7 +109,9 @@ class PlayCoreImmediateUpdateService(
                         }
                     }
                     UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS -> {
-                        onSuccess(createStatus(
+                        onSuccess(buildUpdateStatusFromInfo(
+                            context = context,
+                            info = appUpdateInfo,
                             supported = true,
                             updateAvailable = true,
                             reason = "developer-triggered-update-in-progress"
@@ -118,6 +128,7 @@ class PlayCoreImmediateUpdateService(
     }
 
     private fun startUpdateFlow(
+        context: Context,
         appUpdateManager: AppUpdateManager,
         appUpdateInfo: com.google.android.play.core.appupdate.AppUpdateInfo,
         activity: Activity,
@@ -132,7 +143,9 @@ class PlayCoreImmediateUpdateService(
             buildAppUpdateOptions(AppUpdateType.IMMEDIATE, allowAssetPackDeletion)
         ).addOnCompleteListener { task ->
             if (task.isSuccessful) {
-                onSuccess(createStatus(
+                onSuccess(buildUpdateStatusFromInfo(
+                    context = context,
+                    info = appUpdateInfo,
                     supported = true,
                     updateAvailable = true,
                     reason = "update-available",

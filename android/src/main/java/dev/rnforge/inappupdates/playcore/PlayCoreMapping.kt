@@ -15,6 +15,7 @@ import com.margelo.nitro.rnforge.inappupdates.AndroidDetailsNative
 import com.margelo.nitro.rnforge.inappupdates.CapabilitiesNative
 import com.margelo.nitro.rnforge.inappupdates.UpdateStatusNative
 import com.margelo.nitro.rnforge.inappupdates.Variant_NullType_Boolean
+import com.margelo.nitro.rnforge.inappupdates.Variant_String_Double
 
 fun getInstallSource(context: Context): String? {
     return try {
@@ -77,7 +78,10 @@ fun createStatus(
     immediateAllowed: Boolean? = null,
     flexibleAllowed: Boolean? = null,
     installStatus: String? = null,
-    android: AndroidDetailsNative? = null
+    android: AndroidDetailsNative? = null,
+    currentVersion: String? = null,
+    currentBuild: String? = null,
+    latestStoreBuild: String? = null
 ): UpdateStatusNative {
     return UpdateStatusNative(
         platform = "android",
@@ -96,10 +100,10 @@ fun createStatus(
             flexible = flexibleAllowed ?: false
         ),
         reason = reason,
-        currentVersion = null,
-        currentBuild = null,
+        currentVersion = currentVersion,
+        currentBuild = currentBuild?.let { Variant_String_Double.create(it) },
         latestStoreVersion = null,
-        latestStoreBuild = null,
+        latestStoreBuild = latestStoreBuild?.let { Variant_String_Double.create(it) },
         installStatus = installStatus,
         android = android,
         ios = null

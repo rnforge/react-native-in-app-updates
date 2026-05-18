@@ -19,9 +19,9 @@ describe('mapNativeStatus', () => {
       },
       reason: 'update-available',
       currentVersion: '1.0.0',
-      currentBuild: 1,
+      currentBuild: '1',
       latestStoreVersion: '2.0.0',
-      latestStoreBuild: 2,
+      latestStoreBuild: '2',
       installStatus: 'pending',
       android: {
         packageName: 'com.example.app',
@@ -45,9 +45,9 @@ describe('mapNativeStatus', () => {
     expect(result.allowed.immediate).toBe(true)
     expect(result.reason).toBe('update-available')
     expect(result.currentVersion).toBe('1.0.0')
-    expect(result.currentBuild).toBe(1)
+    expect(result.currentBuild).toBe('1')
     expect(result.latestStoreVersion).toBe('2.0.0')
-    expect(result.latestStoreBuild).toBe(2)
+    expect(result.latestStoreBuild).toBe('2')
     expect(result.installStatus).toBe('pending')
     expect(result.android?.packageName).toBe('com.example.app')
     expect(result.android?.playCore?.availableVersionCode).toBe(2)

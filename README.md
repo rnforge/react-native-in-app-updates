@@ -98,6 +98,10 @@ const status = await getUpdateStatus({
 | `reason` | Typed reason for the result (e.g. `'update-available'`, `'unsupported-install-source'`, `'no-update-available'`) |
 | `capabilities` | What flows are available on this platform regardless of current state |
 | `allowed` | Whether immediate/flexible flows are currently permitted by Play policy |
+| `currentVersion` | Installed app display version. Android reads `versionName`; iOS reads `CFBundleShortVersionString`. |
+| `currentBuild` | Installed app build number. Android reads version code (`longVersionCode` on API 28+); iOS reads `CFBundleVersion`. |
+| `latestStoreVersion` | Store display version when the platform source provides it. iOS App Store lookup provides this; Android Play Core does not. |
+| `latestStoreBuild` | Store build/version code when the platform source provides it. Android Play Core provides `availableVersionCode` only when an update is available or in progress; iOS App Store lookup does not provide a store build. |
 | `android.playCore` | Raw Play Core details: `updateAvailability`, `availableVersionCode`, `clientVersionStalenessDays`, etc. |
 
 ### `startImmediateUpdate(options?)`
@@ -219,7 +223,7 @@ Instead, iOS APIs return **explicit typed status**:
 
 `getUpdateStatus()` has two iOS modes:
 
-- With a valid `appStoreId`, it performs an App Store lookup. Successful lookups return `supported: true`, `latestVersionLookup: true`, `updateAvailable: true/false/null`, `currentVersion`, `latestStoreVersion`, and populated `ios.appStore` metadata.
+- With a valid `appStoreId`, it performs an App Store lookup. Successful lookups return `supported: true`, `latestVersionLookup: true`, `updateAvailable: true/false/null`, `currentVersion`, `currentBuild`, `latestStoreVersion`, and populated `ios.appStore` metadata.
 - Without `appStoreId`, or when lookup fails, it returns `supported: false` with `reason: 'missing-app-store-id'` or `'store-lookup-unavailable'`.
 
 | API | iOS Result |
