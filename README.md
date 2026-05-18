@@ -96,13 +96,25 @@ const status = await getUpdateStatus({
 | `supported` | Whether the current platform + install source supports in-app updates |
 | `updateAvailable` | `true` if a newer version is available, `false` if not, `null` if unsupported |
 | `reason` | Typed reason for the result (e.g. `'update-available'`, `'unsupported-install-source'`, `'no-update-available'`) |
-| `capabilities` | What flows are available on this platform regardless of current state |
+| `capabilities` | Package-level feature flags for this platform/install source. `immediate`, `flexible`, and `installStateListener` are stable platform capabilities. `storePage` depends on input (iOS requires `appStoreId`). `latestVersionLookup` depends on lookup success (iOS only). |
 | `allowed` | Whether immediate/flexible flows are currently permitted by Play policy |
 | `currentVersion` | Installed app display version. Android reads `versionName`; iOS reads `CFBundleShortVersionString`. |
 | `currentBuild` | Installed app build number. Android reads version code (`longVersionCode` on API 28+); iOS reads `CFBundleVersion`. |
 | `latestStoreVersion` | Store display version when the platform source provides it. iOS App Store lookup provides this; Android Play Core does not. |
 | `latestStoreBuild` | Store build/version code when the platform source provides it. Android Play Core provides `availableVersionCode` only when an update is available or in progress; iOS App Store lookup does not provide a store build. |
 | `android.playCore` | Raw Play Core details: `updateAvailability`, `availableVersionCode`, `clientVersionStalenessDays`, etc. |
+
+**Capability fields:**
+
+| Capability | Meaning | Android Play | iOS |
+|---|---|---|---|
+| `immediate` | Package supports immediate update flow | `true` | `false` |
+| `flexible` | Package supports flexible update flow | `true` | `false` |
+| `storePage` | Package can attempt to open a store page with current input | `true` | `true` when `appStoreId` provided |
+| `latestVersionLookup` | Store version info is available in this result | `false` | `true` when lookup succeeds |
+| `installStateListener` | Package supports install-state event listeners | `true` | `false` |
+
+`capabilities` indicates what the package can do on this platform/install source. It does not reflect Play policy, update availability, or current device state — those are expressed through `allowed`, `updateAvailable`, `reason`, and `installStatus`.
 
 ### `startImmediateUpdate(options?)`
 
