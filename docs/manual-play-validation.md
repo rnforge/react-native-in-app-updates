@@ -191,6 +191,8 @@ Run each step in order and record the observed result.
 - `getUpdateStatus()` returns `supported: false`, `reason: "unsupported-install-source"`.
 - `startImmediateUpdate()` returns `supported: false`, `reason: "unsupported-install-source"`.
 - `startFlexibleUpdate()` returns `supported: false`, `reason: "unsupported-install-source"`.
+- Each status includes installed `currentVersion` and `currentBuild` when Android package metadata is available.
+- `latestStoreVersion` and `latestStoreBuild` are absent because Play Core store metadata is not queried for non-Play installs.
 - No JavaScript exception thrown.
 
 **Observed:**
@@ -211,17 +213,18 @@ Run each step in order and record the observed result.
 7. Tap **openStorePage()** (with `appStoreId` and optional `country`).
 
 **Expected:**
-- `getUpdateStatus()` without `appStoreId`: `supported: false`, `reason: "missing-app-store-id"`.
+- `getUpdateStatus()` without `appStoreId`: `supported: false`, `reason: "missing-app-store-id"`, with installed `currentVersion` and `currentBuild` when bundle metadata is available.
 - `getUpdateStatus()` with valid `appStoreId`: performs App Store metadata lookup.
-  - If store version is newer and OS-compatible: `supported: true`, `updateAvailable: true`, `reason: "update-available"`, `ios.appStore` populated.
+  - If store version is newer and OS-compatible: `supported: true`, `updateAvailable: true`, `reason: "update-available"`, installed `currentVersion`/`currentBuild`, source-backed `latestStoreVersion`, and `ios.appStore` populated.
   - If store version matches current: `supported: true`, `updateAvailable: false`, `reason: "no-update-available"`.
-  - If network fails or no result: `supported: false`, `reason: "store-lookup-unavailable"`.
-  - If minimum OS > device OS: `supported: true`, `updateAvailable: null`, `reason: "update-not-allowed"`.
+  - If network, HTTP, no-result, or parse failure occurs: `supported: false` with the most precise available reason (`"store-lookup-timeout"`, `"store-lookup-network-error"`, `"store-lookup-http-error"`, `"store-lookup-not-found"`, `"store-lookup-invalid-response"`, or generic `"store-lookup-unavailable"`).
+  - If minimum OS > device OS: `supported: false`, `updateAvailable: null`, `reason: "unsupported-os-version"`.
 - `getUpdateStatus()` with invalid `appStoreId`: throws `InAppUpdatesError` with `code: "invalid-input"`.
-- `startImmediateUpdate()`: `supported: false`, `reason: "unsupported-platform"`.
-- `startFlexibleUpdate()`: `supported: false`, `reason: "unsupported-platform"`.
+- `startImmediateUpdate()`: `supported: false`, `reason: "unsupported-platform"`, with installed `currentVersion` and `currentBuild` when bundle metadata is available.
+- `startFlexibleUpdate()`: `supported: false`, `reason: "unsupported-platform"`, with installed `currentVersion` and `currentBuild` when bundle metadata is available.
 - `addInstallStateListener()`: fires one event with `supported: false`, `reason: "unsupported-platform"`, returns a noop subscription.
 - `openStorePage()`: opens the App Store page for the given `appStoreId`; optional `country` localizes the URL.
+- iOS `latestStoreBuild` remains absent because App Store lookup does not expose a source-backed store build number.
 
 **Observed:**
 
@@ -231,9 +234,9 @@ Run each step in order and record the observed result.
 
 | API | Expected happy-path result | Expected unsupported/error result |
 |---|---|---|
-| `getUpdateStatus()` | Android: `supported: true`, `updateAvailable: true/false`, `android.playCore` details. iOS: `supported: true`, `updateAvailable: true/false/null`, `ios.appStore` metadata. | Android: `supported: false`, `reason: "unsupported-install-source"` or `"play-core-unavailable"`. iOS: `supported: false`, `reason: "missing-app-store-id"` or `"store-lookup-unavailable"`. |
-| `startImmediateUpdate()` | Play Core immediate UI shown, app may restart | `supported: false`, `reason: "unsupported-install-source"` |
-| `startFlexibleUpdate()` | Play Core flexible UI shown, background download starts | `supported: false`, `reason: "unsupported-install-source"` |
+| `getUpdateStatus()` | Android: `supported: true`, `updateAvailable: true/false`, installed version/build fields, and `android.playCore` details. iOS: `supported: true`, `updateAvailable: true/false/null`, installed version/build fields, source-backed `latestStoreVersion`, and `ios.appStore` metadata. | Android: `supported: false`, `reason: "unsupported-install-source"` or `"play-core-unavailable"`, with installed version/build fields when package metadata is available. iOS: `supported: false`, `reason: "missing-app-store-id"` or a precise store lookup reason, with installed version/build fields when bundle metadata is available. |
+| `startImmediateUpdate()` | Play Core immediate UI shown, app may restart | Android: `supported: false`, `reason: "unsupported-install-source"` or `"activity-unavailable"` depending on the gate. iOS: `supported: false`, `reason: "unsupported-platform"`. |
+| `startFlexibleUpdate()` | Play Core flexible UI shown, background download starts | Android: `supported: false`, `reason: "unsupported-install-source"` or `"activity-unavailable"` depending on the gate. iOS: `supported: false`, `reason: "unsupported-platform"`. |
 | `completeFlexibleUpdate()` | App installs update and restarts | `supported: true`, `reason: "update-not-allowed"` if no download pending |
 | `addInstallStateListener()` | Events fire with progress and status changes | iOS: `supported: false`, `reason: "unsupported-platform"` |
 | `openStorePage()` | Platform-appropriate store page opens | iOS: throws `InAppUpdatesError` with `code: "invalid-input"` if `appStoreId` missing, empty, non-digits, or `country` invalid |

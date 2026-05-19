@@ -237,8 +237,8 @@ Instead, iOS APIs return **explicit typed status**:
 
 - With a valid `appStoreId`, it performs an App Store lookup. Successful lookups return `latestVersionLookup: true`, `updateAvailable: true/false/null`, `currentVersion`, `currentBuild`, `latestStoreVersion`, and populated `ios.appStore` metadata.
 - If App Store metadata says the current device OS is below `minimumOsVersion`, lookup still succeeds but the status returns `supported: false`, `updateAvailable: null`, and `reason: 'unsupported-os-version'`.
-- Without `appStoreId`, it returns `supported: false` with `reason: 'missing-app-store-id'`.
-- Lookup failures return `supported: false` with a precise reason when the native source can distinguish it: `'store-lookup-timeout'`, `'store-lookup-network-error'`, `'store-lookup-http-error'`, `'store-lookup-not-found'`, or `'store-lookup-invalid-response'`. `'store-lookup-unavailable'` remains the generic fallback.
+- Without `appStoreId`, it returns `supported: false` with `reason: 'missing-app-store-id'` and still includes installed `currentVersion` / `currentBuild` when bundle metadata is available.
+- Lookup failures return `supported: false` with a precise reason when the native source can distinguish it: `'store-lookup-timeout'`, `'store-lookup-network-error'`, `'store-lookup-http-error'`, `'store-lookup-not-found'`, or `'store-lookup-invalid-response'`. `'store-lookup-unavailable'` remains the generic fallback. These fallback statuses also include installed `currentVersion` / `currentBuild` when bundle metadata is available.
 
 | API | iOS Result |
 |---|---|

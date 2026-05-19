@@ -140,7 +140,7 @@ cd example/android
 ./gradlew :rnforge_react-native-in-app-updates:jacocoDebugUnitTestReport
 ```
 
-> **Status:** The Gradle harness runs the library module (`:rnforge_react-native-in-app-updates`). Last verified Android JVM result: 43 tests, 0 skipped, 0 failures. Last measured Android Jacoco app-package line coverage: 82.43%; generated Nitro bindings are not a useful coverage target and should be excluded from coverage interpretation.
+> **Status:** The Gradle harness runs the library module (`:rnforge_react-native-in-app-updates`). Android JVM and `assembleDebug` checks were last verified on `rnforge-mac` during the pre-release cleanup and fallback-version follow-ups. Last measured Android Jacoco app-package line coverage: 82.43%; generated Nitro bindings are not a useful coverage target and should be excluded from coverage interpretation.
 
 ### Testable seams
 
@@ -162,7 +162,7 @@ All services have constructor defaults, so production code (`HybridInAppUpdates`
   - `createUnsupportedStatus()` / `createStatus()` — RNForge status object structure
 
 - **PlayCoreEnvironmentTest** — Early-return guard behavior:
-  - `checkEarlyEnvironment()` returns `update-not-allowed` when context is `null`
+  - `checkEarlyEnvironment()` returns `context-unavailable` when context is `null`
 
 - **PlayCoreInstallStateListenerServiceTest** — Listener seam safety:
   - Null-context path does not invoke `AppUpdateManagerProvider`
@@ -173,17 +173,23 @@ All services have constructor defaults, so production code (`HybridInAppUpdates`
 - **PlayCoreEnvironmentAndListenerFakeManagerTest** — Environment and listener coverage:
   - unsupported install source
   - Play Services unavailable
+  - Android unsupported environment statuses preserve installed `currentVersion` and `currentBuild` when package metadata is available
+  - `unsupported-os-version` and `apk-expansion-files-unsupported` environment gates
   - install-state listener progress and completion
   - flexible update completion after download
 - **PlayCoreImmediateUpdateServiceFakeManagerTest** — Immediate flow coverage:
   - no update available
   - immediate flow starts when allowed and an Activity exists
-  - update-not-allowed when Activity is missing or immediate flow is not allowed
+  - `activity-unavailable` when Activity is missing
+  - `update-not-allowed` when immediate flow is not allowed
+  - installed `currentVersion`, installed `currentBuild`, and gated `latestStoreBuild` status fields
   - unsupported install source
 - **PlayCoreFlexibleUpdateServiceFakeManagerTest** — Flexible flow coverage:
   - no update available
   - flexible flow starts when allowed and an Activity exists
-  - update-not-allowed when Activity is missing or flexible flow is not allowed
+  - `activity-unavailable` when Activity is missing
+  - `update-not-allowed` when flexible flow is not allowed
+  - installed `currentVersion`, installed `currentBuild`, and gated `latestStoreBuild` status fields
   - complete without downloaded update
   - Play Services unavailable
 - **PlayCoreServiceFailureTest** — Task failure coverage:
@@ -209,6 +215,7 @@ swift test
 The iOS lookup logic is split into seam-friendly Swift helpers:
 
 - `ios/Core/AppStoreLookupCore.swift` — pure Foundation lookup logic (URL construction, iTunes response parsing, dotted version comparison)
+- `ios/Core/AppStoreLookupStatusCore.swift` — pure status-field logic for installed version/build fields, fallback statuses, source-backed store fields, and OS-compatibility decisions
 - `ios/Support/AppStoreLookupSupport.swift` — Nitro adapter glue (bridges Core helpers to the Nitro native module)
 
 SwiftPM and future XCTest/Xcode coverage target the Core helpers for:
@@ -217,6 +224,11 @@ SwiftPM and future XCTest/Xcode coverage target the Core helpers for:
 - iTunes response parsing
 - dotted numeric version comparison
 - lookup failure/status mapping
+- installed `currentVersion` / `currentBuild` fallback fields for `missing-app-store-id`, lookup failures, and `unsupported-platform`
+- successful lookup status fields, including source-backed `latestStoreVersion` and absent `latestStoreBuild`
+- `unsupported-os-version` when App Store metadata requires a newer device OS
+
+Last verified SwiftPM result on `rnforge-mac`: 23 tests, 0 failures. The iOS example simulator build also passed after refreshing CocoaPods so the generated Pods project included the current Swift sources.
 
 ## Play Console validation
 
