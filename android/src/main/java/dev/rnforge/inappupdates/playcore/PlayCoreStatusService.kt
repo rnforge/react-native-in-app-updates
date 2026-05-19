@@ -78,22 +78,41 @@ internal fun checkEarlyEnvironment(
         )
     }
 
+    val currentVersion = getAppVersionName(context)
+    val currentBuild = getAppVersionCode(context)
+
     if (!envChecker.isSupportedOsVersion()) {
-        return createUnsupportedStatus("unsupported-os-version")
+        return createUnsupportedStatus(
+            reason = "unsupported-os-version",
+            currentVersion = currentVersion,
+            currentBuild = currentBuild
+        )
     }
 
     if (envChecker.hasApkExpansionFiles(context)) {
-        return createUnsupportedStatus("apk-expansion-files-unsupported")
+        return createUnsupportedStatus(
+            reason = "apk-expansion-files-unsupported",
+            currentVersion = currentVersion,
+            currentBuild = currentBuild
+        )
     }
 
     val installSource = envChecker.getInstallSource(context)
     if (installSource != "com.android.vending") {
-        return createUnsupportedStatus("unsupported-install-source")
+        return createUnsupportedStatus(
+            reason = "unsupported-install-source",
+            currentVersion = currentVersion,
+            currentBuild = currentBuild
+        )
     }
 
     val playServicesResult = envChecker.isGooglePlayServicesAvailable(context)
     if (playServicesResult != ConnectionResult.SUCCESS) {
-        return createUnsupportedStatus("play-core-unavailable")
+        return createUnsupportedStatus(
+            reason = "play-core-unavailable",
+            currentVersion = currentVersion,
+            currentBuild = currentBuild
+        )
     }
 
     return null

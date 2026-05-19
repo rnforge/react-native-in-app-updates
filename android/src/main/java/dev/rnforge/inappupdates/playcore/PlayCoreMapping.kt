@@ -44,7 +44,11 @@ fun mapInstallStatus(status: Int): String {
     }
 }
 
-fun createUnsupportedStatus(reason: String): UpdateStatusNative {
+fun createUnsupportedStatus(
+    reason: String,
+    currentVersion: String? = null,
+    currentBuild: String? = null
+): UpdateStatusNative {
     return UpdateStatusNative(
         platform = "android",
         supported = false,
@@ -61,8 +65,8 @@ fun createUnsupportedStatus(reason: String): UpdateStatusNative {
             flexible = false
         ),
         reason = reason,
-        currentVersion = null,
-        currentBuild = null,
+        currentVersion = currentVersion,
+        currentBuild = currentBuild?.let { Variant_String_Double.create(it) },
         latestStoreVersion = null,
         latestStoreBuild = null,
         installStatus = null,

@@ -3,12 +3,15 @@ package dev.rnforge.inappupdates.playcore
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.play.core.appupdate.testing.FakeAppUpdateManager
 import com.google.android.play.core.install.model.UpdateAvailability
+import android.content.pm.PackageInfo
+import android.os.Build
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.Robolectric
 import org.robolectric.RobolectricTestRunner
+import org.robolectric.Shadows
 
 @RunWith(RobolectricTestRunner::class)
 class PlayCoreEnvironmentAndListenerFakeManagerTest {
@@ -20,10 +23,24 @@ class PlayCoreEnvironmentAndListenerFakeManagerTest {
     fun setUp() {
         application = org.robolectric.RuntimeEnvironment.getApplication()
         fakeManager = FakeAppUpdateManager(application)
+
+        val packageManager = Shadows.shadowOf(application.packageManager)
+        val packageInfo = PackageInfo().apply {
+            packageName = application.packageName
+            versionName = "1.0.0"
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                longVersionCode = 42L
+            } else {
+                @Suppress("DEPRECATION")
+                versionCode = 42
+            }
+        }
+        @Suppress("DEPRECATION")
+        packageManager.addPackage(packageInfo)
     }
 
     @Test
-    fun checkEarlyEnvironment_nonPlayInstallSource_returnsUnsupportedInstallSource() {
+    fun checkEarlyEnvironment_nonPlayInstallSource_returnsUnsupportedInstallSourceWithInstalledVersion() {
         val status = checkEarlyEnvironment(
             application,
             FakeEnvironmentChecker("com.example.other", ConnectionResult.SUCCESS)
@@ -32,10 +49,13 @@ class PlayCoreEnvironmentAndListenerFakeManagerTest {
         assertNotNull(status)
         assertEquals("unsupported-install-source", status!!.reason)
         assertFalse(status.supported)
+        assertEquals("1.0.0", status.currentVersion)
+        assertEquals("42", status.currentBuild?.asFirstOrNull())
+        assertNull(status.latestStoreBuild)
     }
 
     @Test
-    fun checkEarlyEnvironment_playServicesUnavailable_returnsPlayCoreUnavailable() {
+    fun checkEarlyEnvironment_playServicesUnavailable_returnsPlayCoreUnavailableWithInstalledVersion() {
         val status = checkEarlyEnvironment(
             application,
             FakeEnvironmentChecker("com.android.vending", 1)
@@ -44,10 +64,13 @@ class PlayCoreEnvironmentAndListenerFakeManagerTest {
         assertNotNull(status)
         assertEquals("play-core-unavailable", status!!.reason)
         assertFalse(status.supported)
+        assertEquals("1.0.0", status.currentVersion)
+        assertEquals("42", status.currentBuild?.asFirstOrNull())
+        assertNull(status.latestStoreBuild)
     }
 
     @Test
-    fun checkEarlyEnvironment_unsupportedOsVersion_returnsUnsupportedOsVersion() {
+    fun checkEarlyEnvironment_unsupportedOsVersion_returnsUnsupportedOsVersionWithInstalledVersion() {
         val status = checkEarlyEnvironment(
             application,
             FakeEnvironmentChecker(supportedOsVersion = false)
@@ -56,10 +79,13 @@ class PlayCoreEnvironmentAndListenerFakeManagerTest {
         assertNotNull(status)
         assertEquals("unsupported-os-version", status!!.reason)
         assertFalse(status.supported)
+        assertEquals("1.0.0", status.currentVersion)
+        assertEquals("42", status.currentBuild?.asFirstOrNull())
+        assertNull(status.latestStoreBuild)
     }
 
     @Test
-    fun checkEarlyEnvironment_apkExpansionFiles_returnsApkExpansionFilesUnsupported() {
+    fun checkEarlyEnvironment_apkExpansionFiles_returnsApkExpansionFilesUnsupportedWithInstalledVersion() {
         val status = checkEarlyEnvironment(
             application,
             FakeEnvironmentChecker(apkExpansionFiles = true)
@@ -68,6 +94,9 @@ class PlayCoreEnvironmentAndListenerFakeManagerTest {
         assertNotNull(status)
         assertEquals("apk-expansion-files-unsupported", status!!.reason)
         assertFalse(status.supported)
+        assertEquals("1.0.0", status.currentVersion)
+        assertEquals("42", status.currentBuild?.asFirstOrNull())
+        assertNull(status.latestStoreBuild)
     }
 
     @Test
