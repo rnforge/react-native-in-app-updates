@@ -1,3 +1,17 @@
+## [1.0.0-next.4](https://github.com/rnforge/react-native-in-app-updates/compare/v1.0.0-next.3...v1.0.0-next.4) (2026-05-19)
+
+### 📚 Documentation
+
+* clarify capability semantics ([e7f6000](https://github.com/rnforge/react-native-in-app-updates/commit/e7f6000abc194b8fcae4e4ec75d096eb95139375))
+
+### 🛠️ Other changes
+
+* add android expected-state reasons ([0f754df](https://github.com/rnforge/react-native-in-app-updates/commit/0f754dfe1332f6b26f9626ea87ae8384d93e7800))
+* add android play diagnostic labels ([3a320f5](https://github.com/rnforge/react-native-in-app-updates/commit/3a320f5a331d45fc3dbd4861dd4724f64546a33a))
+* enable reserved android unsupported reasons ([335835b](https://github.com/rnforge/react-native-in-app-updates/commit/335835b9323ba074471dd88ef6cab42e63dc2ae7))
+* finish ios lookup and activity result review ([2cc7b8c](https://github.com/rnforge/react-native-in-app-updates/commit/2cc7b8c489b59cecc3f8731c6dc548b680476451))
+* populate update version fields ([73df6e5](https://github.com/rnforge/react-native-in-app-updates/commit/73df6e5b5fcd39792b7769e6217df440af61f09a))
+
 ## [1.0.0-next.3](https://github.com/rnforge/react-native-in-app-updates/compare/v1.0.0-next.2...v1.0.0-next.3) (2026-05-16)
 
 ### 🐛 Bug Fixes
