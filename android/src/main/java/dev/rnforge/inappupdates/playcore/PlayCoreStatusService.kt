@@ -74,8 +74,16 @@ internal fun checkEarlyEnvironment(
         return createStatus(
             supported = true,
             updateAvailable = null,
-            reason = "update-not-allowed"
+            reason = "context-unavailable"
         )
+    }
+
+    if (!envChecker.isSupportedOsVersion()) {
+        return createUnsupportedStatus("unsupported-os-version")
+    }
+
+    if (envChecker.hasApkExpansionFiles(context)) {
+        return createUnsupportedStatus("apk-expansion-files-unsupported")
     }
 
     val installSource = envChecker.getInstallSource(context)

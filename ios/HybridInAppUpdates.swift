@@ -46,16 +46,17 @@ class HybridInAppUpdates: HybridInAppUpdatesSpec {
             DispatchQueue.main.async {
                 switch result {
                 case .success(let data):
-                    guard let metadata = AppStoreLookupSupport.parseLookupMetadata(data: data) else {
-                        promise.resolve(withResult: AppStoreLookupSupport.makeLookupFailedStatus(appStoreId: appStoreId, country: country))
-                        return
+                    let parseResult = AppStoreLookupSupport.parseLookupResult(data: data)
+                    switch parseResult {
+                    case .metadata(let metadata):
+                        let currentVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
+                        promise.resolve(withResult: AppStoreLookupSupport.makeSuccessStatus(metadata: metadata, currentVersion: currentVersion, appStoreId: appStoreId))
+                    case .noResult, .malformedJSON:
+                        promise.resolve(withResult: AppStoreLookupSupport.makeLookupFailedStatus(parseResult: parseResult, appStoreId: appStoreId, country: country))
                     }
 
-                    let currentVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
-                    promise.resolve(withResult: AppStoreLookupSupport.makeSuccessStatus(metadata: metadata, currentVersion: currentVersion, appStoreId: appStoreId))
-
-                case .failure:
-                    promise.resolve(withResult: AppStoreLookupSupport.makeLookupFailedStatus(appStoreId: appStoreId, country: country))
+                case .failure(let error):
+                    promise.resolve(withResult: AppStoreLookupSupport.makeLookupFailedStatus(error: error, appStoreId: appStoreId, country: country))
                 }
             }
         }

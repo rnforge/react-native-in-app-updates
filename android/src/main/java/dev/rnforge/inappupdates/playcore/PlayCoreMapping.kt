@@ -7,6 +7,7 @@ import android.os.Build
 import com.google.android.play.core.appupdate.AppUpdateInfo
 import com.google.android.play.core.appupdate.AppUpdateOptions
 import com.google.android.play.core.install.InstallException
+import com.google.android.play.core.install.model.InstallErrorCode
 import com.google.android.play.core.install.model.InstallStatus
 import com.margelo.nitro.core.NullType
 import com.margelo.nitro.rnforge.inappupdates.AllowedFlowsNative
@@ -14,6 +15,7 @@ import com.margelo.nitro.rnforge.inappupdates.AndroidDetailsNative
 import com.margelo.nitro.rnforge.inappupdates.CapabilitiesNative
 import com.margelo.nitro.rnforge.inappupdates.UpdateStatusNative
 import com.margelo.nitro.rnforge.inappupdates.Variant_NullType_Boolean
+import com.margelo.nitro.rnforge.inappupdates.Variant_String_Double
 
 fun getInstallSource(context: Context): String? {
     return try {
@@ -76,7 +78,10 @@ fun createStatus(
     immediateAllowed: Boolean? = null,
     flexibleAllowed: Boolean? = null,
     installStatus: String? = null,
-    android: AndroidDetailsNative? = null
+    android: AndroidDetailsNative? = null,
+    currentVersion: String? = null,
+    currentBuild: String? = null,
+    latestStoreBuild: String? = null
 ): UpdateStatusNative {
     return UpdateStatusNative(
         platform = "android",
@@ -95,10 +100,10 @@ fun createStatus(
             flexible = flexibleAllowed ?: false
         ),
         reason = reason,
-        currentVersion = null,
-        currentBuild = null,
+        currentVersion = currentVersion,
+        currentBuild = currentBuild?.let { Variant_String_Double.create(it) },
         latestStoreVersion = null,
-        latestStoreBuild = null,
+        latestStoreBuild = latestStoreBuild?.let { Variant_String_Double.create(it) },
         installStatus = installStatus,
         android = android,
         ios = null
@@ -117,9 +122,33 @@ fun mapFailedUpdatePreconditionsOrNull(
         )
         val options = buildAppUpdateOptions(appUpdateType, allowAssetPackDeletion)
         @Suppress("UNCHECKED_CAST")
-        (method.invoke(appUpdateInfo, options) as? Iterable<Any>)?.map { it.toString() }
+        (method.invoke(appUpdateInfo, options) as? Iterable<Any>)?.map { precondition ->
+            val rawValue = when (precondition) {
+                is Int -> precondition
+                is Number -> precondition.toInt()
+                else -> precondition.toString().toIntOrNull()
+            }
+            if (rawValue != null) mapUpdatePrecondition(rawValue) else "unknown-${precondition}"
+        }
     } catch (_: Exception) {
         null
+    }
+}
+
+/**
+ * Maps official Play Core [UpdatePrecondition] integer constants to stable RNForge semantic labels.
+ *
+ * Official constants: https://developer.android.com/reference/com/google/android/play/core/install/model/UpdatePrecondition
+ */
+internal fun mapUpdatePrecondition(rawValue: Int): String {
+    return when (rawValue) {
+        0 -> "unknown"
+        1 -> "cannot-display"
+        2 -> "need-store-to-proceed"
+        3 -> "insufficient-storage"
+        4 -> "device-status"
+        5 -> "app-version-fresh"
+        else -> "unknown-$rawValue"
     }
 }
 
@@ -146,10 +175,35 @@ fun encodeTaskFailure(error: Exception): Exception {
     return Exception(message, error)
 }
 
+/**
+ * Maps Play Core [InstallErrorCode] values to official semantic labels.
+ *
+ * Returns null for non-failed statuses or for error code 0 (NO_ERROR).
+ * Falls back to `install-error-<code>` for unknown codes.
+ *
+ * Official constants: https://developer.android.com/reference/com/google/android/play/core/install/model/InstallErrorCode
+ */
 fun mapInstallErrorCodeLabel(status: Int, rawErrorCode: Int): String? {
-    return if (status == InstallStatus.FAILED) {
-        "INSTALL_ERROR_$rawErrorCode"
-    } else {
-        null
+    if (status != InstallStatus.FAILED) return null
+    if (rawErrorCode == InstallErrorCode.NO_ERROR) return null
+    @Suppress("DEPRECATION")
+    if (rawErrorCode == InstallErrorCode.NO_ERROR_PARTIALLY_ALLOWED) return null
+
+    // ERROR_INSTALL_IN_PROGRESS = -8 is documented in current official Android docs
+    // but is not exposed as a constant in com.google.android.play:app-update:2.1.0.
+    // Map the raw value directly for compile-safe compatibility.
+    if (rawErrorCode == -8) return "error-install-in-progress"
+
+    return when (rawErrorCode) {
+        InstallErrorCode.ERROR_UNKNOWN -> "error-unknown"
+        InstallErrorCode.ERROR_API_NOT_AVAILABLE -> "error-api-not-available"
+        InstallErrorCode.ERROR_APP_NOT_OWNED -> "error-app-not-owned"
+        InstallErrorCode.ERROR_DOWNLOAD_NOT_PRESENT -> "error-download-not-present"
+        InstallErrorCode.ERROR_INSTALL_NOT_ALLOWED -> "error-install-not-allowed"
+        InstallErrorCode.ERROR_INSTALL_UNAVAILABLE -> "error-install-unavailable"
+        InstallErrorCode.ERROR_INTERNAL_ERROR -> "error-internal-error"
+        InstallErrorCode.ERROR_INVALID_REQUEST -> "error-invalid-request"
+        InstallErrorCode.ERROR_PLAY_STORE_NOT_FOUND -> "error-play-store-not-found"
+        else -> "install-error-$rawErrorCode"
     }
 }

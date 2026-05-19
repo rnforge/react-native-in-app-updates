@@ -96,9 +96,25 @@ const status = await getUpdateStatus({
 | `supported` | Whether the current platform + install source supports in-app updates |
 | `updateAvailable` | `true` if a newer version is available, `false` if not, `null` if unsupported |
 | `reason` | Typed reason for the result (e.g. `'update-available'`, `'unsupported-install-source'`, `'no-update-available'`) |
-| `capabilities` | What flows are available on this platform regardless of current state |
+| `capabilities` | Package-level feature flags for this platform/install source. `immediate`, `flexible`, and `installStateListener` are stable platform capabilities. `storePage` depends on input (iOS requires `appStoreId`). `latestVersionLookup` depends on lookup success (iOS only). |
 | `allowed` | Whether immediate/flexible flows are currently permitted by Play policy |
+| `currentVersion` | Installed app display version. Android reads `versionName`; iOS reads `CFBundleShortVersionString`. |
+| `currentBuild` | Installed app build number. Android reads version code (`longVersionCode` on API 28+); iOS reads `CFBundleVersion`. |
+| `latestStoreVersion` | Store display version when the platform source provides it. iOS App Store lookup provides this; Android Play Core does not. |
+| `latestStoreBuild` | Store build/version code when the platform source provides it. Android Play Core provides `availableVersionCode` only when an update is available or in progress; iOS App Store lookup does not provide a store build. |
 | `android.playCore` | Raw Play Core details: `updateAvailability`, `availableVersionCode`, `clientVersionStalenessDays`, etc. |
+
+**Capability fields:**
+
+| Capability | Meaning | Android Play | iOS |
+|---|---|---|---|
+| `immediate` | Package supports immediate update flow | `true` | `false` |
+| `flexible` | Package supports flexible update flow | `true` | `false` |
+| `storePage` | Package can attempt to open a store page with current input | `true` | `true` when `appStoreId` provided |
+| `latestVersionLookup` | Store version info is available in this result | `false` | `true` when lookup succeeds |
+| `installStateListener` | Package supports install-state event listeners | `true` | `false` |
+
+`capabilities` indicates what the package can do on this platform/install source. It does not reflect Play policy, update availability, or current device state — those are expressed through `allowed`, `updateAvailable`, `reason`, and `installStatus`.
 
 ### `startImmediateUpdate(options?)`
 
@@ -108,7 +124,7 @@ Starts an Android immediate update flow. Presents a full-screen Play Core dialog
 import { startImmediateUpdate } from '@rnforge/react-native-in-app-updates'
 
 const result = await startImmediateUpdate()
-console.log(result.reason) // 'update-available', 'update-not-allowed', 'unsupported-install-source', etc.
+console.log(result.reason) // 'update-available', 'activity-unavailable', 'update-not-allowed', 'unsupported-install-source', etc.
 ```
 
 - On Android Play installs: triggers the Play immediate UI. App may restart if the user accepts.
@@ -133,7 +149,7 @@ Starts an Android flexible update flow. Presents a non-blocking Play Core snackb
 import { startFlexibleUpdate } from '@rnforge/react-native-in-app-updates'
 
 const result = await startFlexibleUpdate()
-console.log(result.reason) // 'update-available', 'update-not-allowed', etc.
+console.log(result.reason) // 'update-available', 'activity-unavailable', 'update-not-allowed', etc.
 ```
 
 - On Android Play installs: triggers the Play flexible UI. Download proceeds in the background.
@@ -219,8 +235,10 @@ Instead, iOS APIs return **explicit typed status**:
 
 `getUpdateStatus()` has two iOS modes:
 
-- With a valid `appStoreId`, it performs an App Store lookup. Successful lookups return `supported: true`, `latestVersionLookup: true`, `updateAvailable: true/false/null`, `currentVersion`, `latestStoreVersion`, and populated `ios.appStore` metadata.
-- Without `appStoreId`, or when lookup fails, it returns `supported: false` with `reason: 'missing-app-store-id'` or `'store-lookup-unavailable'`.
+- With a valid `appStoreId`, it performs an App Store lookup. Successful lookups return `latestVersionLookup: true`, `updateAvailable: true/false/null`, `currentVersion`, `currentBuild`, `latestStoreVersion`, and populated `ios.appStore` metadata.
+- If App Store metadata says the current device OS is below `minimumOsVersion`, lookup still succeeds but the status returns `supported: false`, `updateAvailable: null`, and `reason: 'unsupported-os-version'`.
+- Without `appStoreId`, it returns `supported: false` with `reason: 'missing-app-store-id'`.
+- Lookup failures return `supported: false` with a precise reason when the native source can distinguish it: `'store-lookup-timeout'`, `'store-lookup-network-error'`, `'store-lookup-http-error'`, `'store-lookup-not-found'`, or `'store-lookup-invalid-response'`. `'store-lookup-unavailable'` remains the generic fallback.
 
 | API | iOS Result |
 |---|---|
@@ -255,6 +273,8 @@ If any of these environment requirements are not met, the package returns `suppo
 | Condition | Reason |
 |---|---|
 | Sideloaded / debug install | `'unsupported-install-source'` |
+| Android OS version below the package support floor | `'unsupported-os-version'` |
+| Legacy APK expansion (`.obb`) files detected | `'apk-expansion-files-unsupported'` |
 | Play Core unavailable | `'play-core-unavailable'` |
 
 When the environment supports in-app updates, the package returns `supported: true`. The update result then depends on Play availability and policy:
@@ -264,9 +284,11 @@ When the environment supports in-app updates, the package returns `supported: tr
 | Newer version available on Play | `'update-available'` | `true` |
 | Installed version is latest | `'no-update-available'` | `false` |
 | Developer-triggered update in progress | `'developer-triggered-update-in-progress'` | `true` |
-| Update available but not allowed by policy | `'update-not-allowed'` | varies |
+| Update available but Play Core disallows the flow | `'update-not-allowed'` | varies |
+| Update available but no foreground Activity to launch UI | `'activity-unavailable'` | `true` |
+| Android application context unavailable | `'context-unavailable'` | `null` |
 
-The `'apk-expansion-files-unsupported'` reason is reserved in the type system for future detection. The current Android implementation does not emit it.
+The `'unsupported-os-version'` and `'apk-expansion-files-unsupported'` checks are Android-only environment gates. APK expansion detection is based on `.obb` files in the app's OBB directories; Play Asset Delivery is handled separately by the `android.allowAssetPackDeletion` option.
 
 ## Helper Predicates
 
@@ -378,6 +400,14 @@ Your app is not installed from Google Play. Play in-app updates require a Play-d
 - The device account may not be enrolled as an internal tester.
 - The signing certificate of the installed build may not match the Play track build.
 
+### `startImmediateUpdate()` / `startFlexibleUpdate()` returns `'activity-unavailable'`
+
+An update is available and Play Core permits the requested flow, but there is no foreground Activity to launch the Play update UI. This can happen when the app is in the background or during early lifecycle before any Activity is attached. The app should wait until a foreground Activity is available before retrying.
+
+### `getUpdateStatus()` / `startImmediateUpdate()` / `startFlexibleUpdate()` returns `'context-unavailable'`
+
+The Android application context is not available. This is a rare lifecycle edge case where the package cannot access the app's Context to query Play Core. The app should retry when the context becomes available.
+
 ### `startImmediateUpdate()` / `startFlexibleUpdate()` returns `'update-not-allowed'`
 
 Play policy has decided the update is not allowed at this time (e.g. too soon after last check, device constraints, or user declined previously). The app should continue normally and retry later.
@@ -389,6 +419,19 @@ You must provide a valid `appStoreId` (digits-only) and optionally a two-letter 
 ```typescript
 await openStorePage({ ios: { appStoreId: '1234567890', country: 'us' } })
 ```
+
+### iOS `getUpdateStatus()` returns a `store-lookup-*` reason
+
+The App Store lookup did not produce usable metadata. The reason is source-backed where possible:
+
+| Reason | Meaning |
+|---|---|
+| `'store-lookup-timeout'` | The lookup request timed out |
+| `'store-lookup-network-error'` | The lookup failed before an HTTP response was available |
+| `'store-lookup-http-error'` | iTunes Lookup returned a non-2xx HTTP response |
+| `'store-lookup-not-found'` | iTunes Lookup returned no app result for the provided `appStoreId` / `country` |
+| `'store-lookup-invalid-response'` | The response was empty or could not be parsed |
+| `'store-lookup-unavailable'` | Generic fallback when the native source cannot classify the failure |
 
 ### Listener events stop firing or show stale progress
 

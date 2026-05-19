@@ -8,6 +8,11 @@ export type UnsupportedReason =
   | 'missing-app-store-id'
   | 'play-core-unavailable'
   | 'store-lookup-unavailable'
+  | 'store-lookup-timeout'
+  | 'store-lookup-network-error'
+  | 'store-lookup-http-error'
+  | 'store-lookup-not-found'
+  | 'store-lookup-invalid-response'
 
 export type AvailabilityReason =
   | 'update-available'
@@ -15,6 +20,8 @@ export type AvailabilityReason =
   | 'developer-triggered-update-in-progress'
   | 'flexible-update-downloaded'
   | 'update-not-allowed'
+  | 'context-unavailable'
+  | 'activity-unavailable'
   | 'unknown'
 
 export type InstallStatus =

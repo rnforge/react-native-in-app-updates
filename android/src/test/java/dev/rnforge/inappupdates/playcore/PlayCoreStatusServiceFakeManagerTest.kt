@@ -10,6 +10,10 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
+import org.robolectric.Shadows
+import org.robolectric.RuntimeEnvironment
+import android.content.pm.PackageInfo
+import android.os.Build
 
 @RunWith(RobolectricTestRunner::class)
 class PlayCoreStatusServiceFakeManagerTest {
@@ -19,9 +23,22 @@ class PlayCoreStatusServiceFakeManagerTest {
 
     @Before
     fun setUp() {
-        val application = org.robolectric.RuntimeEnvironment.getApplication()
+        val application = RuntimeEnvironment.getApplication()
         fakeManager = FakeAppUpdateManager(application)
         activityProvider = FakeActivityProvider(application, null)
+
+        val packageManager = Shadows.shadowOf(application.packageManager)
+        val packageInfo = PackageInfo().apply {
+            packageName = application.packageName
+            versionName = "1.0.0"
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                longVersionCode = 42L
+            } else {
+                @Suppress("DEPRECATION")
+                versionCode = 42
+            }
+        }
+        packageManager.addPackage(packageInfo)
     }
 
     @Test
@@ -99,5 +116,73 @@ class PlayCoreStatusServiceFakeManagerTest {
 
         assertFalse(status.allowed.immediate)
         assertTrue(status.allowed.flexible)
+    }
+
+    @Test
+    fun getUpdateStatus_updateAvailable_populatesCurrentVersion() {
+        fakeManager.setUpdateAvailable(UpdateAvailability.UPDATE_AVAILABLE)
+
+        val service = PlayCoreStatusService(
+            managerProvider = FakeManagerProvider(fakeManager),
+            envChecker = FakeEnvironmentChecker(),
+            activityProvider = activityProvider
+        )
+
+        val status = awaitStatus { onSuccess, onFailure ->
+            service.getUpdateStatus(null, onSuccess, onFailure)
+        }
+
+        assertEquals("1.0.0", status.currentVersion)
+    }
+
+    @Test
+    fun getUpdateStatus_updateAvailable_populatesCurrentBuild() {
+        fakeManager.setUpdateAvailable(UpdateAvailability.UPDATE_AVAILABLE)
+
+        val service = PlayCoreStatusService(
+            managerProvider = FakeManagerProvider(fakeManager),
+            envChecker = FakeEnvironmentChecker(),
+            activityProvider = activityProvider
+        )
+
+        val status = awaitStatus { onSuccess, onFailure ->
+            service.getUpdateStatus(null, onSuccess, onFailure)
+        }
+
+        assertEquals("42", status.currentBuild?.asFirstOrNull())
+    }
+
+    @Test
+    fun getUpdateStatus_updateAvailable_populatesLatestStoreBuild() {
+        fakeManager.setUpdateAvailable(UpdateAvailability.UPDATE_AVAILABLE)
+
+        val service = PlayCoreStatusService(
+            managerProvider = FakeManagerProvider(fakeManager),
+            envChecker = FakeEnvironmentChecker(),
+            activityProvider = activityProvider
+        )
+
+        val status = awaitStatus { onSuccess, onFailure ->
+            service.getUpdateStatus(null, onSuccess, onFailure)
+        }
+
+        assertNotNull("latestStoreBuild should be populated when update is available", status.latestStoreBuild)
+    }
+
+    @Test
+    fun getUpdateStatus_noUpdate_available_latestStoreBuildIsNull() {
+        fakeManager.setUpdateNotAvailable()
+
+        val service = PlayCoreStatusService(
+            managerProvider = FakeManagerProvider(fakeManager),
+            envChecker = FakeEnvironmentChecker(),
+            activityProvider = activityProvider
+        )
+
+        val status = awaitStatus { onSuccess, onFailure ->
+            service.getUpdateStatus(null, onSuccess, onFailure)
+        }
+
+        assertNull("latestStoreBuild should be null when update is not available", status.latestStoreBuild)
     }
 }

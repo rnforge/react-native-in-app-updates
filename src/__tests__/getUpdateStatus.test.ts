@@ -402,7 +402,7 @@ describe('getUpdateStatus', () => {
     expect(result.reason).toBe('no-update-available')
   })
 
-  it('iOS lookup failure returns store-lookup-unavailable', async () => {
+  it('iOS lookup failure can return a precise lookup reason', async () => {
     mockObject.getUpdateStatus.mockResolvedValue({
       platform: 'ios',
       supported: false,
@@ -418,7 +418,7 @@ describe('getUpdateStatus', () => {
         immediate: false,
         flexible: false,
       },
-      reason: 'store-lookup-unavailable',
+      reason: 'store-lookup-not-found',
       ios: {
         bundleIdentifier: 'com.example.app',
         appStoreId: '1234567890',
@@ -428,10 +428,47 @@ describe('getUpdateStatus', () => {
     const result = await getUpdateStatus({ ios: { appStoreId: '1234567890' } })
 
     expect(result.supported).toBe(false)
-    expect(result.reason).toBe('store-lookup-unavailable')
+    expect(result.reason).toBe('store-lookup-not-found')
     expect(result.capabilities.storePage).toBe(true)
     expect(result.capabilities.latestVersionLookup).toBe(false)
     expect(result.ios?.appStoreId).toBe('1234567890')
+  })
+
+  it('iOS unsupported OS version returns unsupported-os-version', async () => {
+    mockObject.getUpdateStatus.mockResolvedValue({
+      platform: 'ios',
+      supported: false,
+      updateAvailable: null,
+      capabilities: {
+        immediate: false,
+        flexible: false,
+        storePage: true,
+        latestVersionLookup: true,
+        installStateListener: false,
+      },
+      allowed: {
+        immediate: false,
+        flexible: false,
+      },
+      reason: 'unsupported-os-version',
+      currentVersion: '1.0.0',
+      latestStoreVersion: '2.0.0',
+      ios: {
+        bundleIdentifier: 'com.example.app',
+        appStoreId: '1234567890',
+        appStore: {
+          version: '2.0.0',
+          minimumOsVersion: '99.0',
+        },
+      },
+    })
+
+    const result = await getUpdateStatus({ ios: { appStoreId: '1234567890' } })
+
+    expect(result.supported).toBe(false)
+    expect(result.updateAvailable).toBeNull()
+    expect(result.reason).toBe('unsupported-os-version')
+    expect(result.capabilities.latestVersionLookup).toBe(true)
   })
 
   it('iOS ambiguous version returns update-not-allowed', async () => {

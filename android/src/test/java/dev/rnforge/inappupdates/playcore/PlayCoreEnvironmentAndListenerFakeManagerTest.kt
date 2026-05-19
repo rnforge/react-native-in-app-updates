@@ -47,6 +47,30 @@ class PlayCoreEnvironmentAndListenerFakeManagerTest {
     }
 
     @Test
+    fun checkEarlyEnvironment_unsupportedOsVersion_returnsUnsupportedOsVersion() {
+        val status = checkEarlyEnvironment(
+            application,
+            FakeEnvironmentChecker(supportedOsVersion = false)
+        )
+
+        assertNotNull(status)
+        assertEquals("unsupported-os-version", status!!.reason)
+        assertFalse(status.supported)
+    }
+
+    @Test
+    fun checkEarlyEnvironment_apkExpansionFiles_returnsApkExpansionFilesUnsupported() {
+        val status = checkEarlyEnvironment(
+            application,
+            FakeEnvironmentChecker(apkExpansionFiles = true)
+        )
+
+        assertNotNull(status)
+        assertEquals("apk-expansion-files-unsupported", status!!.reason)
+        assertFalse(status.supported)
+    }
+
+    @Test
     fun installStateListener_receivesDownloadingAndDownloadedEvents() {
         val activity = Robolectric.buildActivity(android.app.Activity::class.java).setup().get()
         val events = mutableListOf<String>()
