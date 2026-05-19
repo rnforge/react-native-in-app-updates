@@ -9,6 +9,14 @@ enum AppStoreLookupSupport {
         storeUrl: String? = nil,
         storePage: Bool
     ) -> UpdateStatusNative {
+        let fields = AppStoreLookupCore.makeFallbackStatusFields(
+            reason: reason,
+            installed: currentInstalledAppMetadata(),
+            appStoreId: appStoreId,
+            storeUrl: storeUrl,
+            storePage: storePage
+        )
+
         let iosDetails = appStoreId.map {
             IosDetailsNative(
                 bundleIdentifier: Bundle.main.bundleIdentifier,
@@ -33,11 +41,11 @@ enum AppStoreLookupSupport {
                 immediate: false,
                 flexible: false
             ),
-            reason: reason,
-            currentVersion: currentAppVersion(),
-            currentBuild: currentAppBuild().map { .first($0) },
-            latestStoreVersion: nil,
-            latestStoreBuild: nil,
+            reason: fields.reason,
+            currentVersion: fields.currentVersion,
+            currentBuild: fields.currentBuild.map { .first($0) },
+            latestStoreVersion: fields.latestStoreVersion,
+            latestStoreBuild: fields.latestStoreBuild.map { .first($0) },
             installStatus: nil,
             android: nil,
             ios: iosDetails
@@ -66,10 +74,15 @@ enum AppStoreLookupSupport {
     }
 
     static func makeSuccessStatus(metadata: AppStoreLookupMetadata, currentVersion: String?, appStoreId: String) -> UpdateStatusNative {
-        let (supported, updateAvailable, reason) = determineUpdateAvailability(
+        let installed = AppStoreInstalledAppMetadata(
             currentVersion: currentVersion,
-            latestVersion: metadata.version,
-            minimumOsVersion: metadata.minimumOsVersion
+            currentBuild: currentAppBuild()
+        )
+        let fields = AppStoreLookupCore.makeSuccessStatusFields(
+            metadata: metadata,
+            installed: installed,
+            appStoreId: appStoreId,
+            currentOSVersion: UIDevice.current.systemVersion
         )
 
         let appStoreDetails = IosAppStoreDetailsNative(
@@ -93,12 +106,10 @@ enum AppStoreLookupSupport {
             appStore: appStoreDetails
         )
 
-        let currentBuild = currentAppBuild()
-
         return UpdateStatusNative(
             platform: "ios",
-            supported: supported,
-            updateAvailable: updateAvailable,
+            supported: fields.supported,
+            updateAvailable: fields.updateAvailable.map { .second($0) } ?? .first(NullType.null),
             capabilities: CapabilitiesNative(
                 immediate: false,
                 flexible: false,
@@ -110,51 +121,15 @@ enum AppStoreLookupSupport {
                 immediate: false,
                 flexible: false
             ),
-            reason: reason,
-            currentVersion: currentVersion,
-            currentBuild: currentBuild.map { .first($0) },
-            latestStoreVersion: metadata.version,
-            latestStoreBuild: nil,
+            reason: fields.reason,
+            currentVersion: fields.currentVersion,
+            currentBuild: fields.currentBuild.map { .first($0) },
+            latestStoreVersion: fields.latestStoreVersion,
+            latestStoreBuild: fields.latestStoreBuild.map { .first($0) },
             installStatus: nil,
             android: nil,
             ios: iosDetails
         )
-    }
-
-    private static func determineUpdateAvailability(
-        currentVersion: String?,
-        latestVersion: String?,
-        minimumOsVersion: String?
-    ) -> (Bool, Variant_NullType_Bool, String) {
-        // Check minimum OS first, before version comparison
-        if let minimumOsVersion = minimumOsVersion {
-            let currentOS = UIDevice.current.systemVersion
-            if let osComparison = AppStoreLookupCore.compareDottedNumericVersions(currentOS, minimumOsVersion) {
-                if osComparison == .orderedAscending {
-                    return (false, .first(NullType.null), "unsupported-os-version")
-                }
-            } else {
-                // Ambiguous OS comparison → conservative
-                return (true, .first(NullType.null), "update-not-allowed")
-            }
-        }
-
-        if let currentVersion = currentVersion, let latestVersion = latestVersion {
-            if let comparison = AppStoreLookupCore.compareDottedNumericVersions(currentVersion, latestVersion) {
-                switch comparison {
-                case .orderedAscending:
-                    return (true, .second(true), "update-available")
-                case .orderedSame, .orderedDescending:
-                    return (true, .second(false), "no-update-available")
-                @unknown default:
-                    return (true, .first(NullType.null), "update-not-allowed")
-                }
-            } else {
-                return (true, .first(NullType.null), "update-not-allowed")
-            }
-        } else {
-            return (true, .first(NullType.null), "update-not-allowed")
-        }
     }
 
     static func lookupURL(appStoreId: String, country: String? = nil) -> URL? {
@@ -167,6 +142,10 @@ enum AppStoreLookupSupport {
 
     static func currentAppBuild() -> String? {
         Bundle.main.infoDictionary?["CFBundleVersion"] as? String
+    }
+
+    static func currentInstalledAppMetadata() -> AppStoreInstalledAppMetadata {
+        AppStoreInstalledAppMetadata.from(infoDictionary: Bundle.main.infoDictionary)
     }
 
     static func storePageURL(appStoreId: String, country: String? = nil) -> URL? {
