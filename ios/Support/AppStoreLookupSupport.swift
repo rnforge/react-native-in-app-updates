@@ -34,8 +34,8 @@ enum AppStoreLookupSupport {
                 flexible: false
             ),
             reason: reason,
-            currentVersion: nil,
-            currentBuild: nil,
+            currentVersion: currentAppVersion(),
+            currentBuild: currentAppBuild().map { .first($0) },
             latestStoreVersion: nil,
             latestStoreBuild: nil,
             installStatus: nil,
@@ -93,7 +93,7 @@ enum AppStoreLookupSupport {
             appStore: appStoreDetails
         )
 
-        let currentBuild = Bundle.main.infoDictionary?["CFBundleVersion"] as? String
+        let currentBuild = currentAppBuild()
 
         return UpdateStatusNative(
             platform: "ios",
@@ -159,6 +159,14 @@ enum AppStoreLookupSupport {
 
     static func lookupURL(appStoreId: String, country: String? = nil) -> URL? {
         AppStoreLookupCore.lookupURL(appStoreId: appStoreId, country: country)
+    }
+
+    static func currentAppVersion() -> String? {
+        Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
+    }
+
+    static func currentAppBuild() -> String? {
+        Bundle.main.infoDictionary?["CFBundleVersion"] as? String
     }
 
     static func storePageURL(appStoreId: String, country: String? = nil) -> URL? {

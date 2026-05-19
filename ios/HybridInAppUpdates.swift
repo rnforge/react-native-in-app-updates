@@ -49,7 +49,7 @@ class HybridInAppUpdates: HybridInAppUpdatesSpec {
                     let parseResult = AppStoreLookupSupport.parseLookupResult(data: data)
                     switch parseResult {
                     case .metadata(let metadata):
-                        let currentVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
+                        let currentVersion = AppStoreLookupSupport.currentAppVersion()
                         promise.resolve(withResult: AppStoreLookupSupport.makeSuccessStatus(metadata: metadata, currentVersion: currentVersion, appStoreId: appStoreId))
                     case .noResult, .malformedJSON:
                         promise.resolve(withResult: AppStoreLookupSupport.makeLookupFailedStatus(parseResult: parseResult, appStoreId: appStoreId, country: country))
