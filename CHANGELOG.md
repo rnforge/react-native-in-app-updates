@@ -1,3 +1,9 @@
+## [1.0.0-next.5](https://github.com/rnforge/react-native-in-app-updates/compare/v1.0.0-next.4...v1.0.0-next.5) (2026-05-19)
+
+### 🛠️ Other changes
+
+* populate installed version for android unsupported states ([5ea13e1](https://github.com/rnforge/react-native-in-app-updates/commit/5ea13e162699f7dcc7b80c8ac7b9fa0a99b4f509))
+
 ## [1.0.0-next.4](https://github.com/rnforge/react-native-in-app-updates/compare/v1.0.0-next.3...v1.0.0-next.4) (2026-05-19)
 
 ### 📚 Documentation
