@@ -1,3 +1,13 @@
+## [1.0.0-next.6](https://github.com/rnforge/react-native-in-app-updates/compare/v1.0.0-next.5...v1.0.0-next.6) (2026-05-19)
+
+### 📚 Documentation
+
+* refresh prerelease validation expectations ([e43bc06](https://github.com/rnforge/react-native-in-app-updates/commit/e43bc06fdbeebc01ec13584da2e648aa40a3e0c4))
+
+### 🛠️ Other changes
+
+* populate installed version for ios fallback states ([148b5ed](https://github.com/rnforge/react-native-in-app-updates/commit/148b5edef81c00a9695d266d5c272ecbb2382e62))
+
 ## [1.0.0-next.5](https://github.com/rnforge/react-native-in-app-updates/compare/v1.0.0-next.4...v1.0.0-next.5) (2026-05-19)
 
 ### 🛠️ Other changes
