@@ -151,11 +151,35 @@ class PlayCoreMappingTest {
         assertEquals("play-core-unavailable", status.reason)
         assertFalse(status.capabilities.immediate)
         assertFalse(status.capabilities.flexible)
-        assertFalse(status.capabilities.storePage)
+        assertTrue(status.capabilities.storePage)
         assertFalse(status.capabilities.latestVersionLookup)
         assertFalse(status.capabilities.installStateListener)
         assertFalse(status.allowed.immediate)
         assertFalse(status.allowed.flexible)
+    }
+
+    @Test
+    fun createUnsupportedStatus_unsupportedInstallSource_preservesStorePage() {
+        val status = createUnsupportedStatus("unsupported-install-source")
+        assertEquals("unsupported-install-source", status.reason)
+        assertFalse(status.supported)
+        assertFalse(status.capabilities.immediate)
+        assertFalse(status.capabilities.flexible)
+        assertTrue(status.capabilities.storePage)
+        assertFalse(status.capabilities.latestVersionLookup)
+        assertFalse(status.capabilities.installStateListener)
+    }
+
+    @Test
+    fun createUnsupportedStatus_playCoreUnavailable_preservesStorePage() {
+        val status = createUnsupportedStatus("play-core-unavailable")
+        assertEquals("play-core-unavailable", status.reason)
+        assertFalse(status.supported)
+        assertFalse(status.capabilities.immediate)
+        assertFalse(status.capabilities.flexible)
+        assertTrue(status.capabilities.storePage)
+        assertFalse(status.capabilities.latestVersionLookup)
+        assertFalse(status.capabilities.installStateListener)
     }
 
     @Test

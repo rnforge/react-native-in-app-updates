@@ -249,6 +249,30 @@ describe('canOpenStorePage', () => {
     })
     expect(canOpenStorePage(status)).toBe(false)
   })
+
+  it('returns true for Android unsupported-install-source with store-page fallback', () => {
+    const status = makeStatus({
+      platform: 'android',
+      supported: false,
+      updateAvailable: null,
+      capabilities: { immediate: false, flexible: false, storePage: true, latestVersionLookup: false, installStateListener: false },
+      allowed: { immediate: false, flexible: false },
+      reason: 'unsupported-install-source',
+    })
+    expect(canOpenStorePage(status)).toBe(true)
+  })
+
+  it('returns true for Android play-core-unavailable with store-page fallback', () => {
+    const status = makeStatus({
+      platform: 'android',
+      supported: false,
+      updateAvailable: null,
+      capabilities: { immediate: false, flexible: false, storePage: true, latestVersionLookup: false, installStateListener: false },
+      allowed: { immediate: false, flexible: false },
+      reason: 'play-core-unavailable',
+    })
+    expect(canOpenStorePage(status)).toBe(true)
+  })
 })
 
 describe('supportsInstallStateListener', () => {

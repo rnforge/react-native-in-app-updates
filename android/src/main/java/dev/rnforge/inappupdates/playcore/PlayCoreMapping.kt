@@ -52,7 +52,7 @@ fun createUnsupportedStatus(reason: String): UpdateStatusNative {
         capabilities = CapabilitiesNative(
             immediate = false,
             flexible = false,
-            storePage = false,
+            storePage = reason == "unsupported-install-source" || reason == "play-core-unavailable",
             latestVersionLookup = false,
             installStateListener = false
         ),

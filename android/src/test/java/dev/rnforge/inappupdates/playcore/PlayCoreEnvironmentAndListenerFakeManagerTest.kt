@@ -32,6 +32,7 @@ class PlayCoreEnvironmentAndListenerFakeManagerTest {
         assertNotNull(status)
         assertEquals("unsupported-install-source", status!!.reason)
         assertFalse(status.supported)
+        assertTrue(status.capabilities.storePage)
     }
 
     @Test
@@ -44,6 +45,7 @@ class PlayCoreEnvironmentAndListenerFakeManagerTest {
         assertNotNull(status)
         assertEquals("play-core-unavailable", status!!.reason)
         assertFalse(status.supported)
+        assertTrue(status.capabilities.storePage)
     }
 
     @Test
