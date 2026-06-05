@@ -161,6 +161,15 @@ describe('completeFlexibleUpdate', () => {
       },
       reason: 'flexible-update-downloaded',
       installStatus: 'downloaded',
+      android: {
+        packageName: 'com.example.app',
+        playCore: {
+          updateAvailability: 'UPDATE_AVAILABLE',
+          installStatus: 'downloaded',
+          immediateAllowed: true,
+          flexibleAllowed: true,
+        },
+      },
     })
 
     const result = await completeFlexibleUpdate()
@@ -168,6 +177,7 @@ describe('completeFlexibleUpdate', () => {
     expect(result.supported).toBe(true)
     expect(result.reason).toBe('flexible-update-downloaded')
     expect(result.installStatus).toBe('downloaded')
+    expect(result.android?.packageName).toBe('com.example.app')
   })
 
   it('returns update-not-allowed when no downloaded flexible update is present', async () => {

@@ -118,6 +118,14 @@ describe('startImmediateUpdate', () => {
         flexible: true,
       },
       reason: 'update-not-allowed',
+      android: {
+        packageName: 'com.example.app',
+        playCore: {
+          updateAvailability: 'UPDATE_AVAILABLE',
+          immediateAllowed: false,
+          flexibleAllowed: true,
+        },
+      },
     })
 
     const result = await startImmediateUpdate()
@@ -126,6 +134,7 @@ describe('startImmediateUpdate', () => {
     expect(result.reason).toBe('update-not-allowed')
     expect(result.capabilities.storePage).toBe(true)
     expect(result.allowed.immediate).toBe(false)
+    expect(result.android?.packageName).toBe('com.example.app')
   })
 
   it('passes android allowAssetPackDeletion option to native layer', async () => {

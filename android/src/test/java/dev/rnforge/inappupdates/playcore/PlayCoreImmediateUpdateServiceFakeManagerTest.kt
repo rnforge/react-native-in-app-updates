@@ -71,6 +71,10 @@ class PlayCoreImmediateUpdateServiceFakeManagerTest {
         assertEquals("update-available", status.reason)
         assertTrue(status.allowed.immediate)
         assertTrue(fakeManager.isImmediateFlowVisible)
+        assertNotNull(status.android)
+        assertEquals(application.packageName, status.android!!.packageName)
+        assertNotNull(status.android!!.playCore)
+        assertEquals("UPDATE_AVAILABLE", status.android!!.playCore!!.updateAvailability)
     }
 
     @Test
@@ -84,6 +88,12 @@ class PlayCoreImmediateUpdateServiceFakeManagerTest {
 
         assertEquals("activity-unavailable", status.reason)
         assertTrue(status.updateAvailable!!.asSecondOrNull() ?: false)
+        assertNotNull(status.android)
+        assertEquals(application.packageName, status.android!!.packageName)
+        assertNotNull(status.android!!.playCore)
+        assertEquals("UPDATE_AVAILABLE", status.android!!.playCore!!.updateAvailability)
+        assertTrue(status.android!!.playCore!!.immediateAllowed!!)
+        assertTrue(status.android!!.playCore!!.flexibleAllowed!!)
     }
 
     @Test
@@ -99,6 +109,12 @@ class PlayCoreImmediateUpdateServiceFakeManagerTest {
         assertEquals("update-not-allowed", status.reason)
         assertFalse(status.allowed.immediate)
         assertTrue(status.allowed.flexible)
+        assertNotNull(status.android)
+        assertEquals(application.packageName, status.android!!.packageName)
+        assertNotNull(status.android!!.playCore)
+        assertEquals("UPDATE_AVAILABLE", status.android!!.playCore!!.updateAvailability)
+        assertFalse(status.android!!.playCore!!.immediateAllowed!!)
+        assertTrue(status.android!!.playCore!!.flexibleAllowed!!)
     }
 
     @Test
