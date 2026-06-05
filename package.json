@@ -45,7 +45,10 @@
     "docs",
     "TESTING.md"
   ],
-  "repository": "https://github.com/rnforge/react-native-in-app-updates.git",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rnforge/react-native-in-app-updates.git"
+  },
   "author": "RNForge",
   "license": "MIT",
   "bugs": "https://github.com/rnforge/react-native-in-app-updates/issues",
