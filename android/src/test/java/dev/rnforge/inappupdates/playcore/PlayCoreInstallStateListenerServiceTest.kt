@@ -2,6 +2,7 @@ package dev.rnforge.inappupdates.playcore
 
 import dev.rnforge.inappupdates.ActivityProvider
 import dev.rnforge.inappupdates.EnvironmentChecker
+import com.margelo.nitro.rnforge.inappupdates.InstallStateEventNative
 
 import org.junit.Assert.*
 import org.junit.Test
@@ -49,6 +50,28 @@ class PlayCoreInstallStateListenerServiceTest {
     fun addAndRemoveInstallStateListener_nullContext_isSafe() {
         val service = PlayCoreInstallStateListenerService(ThrowingProvider(), NullActivityProvider)
         val listenerId = service.addInstallStateListener { _ -> }
+        service.removeInstallStateListener(listenerId)
+    }
+
+    @Test
+    fun addInstallStateListener_nullContext_emitsTypedUnavailableEvent() {
+        val service = PlayCoreInstallStateListenerService(ThrowingProvider(), NullActivityProvider)
+        val capturedEvents = mutableListOf<InstallStateEventNative>()
+
+        val listenerId = service.addInstallStateListener { event ->
+            capturedEvents.add(event)
+        }
+
+        assertEquals("Should emit exactly one event when context is unavailable", 1, capturedEvents.size)
+
+        val event = capturedEvents[0]
+        assertEquals("android", event.platform)
+        assertFalse(event.supported)
+        assertEquals("unsupported", event.installStatus)
+        assertEquals("context-unavailable", event.reason)
+
+        assertTrue("Should generate a non-empty listener ID", listenerId.isNotEmpty())
+
         service.removeInstallStateListener(listenerId)
     }
 }
