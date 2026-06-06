@@ -155,12 +155,13 @@ class PlayCoreImmediateUpdateService(
             buildAppUpdateOptions(AppUpdateType.IMMEDIATE, allowAssetPackDeletion)
         ).addOnCompleteListener { task ->
             if (task.isSuccessful) {
+                val reason = mapFlowResultReason(task.result)
                 onSuccess(buildUpdateStatusFromInfo(
                     context = context,
                     info = appUpdateInfo,
                     supported = true,
                     updateAvailable = true,
-                    reason = "update-available",
+                    reason = reason,
                     immediateAllowed = true,
                     flexibleAllowed = flexibleAllowed,
                     additionalPlayCore = buildFlowPlayCoreDetails(

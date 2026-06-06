@@ -1,5 +1,6 @@
 package dev.rnforge.inappupdates.playcore
 
+import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -173,6 +174,14 @@ fun encodeTaskFailure(error: Exception): Exception {
         else -> error.message ?: "Play Core task failed"
     }
     return Exception(message, error)
+}
+
+fun mapFlowResultReason(resultCode: Int?): String {
+    return when (resultCode) {
+        null, Activity.RESULT_OK -> "update-available"
+        Activity.RESULT_CANCELED -> "user-canceled"
+        else -> "unknown"
+    }
 }
 
 /**

@@ -221,12 +221,13 @@ class PlayCoreFlexibleUpdateService(
             buildAppUpdateOptions(AppUpdateType.FLEXIBLE, allowAssetPackDeletion)
         ).addOnCompleteListener { task ->
             if (task.isSuccessful) {
+                val reason = mapFlowResultReason(task.result)
                 onSuccess(buildUpdateStatusFromInfo(
                     context = context,
                     info = appUpdateInfo,
                     supported = true,
                     updateAvailable = true,
-                    reason = "update-available",
+                    reason = reason,
                     immediateAllowed = immediateAllowed,
                     flexibleAllowed = true,
                     additionalPlayCore = buildFlowPlayCoreDetails(
