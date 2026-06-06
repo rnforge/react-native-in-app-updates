@@ -3,6 +3,7 @@ package dev.rnforge.inappupdates.playcore
 import android.app.Activity
 import android.net.Uri
 import com.google.android.play.core.install.InstallException
+import com.google.android.play.core.install.model.ActivityResult
 import com.google.android.play.core.install.model.InstallErrorCode
 import com.google.android.play.core.install.model.InstallStatus
 import org.junit.Assume.assumeNotNull
@@ -161,7 +162,7 @@ class PlayCoreMappingTest {
 
     @Test
     fun mapFlowResultReason_RESULT_IN_APP_UPDATE_FAILED_returnsUnknown() {
-        assertEquals("unknown", mapFlowResultReason(1))
+        assertEquals("unknown", mapFlowResultReason(ActivityResult.RESULT_IN_APP_UPDATE_FAILED))
     }
 
     @Test

@@ -19,6 +19,14 @@ import org.robolectric.Robolectric
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.Shadows
 
+/**
+ * Integration tests for flow-result reason mapping when [AppUpdateManager.startUpdateFlow]
+ * returns custom result codes (e.g. RESULT_CANCELED).
+ *
+ * [FakeAppUpdateManager] always returns RESULT_OK (or throws for disallowed flows),
+ * so these tests use Mockito to simulate Play Core returning RESULT_CANCELED and
+ * verify the mapping to typed RNForge reasons like "user-canceled".
+ */
 @RunWith(RobolectricTestRunner::class)
 class PlayCoreFlowResultMockManagerTest {
 
