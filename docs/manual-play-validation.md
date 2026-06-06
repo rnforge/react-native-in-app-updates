@@ -134,8 +134,9 @@ Run each step in order and record the observed result.
 
 **Expected:**
 - Play Core flexible-update UI appears (non-blocking snackbar/banner).
-- User can accept to start background download.
-- Returns `UpdateStatus` with `installStatus: "pending"` or `"downloading"`.
+- User can accept to start background download, or decline/dismiss.
+- If accepted: returns `UpdateStatus` with `installStatus: "pending"` or `"downloading"`.
+- If declined: returns `UpdateStatus` with `reason: "user-canceled"`.
 - No JavaScript exception thrown.
 
 **Observed:**

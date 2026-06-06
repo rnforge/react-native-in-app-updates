@@ -70,7 +70,7 @@ class PlayCoreFlowResultMockManagerTest {
             service.startImmediateUpdate(null, onSuccess, onFailure)
         }
 
-        assertEquals("Expected reason 'user-canceled' after fix; current production returns 'update-available'",
+        assertEquals("RESULT_CANCELED should map to 'user-canceled'",
             "user-canceled", status.reason)
         assertNotNull(status.android)
         assertEquals(application.packageName, status.android!!.packageName)
@@ -95,7 +95,7 @@ class PlayCoreFlowResultMockManagerTest {
             service.startFlexibleUpdate(null, onSuccess, onFailure)
         }
 
-        assertEquals("Expected reason 'user-canceled' after fix; current production returns 'update-available'",
+        assertEquals("RESULT_CANCELED should map to 'user-canceled'",
             "user-canceled", status.reason)
         assertNotNull(status.android)
         assertEquals(application.packageName, status.android!!.packageName)

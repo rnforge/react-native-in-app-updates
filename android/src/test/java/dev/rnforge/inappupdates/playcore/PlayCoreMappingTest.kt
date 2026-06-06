@@ -1,5 +1,6 @@
 package dev.rnforge.inappupdates.playcore
 
+import android.app.Activity
 import android.net.Uri
 import com.google.android.play.core.install.InstallException
 import com.google.android.play.core.install.model.InstallErrorCode
@@ -141,6 +142,32 @@ class PlayCoreMappingTest {
     fun mapUpdatePrecondition_unknownValue() {
         assertEquals("unknown-99", mapUpdatePrecondition(99))
         assertEquals("unknown--1", mapUpdatePrecondition(-1))
+    }
+
+    @Test
+    fun mapFlowResultReason_null_returnsUpdateAvailable() {
+        assertEquals("update-available", mapFlowResultReason(null))
+    }
+
+    @Test
+    fun mapFlowResultReason_RESULT_OK_returnsUpdateAvailable() {
+        assertEquals("update-available", mapFlowResultReason(Activity.RESULT_OK))
+    }
+
+    @Test
+    fun mapFlowResultReason_RESULT_CANCELED_returnsUserCanceled() {
+        assertEquals("user-canceled", mapFlowResultReason(Activity.RESULT_CANCELED))
+    }
+
+    @Test
+    fun mapFlowResultReason_RESULT_IN_APP_UPDATE_FAILED_returnsUnknown() {
+        assertEquals("unknown", mapFlowResultReason(1))
+    }
+
+    @Test
+    fun mapFlowResultReason_unexpectedResultCode_returnsUnknown() {
+        assertEquals("unknown", mapFlowResultReason(42))
+        assertEquals("unknown", mapFlowResultReason(-99))
     }
 
     @Test
