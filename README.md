@@ -124,7 +124,7 @@ Starts an Android immediate update flow. Presents a full-screen Play Core dialog
 import { startImmediateUpdate } from '@rnforge/react-native-in-app-updates'
 
 const result = await startImmediateUpdate()
-console.log(result.reason) // 'update-available', 'activity-unavailable', 'update-not-allowed', 'unsupported-install-source', etc.
+console.log(result.reason) // 'update-available', 'user-canceled', 'activity-unavailable', 'update-not-allowed', etc.
 ```
 
 - On Android Play installs: triggers the Play immediate UI. App may restart if the user accepts.
@@ -149,7 +149,7 @@ Starts an Android flexible update flow. Presents a non-blocking Play Core snackb
 import { startFlexibleUpdate } from '@rnforge/react-native-in-app-updates'
 
 const result = await startFlexibleUpdate()
-console.log(result.reason) // 'update-available', 'activity-unavailable', 'update-not-allowed', etc.
+console.log(result.reason) // 'update-available', 'user-canceled', 'activity-unavailable', 'update-not-allowed', etc.
 ```
 
 - On Android Play installs: triggers the Play flexible UI. Download proceeds in the background.
@@ -285,6 +285,7 @@ When the environment supports in-app updates, the package returns `supported: tr
 | Installed version is latest | `'no-update-available'` | `false` |
 | Developer-triggered update in progress | `'developer-triggered-update-in-progress'` | `true` |
 | Update available but Play Core disallows the flow | `'update-not-allowed'` | varies |
+| User canceled the Play update UI | `'user-canceled'` | `true` |
 | Update available but no foreground Activity to launch UI | `'activity-unavailable'` | `true` |
 | Android application context unavailable | `'context-unavailable'` | `null` |
 
@@ -410,7 +411,11 @@ The Android application context is not available. This is a rare lifecycle edge 
 
 ### `startImmediateUpdate()` / `startFlexibleUpdate()` returns `'update-not-allowed'`
 
-Play policy has decided the update is not allowed at this time (e.g. too soon after last check, device constraints, or user declined previously). The app should continue normally and retry later.
+Play policy has decided the requested update flow is not allowed at this time, for example because of device constraints or Play update timing rules. The app should continue normally and retry later.
+
+### `startImmediateUpdate()` / `startFlexibleUpdate()` returns `'user-canceled'`
+
+The Play update UI was shown and the user declined or dismissed it. This is a normal result, not an exception.
 
 ### iOS `openStorePage()` throws `InAppUpdatesError('invalid-input')`
 
