@@ -162,7 +162,7 @@ All services have constructor defaults, so production code (`HybridInAppUpdates`
   - `createUnsupportedStatus()` / `createStatus()` — RNForge status object structure
 
 - **PlayCoreEnvironmentTest** — Early-return guard behavior:
-  - `checkEarlyEnvironment()` returns `update-not-allowed` when context is `null`
+  - `checkEarlyEnvironment()` returns `context-unavailable` when context is `null`
 
 - **PlayCoreInstallStateListenerServiceTest** — Listener seam safety:
   - Null-context path does not invoke `AppUpdateManagerProvider`
@@ -178,14 +178,22 @@ All services have constructor defaults, so production code (`HybridInAppUpdates`
 - **PlayCoreImmediateUpdateServiceFakeManagerTest** — Immediate flow coverage:
   - no update available
   - immediate flow starts when allowed and an Activity exists
-  - update-not-allowed when Activity is missing or immediate flow is not allowed
+  - `activity-unavailable` when Activity is missing, `update-not-allowed` when immediate flow is not allowed
   - unsupported install source
 - **PlayCoreFlexibleUpdateServiceFakeManagerTest** — Flexible flow coverage:
   - no update available
   - flexible flow starts when allowed and an Activity exists
-  - update-not-allowed when Activity is missing or flexible flow is not allowed
+  - `activity-unavailable` when Activity is missing, `update-not-allowed` when flexible flow is not allowed
   - complete without downloaded update
   - Play Services unavailable
+- **PlayCoreFlowResultMockManagerTest** — Flow result reason mapping:
+  - RESULT_CANCELED maps to `user-canceled` for both immediate and flexible flows
+  - diagnostics (android, playCore, currentVersion) are preserved in user-canceled results
+- **PlayCoreStatusMappingTest** — Pure mapping unit tests:
+  - `mapAppUpdateInfoToStatus()` — all four update-availability branches
+  - `buildUpdateStatusFromInfo()` — version fields, additional playCore, null playCore
+  - `buildFlowPlayCoreDetails()` — availability/installStatus passthrough, null allowed, omitted expensive fields
+  - `mapUpdateAvailability()` — known values and unknown fallback
 - **PlayCoreServiceFailureTest** — Task failure coverage:
   - `appUpdateInfo` failure is surfaced through the shared task-failure encoding path
 - **PlayCoreStoreServiceTest** — Android store-page coverage:

@@ -33,11 +33,7 @@ class PlayCoreStatusMappingTest {
         val packageInfo = PackageInfo().apply {
             packageName = application.packageName
             versionName = "1.0.0"
-            @Suppress("DEPRECATION")
-            versionCode = 42
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                longVersionCode = 42L
-            }
+            longVersionCode = 42L
         }
         packageManager.addPackage(packageInfo)
 
@@ -49,16 +45,6 @@ class PlayCoreStatusMappingTest {
         Mockito.`when`(mockInfo.installStatus()).thenReturn(InstallStatus.PENDING)
         Mockito.`when`(mockInfo.clientVersionStalenessDays()).thenReturn(null)
         Mockito.`when`(mockInfo.isUpdateTypeAllowed(Mockito.any<AppUpdateOptions>())).thenReturn(true)
-
-        // match API 28+ version code lookup
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            val pi = PackageInfo().apply {
-                packageName = application.packageName
-                versionName = "1.0.0"
-                longVersionCode = 42L
-            }
-            packageManager.addPackage(pi)
-        }
     }
 
     // ---- mapAppUpdateInfoToStatus ----
