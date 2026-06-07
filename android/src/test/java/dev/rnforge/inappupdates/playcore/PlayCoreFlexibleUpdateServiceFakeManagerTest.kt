@@ -71,6 +71,10 @@ class PlayCoreFlexibleUpdateServiceFakeManagerTest {
         assertEquals("update-available", status.reason)
         assertTrue(status.allowed.flexible)
         assertTrue(fakeManager.isConfirmationDialogVisible)
+        assertNotNull(status.android)
+        assertEquals(application.packageName, status.android!!.packageName)
+        assertNotNull(status.android!!.playCore)
+        assertEquals("UPDATE_AVAILABLE", status.android!!.playCore!!.updateAvailability)
     }
 
     @Test
@@ -84,6 +88,12 @@ class PlayCoreFlexibleUpdateServiceFakeManagerTest {
 
         assertEquals("activity-unavailable", status.reason)
         assertTrue(status.updateAvailable!!.asSecondOrNull() ?: false)
+        assertNotNull(status.android)
+        assertEquals(application.packageName, status.android!!.packageName)
+        assertNotNull(status.android!!.playCore)
+        assertEquals("UPDATE_AVAILABLE", status.android!!.playCore!!.updateAvailability)
+        assertTrue(status.android!!.playCore!!.immediateAllowed!!)
+        assertTrue(status.android!!.playCore!!.flexibleAllowed!!)
     }
 
     @Test
@@ -99,6 +109,12 @@ class PlayCoreFlexibleUpdateServiceFakeManagerTest {
         assertEquals("update-not-allowed", status.reason)
         assertTrue(status.allowed.immediate)
         assertFalse(status.allowed.flexible)
+        assertNotNull(status.android)
+        assertEquals(application.packageName, status.android!!.packageName)
+        assertNotNull(status.android!!.playCore)
+        assertEquals("UPDATE_AVAILABLE", status.android!!.playCore!!.updateAvailability)
+        assertTrue(status.android!!.playCore!!.immediateAllowed!!)
+        assertFalse(status.android!!.playCore!!.flexibleAllowed!!)
     }
 
     @Test
@@ -113,6 +129,12 @@ class PlayCoreFlexibleUpdateServiceFakeManagerTest {
 
         assertEquals("update-not-allowed", status.reason)
         assertTrue(status.updateAvailable!!.asSecondOrNull() ?: false)
+        assertNotNull(status.android)
+        assertEquals(application.packageName, status.android!!.packageName)
+        assertNotNull(status.android!!.playCore)
+        assertEquals("UPDATE_AVAILABLE", status.android!!.playCore!!.updateAvailability)
+        assertTrue(status.android!!.playCore!!.immediateAllowed!!)
+        assertTrue(status.android!!.playCore!!.flexibleAllowed!!)
     }
 
     @Test

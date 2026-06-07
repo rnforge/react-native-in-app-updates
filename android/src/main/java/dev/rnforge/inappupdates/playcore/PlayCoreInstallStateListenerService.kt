@@ -35,6 +35,28 @@ class PlayCoreInstallStateListenerService(
         val listenerId = UUID.randomUUID().toString()
         val context = activityProvider.applicationContext
 
+        if (context == null) {
+            val event = InstallStateEventNative(
+                platform = "android",
+                supported = false,
+                installStatus = "unsupported",
+                reason = "context-unavailable",
+                bytesDownloaded = null,
+                totalBytesToDownload = null,
+                progress = null,
+                errorCode = null,
+                message = null,
+                android = null
+            )
+            callback(event)
+
+            listeners[listenerId] = ListenerRegistration(
+                listener = InstallStateUpdatedListener { },
+                manager = null
+            )
+            return listenerId
+        }
+
         val listener = InstallStateUpdatedListener { state ->
             val bytesDownloaded = state.bytesDownloaded().toDouble()
             val totalBytesToDownload = state.totalBytesToDownload().toDouble()
@@ -53,7 +75,7 @@ class PlayCoreInstallStateListenerService(
                 errorCode = mapInstallErrorCodeLabel(state.installStatus(), state.installErrorCode()),
                 message = null,
                 android = AndroidDetailsNative(
-                    packageName = context?.packageName,
+                    packageName = context.packageName,
                     playCore = PlayCoreDetailsNative(
                         immediateFailedPreconditions = null,
                         flexibleFailedPreconditions = null,
@@ -74,9 +96,7 @@ class PlayCoreInstallStateListenerService(
             callback(event)
         }
 
-        val manager = if (context != null) {
-            managerProvider.getManager(context).also { it.registerListener(listener) }
-        } else null
+        val manager = managerProvider.getManager(context).also { it.registerListener(listener) }
 
         listeners[listenerId] = ListenerRegistration(listener, manager)
 

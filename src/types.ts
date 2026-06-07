@@ -22,6 +22,7 @@ export type AvailabilityReason =
   | 'update-not-allowed'
   | 'context-unavailable'
   | 'activity-unavailable'
+  | 'user-canceled'
   | 'unknown'
 
 export type InstallStatus =

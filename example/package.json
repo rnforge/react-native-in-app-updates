@@ -1,6 +1,6 @@
 {
   "name": "rnforge-in-app-updates-example",
-  "version": "0.1.0",
+  "version": "1.0.0-next.6",
   "private": true,
   "scripts": {
     "android": "react-native run-android",

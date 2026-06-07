@@ -52,6 +52,7 @@ class PlayCoreEnvironmentAndListenerFakeManagerTest {
         assertEquals("1.0.0", status.currentVersion)
         assertEquals("42", status.currentBuild?.asFirstOrNull())
         assertNull(status.latestStoreBuild)
+        assertTrue(status.capabilities.storePage)
     }
 
     @Test
@@ -67,6 +68,7 @@ class PlayCoreEnvironmentAndListenerFakeManagerTest {
         assertEquals("1.0.0", status.currentVersion)
         assertEquals("42", status.currentBuild?.asFirstOrNull())
         assertNull(status.latestStoreBuild)
+        assertTrue(status.capabilities.storePage)
     }
 
     @Test

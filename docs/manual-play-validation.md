@@ -118,7 +118,7 @@ Run each step in order and record the observed result.
 - Play Core immediate-update UI appears (full-screen blocking dialog).
 - User can accept or decline.
 - If accepted: app updates and restarts.
-- If declined: returns `UpdateStatus` with `reason: "update-not-allowed"` or `installStatus: "canceled"`.
+- If declined: returns `UpdateStatus` with `reason: "user-canceled"`.
 - No JavaScript exception thrown.
 
 **Observed:**
@@ -134,8 +134,9 @@ Run each step in order and record the observed result.
 
 **Expected:**
 - Play Core flexible-update UI appears (non-blocking snackbar/banner).
-- User can accept to start background download.
-- Returns `UpdateStatus` with `installStatus: "pending"` or `"downloading"`.
+- User can accept to start background download, or decline/dismiss.
+- If accepted: returns `UpdateStatus` with `installStatus: "pending"` or `"downloading"`.
+- If declined: returns `UpdateStatus` with `reason: "user-canceled"`.
 - No JavaScript exception thrown.
 
 **Observed:**

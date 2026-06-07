@@ -584,6 +584,32 @@ describe('getUpdateStatus', () => {
     expect(result.allowed.flexible).toBe(false)
   })
 
+  it('returns context-unavailable with updateAvailable null when context is missing', async () => {
+    mockObject.getUpdateStatus.mockResolvedValue({
+      platform: 'android',
+      supported: true,
+      updateAvailable: null,
+      capabilities: {
+        immediate: true,
+        flexible: true,
+        storePage: true,
+        latestVersionLookup: false,
+        installStateListener: true,
+      },
+      allowed: {
+        immediate: false,
+        flexible: false,
+      },
+      reason: 'context-unavailable',
+    })
+
+    const result = await getUpdateStatus()
+
+    expect(result.supported).toBe(true)
+    expect(result.updateAvailable).toBeNull()
+    expect(result.reason).toBe('context-unavailable')
+  })
+
   it('throws InAppUpdatesError for native bridge failures', async () => {
     mockObject.getUpdateStatus.mockRejectedValue(new Error('Native bridge failure'))
 

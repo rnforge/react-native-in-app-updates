@@ -259,11 +259,12 @@ describe('AvailabilityReason union', () => {
       'update-not-allowed',
       'context-unavailable',
       'activity-unavailable',
+      'user-canceled',
       'unknown',
     ]
 
-    expect(reasons).toHaveLength(8)
-    expect(new Set(reasons).size).toBe(8)
+    expect(reasons).toHaveLength(9)
+    expect(new Set(reasons).size).toBe(9)
   })
 })
 

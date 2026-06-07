@@ -62,7 +62,10 @@ class PlayCoreFlexibleUpdateService(
                             info = appUpdateInfo,
                             supported = true,
                             updateAvailable = false,
-                            reason = "no-update-available"
+                            reason = "no-update-available",
+                            additionalPlayCore = buildFlowPlayCoreDetails(
+                                appUpdateInfo, immediateAllowed = null, flexibleAllowed = null
+                            )
                         ))
                     }
                     UpdateAvailability.UPDATE_AVAILABLE -> {
@@ -93,7 +96,10 @@ class PlayCoreFlexibleUpdateService(
                                     updateAvailable = true,
                                     reason = "activity-unavailable",
                                     immediateAllowed = immediateAllowed,
-                                    flexibleAllowed = flexibleAllowed
+                                    flexibleAllowed = flexibleAllowed,
+                                    additionalPlayCore = buildFlowPlayCoreDetails(
+                                        appUpdateInfo, immediateAllowed, flexibleAllowed
+                                    )
                                 ))
                             }
                         } else {
@@ -104,7 +110,10 @@ class PlayCoreFlexibleUpdateService(
                                 updateAvailable = true,
                                 reason = "update-not-allowed",
                                 immediateAllowed = immediateAllowed,
-                                flexibleAllowed = false
+                                flexibleAllowed = false,
+                                additionalPlayCore = buildFlowPlayCoreDetails(
+                                    appUpdateInfo, immediateAllowed, false
+                                )
                             ))
                         }
                     }
@@ -114,7 +123,10 @@ class PlayCoreFlexibleUpdateService(
                             info = appUpdateInfo,
                             supported = true,
                             updateAvailable = true,
-                            reason = "developer-triggered-update-in-progress"
+                            reason = "developer-triggered-update-in-progress",
+                            additionalPlayCore = buildFlowPlayCoreDetails(
+                                appUpdateInfo, immediateAllowed = null, flexibleAllowed = null
+                            )
                         ))
                     }
                     else -> {
@@ -163,13 +175,17 @@ class PlayCoreFlexibleUpdateService(
                                     updateAvailable = true,
                                     reason = "flexible-update-downloaded",
                                     immediateAllowed = immediateAllowed,
-                                    flexibleAllowed = true
+                                    flexibleAllowed = true,
+                                    additionalPlayCore = buildFlowPlayCoreDetails(
+                                        appUpdateInfo, immediateAllowed, true
+                                    )
                                 ))
                             } else {
                                 onFailure(encodeTaskFailure(task.exception ?: Exception("completeUpdate failed")))
                             }
                         }
                 } else {
+                    val flexibleAllowed = appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.FLEXIBLE)
                     onSuccess(buildUpdateStatusFromInfo(
                         context = context,
                         info = appUpdateInfo,
@@ -177,7 +193,10 @@ class PlayCoreFlexibleUpdateService(
                         updateAvailable = true,
                         reason = "update-not-allowed",
                         immediateAllowed = immediateAllowed,
-                        flexibleAllowed = appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.FLEXIBLE)
+                        flexibleAllowed = flexibleAllowed,
+                        additionalPlayCore = buildFlowPlayCoreDetails(
+                            appUpdateInfo, immediateAllowed, flexibleAllowed
+                        )
                     ))
                 }
             }
@@ -202,14 +221,18 @@ class PlayCoreFlexibleUpdateService(
             buildAppUpdateOptions(AppUpdateType.FLEXIBLE, allowAssetPackDeletion)
         ).addOnCompleteListener { task ->
             if (task.isSuccessful) {
+                val reason = mapFlowResultReason(task.result)
                 onSuccess(buildUpdateStatusFromInfo(
                     context = context,
                     info = appUpdateInfo,
                     supported = true,
                     updateAvailable = true,
-                    reason = "update-available",
+                    reason = reason,
                     immediateAllowed = immediateAllowed,
-                    flexibleAllowed = true
+                    flexibleAllowed = true,
+                    additionalPlayCore = buildFlowPlayCoreDetails(
+                        appUpdateInfo, immediateAllowed, true
+                    )
                 ))
             } else {
                 onFailure(encodeTaskFailure(task.exception ?: Exception("Flexible update flow failed")))

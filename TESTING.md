@@ -192,6 +192,14 @@ All services have constructor defaults, so production code (`HybridInAppUpdates`
   - installed `currentVersion`, installed `currentBuild`, and gated `latestStoreBuild` status fields
   - complete without downloaded update
   - Play Services unavailable
+- **PlayCoreFlowResultMockManagerTest** — Flow result reason mapping:
+  - RESULT_CANCELED maps to `user-canceled` for both immediate and flexible flows
+  - diagnostics (android, playCore, currentVersion) are preserved in user-canceled results
+- **PlayCoreStatusMappingTest** — Pure mapping unit tests:
+  - `mapAppUpdateInfoToStatus()` — all four update-availability branches
+  - `buildUpdateStatusFromInfo()` — version fields, additional playCore, null playCore
+  - `buildFlowPlayCoreDetails()` — availability/installStatus passthrough, null allowed, omitted expensive fields
+  - `mapUpdateAvailability()` — known values and unknown fallback
 - **PlayCoreServiceFailureTest** — Task failure coverage:
   - `appUpdateInfo` failure is surfaced through the shared task-failure encoding path
 - **PlayCoreStoreServiceTest** — Android store-page coverage:

@@ -1,7 +1,9 @@
 package dev.rnforge.inappupdates.playcore
 
+import android.app.Activity
 import android.net.Uri
 import com.google.android.play.core.install.InstallException
+import com.google.android.play.core.install.model.ActivityResult
 import com.google.android.play.core.install.model.InstallErrorCode
 import com.google.android.play.core.install.model.InstallStatus
 import org.junit.Assume.assumeNotNull
@@ -144,6 +146,32 @@ class PlayCoreMappingTest {
     }
 
     @Test
+    fun mapFlowResultReason_null_returnsUpdateAvailable() {
+        assertEquals("update-available", mapFlowResultReason(null))
+    }
+
+    @Test
+    fun mapFlowResultReason_RESULT_OK_returnsUpdateAvailable() {
+        assertEquals("update-available", mapFlowResultReason(Activity.RESULT_OK))
+    }
+
+    @Test
+    fun mapFlowResultReason_RESULT_CANCELED_returnsUserCanceled() {
+        assertEquals("user-canceled", mapFlowResultReason(Activity.RESULT_CANCELED))
+    }
+
+    @Test
+    fun mapFlowResultReason_RESULT_IN_APP_UPDATE_FAILED_returnsUnknown() {
+        assertEquals("unknown", mapFlowResultReason(ActivityResult.RESULT_IN_APP_UPDATE_FAILED))
+    }
+
+    @Test
+    fun mapFlowResultReason_unexpectedResultCode_returnsUnknown() {
+        assertEquals("unknown", mapFlowResultReason(42))
+        assertEquals("unknown", mapFlowResultReason(-99))
+    }
+
+    @Test
     fun createUnsupportedStatus_structure() {
         val status = createUnsupportedStatus("play-core-unavailable")
         assertEquals("android", status.platform)
@@ -151,11 +179,35 @@ class PlayCoreMappingTest {
         assertEquals("play-core-unavailable", status.reason)
         assertFalse(status.capabilities.immediate)
         assertFalse(status.capabilities.flexible)
-        assertFalse(status.capabilities.storePage)
+        assertTrue(status.capabilities.storePage)
         assertFalse(status.capabilities.latestVersionLookup)
         assertFalse(status.capabilities.installStateListener)
         assertFalse(status.allowed.immediate)
         assertFalse(status.allowed.flexible)
+    }
+
+    @Test
+    fun createUnsupportedStatus_unsupportedInstallSource_preservesStorePage() {
+        val status = createUnsupportedStatus("unsupported-install-source")
+        assertEquals("unsupported-install-source", status.reason)
+        assertFalse(status.supported)
+        assertFalse(status.capabilities.immediate)
+        assertFalse(status.capabilities.flexible)
+        assertTrue(status.capabilities.storePage)
+        assertFalse(status.capabilities.latestVersionLookup)
+        assertFalse(status.capabilities.installStateListener)
+    }
+
+    @Test
+    fun createUnsupportedStatus_playCoreUnavailable_preservesStorePage() {
+        val status = createUnsupportedStatus("play-core-unavailable")
+        assertEquals("play-core-unavailable", status.reason)
+        assertFalse(status.supported)
+        assertFalse(status.capabilities.immediate)
+        assertFalse(status.capabilities.flexible)
+        assertTrue(status.capabilities.storePage)
+        assertFalse(status.capabilities.latestVersionLookup)
+        assertFalse(status.capabilities.installStateListener)
     }
 
     @Test

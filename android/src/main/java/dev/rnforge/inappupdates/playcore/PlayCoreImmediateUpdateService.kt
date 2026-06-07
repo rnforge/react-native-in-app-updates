@@ -62,7 +62,10 @@ class PlayCoreImmediateUpdateService(
                             info = appUpdateInfo,
                             supported = true,
                             updateAvailable = false,
-                            reason = "no-update-available"
+                            reason = "no-update-available",
+                            additionalPlayCore = buildFlowPlayCoreDetails(
+                                appUpdateInfo, immediateAllowed = null, flexibleAllowed = null
+                            )
                         ))
                     }
                     UpdateAvailability.UPDATE_AVAILABLE -> {
@@ -93,7 +96,10 @@ class PlayCoreImmediateUpdateService(
                                     updateAvailable = true,
                                     reason = "activity-unavailable",
                                     immediateAllowed = immediateAllowed,
-                                    flexibleAllowed = flexibleAllowed
+                                    flexibleAllowed = flexibleAllowed,
+                                    additionalPlayCore = buildFlowPlayCoreDetails(
+                                        appUpdateInfo, immediateAllowed, flexibleAllowed
+                                    )
                                 ))
                             }
                         } else {
@@ -104,7 +110,10 @@ class PlayCoreImmediateUpdateService(
                                 updateAvailable = true,
                                 reason = "update-not-allowed",
                                 immediateAllowed = false,
-                                flexibleAllowed = flexibleAllowed
+                                flexibleAllowed = flexibleAllowed,
+                                additionalPlayCore = buildFlowPlayCoreDetails(
+                                    appUpdateInfo, false, flexibleAllowed
+                                )
                             ))
                         }
                     }
@@ -114,7 +123,10 @@ class PlayCoreImmediateUpdateService(
                             info = appUpdateInfo,
                             supported = true,
                             updateAvailable = true,
-                            reason = "developer-triggered-update-in-progress"
+                            reason = "developer-triggered-update-in-progress",
+                            additionalPlayCore = buildFlowPlayCoreDetails(
+                                appUpdateInfo, immediateAllowed = null, flexibleAllowed = null
+                            )
                         ))
                     }
                     else -> {
@@ -143,14 +155,18 @@ class PlayCoreImmediateUpdateService(
             buildAppUpdateOptions(AppUpdateType.IMMEDIATE, allowAssetPackDeletion)
         ).addOnCompleteListener { task ->
             if (task.isSuccessful) {
+                val reason = mapFlowResultReason(task.result)
                 onSuccess(buildUpdateStatusFromInfo(
                     context = context,
                     info = appUpdateInfo,
                     supported = true,
                     updateAvailable = true,
-                    reason = "update-available",
+                    reason = reason,
                     immediateAllowed = true,
-                    flexibleAllowed = flexibleAllowed
+                    flexibleAllowed = flexibleAllowed,
+                    additionalPlayCore = buildFlowPlayCoreDetails(
+                        appUpdateInfo, true, flexibleAllowed
+                    )
                 ))
             } else {
                 onFailure(encodeTaskFailure(task.exception ?: Exception("Immediate update flow failed")))

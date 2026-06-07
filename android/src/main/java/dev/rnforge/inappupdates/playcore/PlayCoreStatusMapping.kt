@@ -63,6 +63,35 @@ internal fun buildUpdateStatusFromInfo(
 }
 
 /**
+ * Builds a compact [PlayCoreDetailsNative] targeted at update-flow call sites.
+ *
+ * Includes only fields that are reliably available from [AppUpdateInfo] inside
+ * flow success/failure listeners. Avoids expensive or flow-irrelevant fields
+ * (e.g. failed preconditions, update priority, staleness days).
+ */
+internal fun buildFlowPlayCoreDetails(
+    info: AppUpdateInfo,
+    immediateAllowed: Boolean?,
+    flexibleAllowed: Boolean?
+): PlayCoreDetailsNative {
+    return PlayCoreDetailsNative(
+        updateAvailability = mapUpdateAvailability(info.updateAvailability()),
+        installStatus = mapInstallStatus(info.installStatus()),
+        immediateAllowed = immediateAllowed,
+        flexibleAllowed = flexibleAllowed,
+        immediateFailedPreconditions = null,
+        flexibleFailedPreconditions = null,
+        installErrorCode = null,
+        taskErrorCode = null,
+        updatePriority = null,
+        clientVersionStalenessDays = null,
+        availableVersionCode = null,
+        bytesDownloaded = null,
+        totalBytesToDownload = null
+    )
+}
+
+/**
  * Pure mapping from Play Core [AppUpdateInfo] to RNForge [UpdateStatusNative].
  *
  * This function is intentionally free of Play Core I/O so it can be unit-tested
@@ -166,7 +195,7 @@ internal fun getAppVersionCode(context: Context): String? {
     }
 }
 
-private fun mapUpdateAvailability(availability: Int): String {
+internal fun mapUpdateAvailability(availability: Int): String {
     return when (availability) {
         com.google.android.play.core.install.model.UpdateAvailability.UPDATE_AVAILABLE -> "UPDATE_AVAILABLE"
         com.google.android.play.core.install.model.UpdateAvailability.UPDATE_NOT_AVAILABLE -> "UPDATE_NOT_AVAILABLE"
