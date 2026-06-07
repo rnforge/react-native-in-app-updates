@@ -1,3 +1,22 @@
+## [1.0.0-next.7](https://github.com/rnforge/react-native-in-app-updates/compare/v1.0.0-next.6...v1.0.0-next.7) (2026-06-07)
+
+### 🐛 Bug Fixes
+
+* attach Android diagnostics to update flow results ([e7aa3f1](https://github.com/rnforge/react-native-in-app-updates/commit/e7aa3f19342a6c2cdf517fa3dcf0e466e1785c56))
+* emit Android listener unavailable event ([8a51c3d](https://github.com/rnforge/react-native-in-app-updates/commit/8a51c3de75fbeb5d61008082cfe68eb797967372))
+* handle canceled Android update flows ([687eebd](https://github.com/rnforge/react-native-in-app-updates/commit/687eebdad96015d6005672fdacd0848a9d025a81))
+* preserve Android store fallback for unsupported states ([da4c944](https://github.com/rnforge/react-native-in-app-updates/commit/da4c94480212e7e4f2a9180426d112e821a945da))
+
+### 📚 Documentation
+
+* document canceled Android update flows ([35bd155](https://github.com/rnforge/react-native-in-app-updates/commit/35bd15538670b088b9f72596f6c424c4e1c7b497))
+
+### 🛠️ Other changes
+
+* harden release package metadata ([472df38](https://github.com/rnforge/react-native-in-app-updates/commit/472df38a5b685f8586d506a4b059ea6afa2e11a2))
+* post-review test and doc cleanup ([8a59e23](https://github.com/rnforge/react-native-in-app-updates/commit/8a59e23fcf15162a62a3d9e047dee4f21d27161d))
+* sync package version metadata ([682c9f4](https://github.com/rnforge/react-native-in-app-updates/commit/682c9f48acfdab7c66685df74ca9d4c621d65986))
+
 ## [1.0.0-next.6](https://github.com/rnforge/react-native-in-app-updates/compare/v1.0.0-next.5...v1.0.0-next.6) (2026-05-19)
 
 ### 📚 Documentation
