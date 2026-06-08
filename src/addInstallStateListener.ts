@@ -1,12 +1,24 @@
 import { InAppUpdates } from './native'
 import type { InstallStateEvent } from './types'
 
+/** Callback for install-state events. */
 export type InstallStateListener = (event: InstallStateEvent) => void
 
+/** Subscription handle returned by {@link addInstallStateListener}. */
 export type InstallStateSubscription = {
+  /** Remove the listener and stop receiving events. */
   remove: () => void
 }
 
+/**
+ * Subscribe to install-state events (download progress, state changes, errors).
+ *
+ * On Android, events are emitted during flexible update downloads and
+ * install-state transitions.
+ *
+ * @param listener - Callback invoked for each install-state event.
+ * @returns A subscription handle. Call `remove()` to unsubscribe.
+ */
 export function addInstallStateListener(
   listener: InstallStateListener
 ): InstallStateSubscription {

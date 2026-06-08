@@ -18,6 +18,16 @@ function normalizeCountry(value: string | undefined): string | undefined {
   return trimmed.toLowerCase()
 }
 
+/**
+ * Open the app's store page.
+ *
+ * On Android, opens the Google Play Store page for the current package.
+ * On iOS, opens the App Store page using the provided `appStoreId`.
+ *
+ * @param options - Platform-specific options. On iOS, `ios.appStoreId` is required.
+ * @throws InAppUpdatesError with code `invalid-input` if iOS options are missing or invalid.
+ *   Also throws with code `bridge-error`, `native-error`, or `unexpected` on native failures.
+ */
 export async function openStorePage(options?: OpenStorePageOptions): Promise<void> {
   if (Platform.OS === 'ios') {
     const appStoreId = options?.ios?.appStoreId
