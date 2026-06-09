@@ -2,6 +2,7 @@ import type { UpdateStatus } from './types'
 
 /**
  * Returns true if a newer version is available in the store.
+ * @public
  */
 export function isUpdateAvailable(status: UpdateStatus): boolean {
   return status.updateAvailable === true
@@ -9,6 +10,7 @@ export function isUpdateAvailable(status: UpdateStatus): boolean {
 
 /**
  * Returns true if an immediate update flow can be started right now.
+ * @public
  */
 export function canStartImmediateUpdate(status: UpdateStatus): boolean {
   return (
@@ -21,6 +23,7 @@ export function canStartImmediateUpdate(status: UpdateStatus): boolean {
 
 /**
  * Returns true if a flexible update flow can be started right now.
+ * @public
  */
 export function canStartFlexibleUpdate(status: UpdateStatus): boolean {
   return (
@@ -35,6 +38,7 @@ export function canStartFlexibleUpdate(status: UpdateStatus): boolean {
  * Returns true if a downloaded flexible update can be completed.
  *
  * This checks the downloaded install-state, not update availability.
+ * @public
  */
 export function canCompleteFlexibleUpdate(status: UpdateStatus): boolean {
   return (
@@ -48,6 +52,7 @@ export function canCompleteFlexibleUpdate(status: UpdateStatus): boolean {
  * Returns true if the store page can be opened for this app.
  *
  * This may be true even when in-app updates are unsupported (e.g. iOS).
+ * @public
  */
 export function canOpenStorePage(status: UpdateStatus): boolean {
   return status.capabilities.storePage === true
@@ -55,6 +60,7 @@ export function canOpenStorePage(status: UpdateStatus): boolean {
 
 /**
  * Returns true if the platform supports install-state listeners.
+ * @public
  */
 export function supportsInstallStateListener(status: UpdateStatus): boolean {
   return status.capabilities.installStateListener === true

@@ -13,9 +13,14 @@ import type { StartFlexibleUpdateOptions, UpdateStatus } from './types'
  *
  * On iOS, returns an unsupported status (flexible updates are not available).
  *
+ * Precondition failures and other expected outcomes are returned as typed
+ * results, not thrown errors. Only invalid input, bridge failures, and
+ * unexpected failures throw {@link InAppUpdatesError}.
+ *
  * @param options - Platform-specific options.
  * @returns The update status after the flow starts or is rejected.
- * @throws InAppUpdatesError on invalid input, native bridge, or unexpected errors.
+ * @throws InAppUpdatesError on invalid input, bridge failures, or unexpected errors.
+ * @public
  */
 export async function startFlexibleUpdate(
   options?: StartFlexibleUpdateOptions

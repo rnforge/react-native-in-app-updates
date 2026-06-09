@@ -1,11 +1,25 @@
-/** The host platform. */
+/**
+ * The host platform.
+ * @public
+ */
 export type Platform = 'android' | 'ios'
 
 /**
- * Reasons for unsupported, unavailable, or store-lookup states.
+ * Reasons for unsupported, unavailable, or store-lookup failure states.
  *
- * Returned in `UpdateStatus.reason` when the platform is not supported,
- * or when store lookups fail.
+ * These are expected typed results, not thrown errors. Returned in
+ * `UpdateStatus.reason` when `UpdateStatus.supported` is `false`, or
+ * when the platform is supported but a store lookup failed.
+ *
+ * Grouped by category:
+ * - Platform/install: `unsupported-platform`, `unsupported-os-version`,
+ *   `unsupported-install-source`, `apk-expansion-files-unsupported`
+ * - Android Play Core: `play-core-unavailable`
+ * - iOS store lookup: `missing-app-store-id`, `store-lookup-unavailable`,
+ *   `store-lookup-timeout`, `store-lookup-network-error`,
+ *   `store-lookup-http-error`, `store-lookup-not-found`,
+ *   `store-lookup-invalid-response`
+ * @public
  */
 export type UnsupportedReason =
   | 'unsupported-platform'
@@ -24,7 +38,12 @@ export type UnsupportedReason =
 /**
  * Reasons describing the current update availability state.
  *
- * Returned in `UpdateStatus.reason` when the platform is supported.
+ * These are expected typed results, not thrown errors. Returned in
+ * `UpdateStatus.reason` when `UpdateStatus.supported` is `true`.
+ *
+ * Includes transient runtime states like `user-canceled` and
+ * `context-unavailable`, which should be handled as normal outcomes.
+ * @public
  */
 export type AvailabilityReason =
   | 'update-available'
@@ -41,6 +60,10 @@ export type AvailabilityReason =
  * Lifecycle status of an in-app update installation.
  *
  * Present in `UpdateStatus.installStatus` and `InstallStateEvent.installStatus`.
+ *
+ * Note: `'downloaded'` is an install status. The reason `'flexible-update-downloaded'`
+ * is a separate concept used in `UpdateStatus.reason` and `InstallStateEvent.reason`.
+ * @public
  */
 export type InstallStatus =
   | 'unknown'
@@ -56,7 +79,12 @@ export type InstallStatus =
 /**
  * Reason for an install-state listener event.
  *
- * Includes all {@link UnsupportedReason} values plus listener-specific reasons.
+ * Includes all {@link UnsupportedReason} values plus listener-specific reasons:
+ * - `'download-progress'` — periodic progress update during flexible download
+ * - `'install-state-changed'` — install status transition
+ * - `'flexible-update-downloaded'` — flexible update download completed
+ * - `'unknown'` — unrecognized event from the native layer
+ * @public
  */
 export type InstallStateEventReason =
   | UnsupportedReason
@@ -65,7 +93,13 @@ export type InstallStateEventReason =
   | 'flexible-update-downloaded'
   | 'unknown'
 
-/** Platform capabilities reported by the current device and install. */
+/**
+ * Platform capabilities reported by the current device and install.
+ *
+ * Capabilities indicate what the platform *can* do. Contrast with
+ * {@link AllowedFlows}, which indicates what is currently permitted.
+ * @public
+ */
 export type Capabilities = {
   /** Whether immediate update flows are supported. */
   immediate: boolean
@@ -79,7 +113,14 @@ export type Capabilities = {
   installStateListener: boolean
 }
 
-/** Which update flows are currently allowed to start. */
+/**
+ * Which update flows are currently allowed to start.
+ *
+ * Allowed flows may change between status checks based on runtime
+ * conditions (e.g. network state, ongoing updates, user settings).
+ * Contrast with {@link Capabilities}, which are stable per device/install.
+ * @public
+ */
 export type AllowedFlows = {
   /** Whether an immediate update can be started now. */
   immediate: boolean
@@ -91,6 +132,11 @@ export type AllowedFlows = {
  * Raw details from the Google Play Core in-app updates API.
  *
  * Only present on Android when Play Core is available.
+ *
+ * These fields are passed through from Play Core and may change
+ * without notice. Prefer top-level {@link UpdateStatus} fields
+ * for stable access.
+ * @public
  */
 export type PlayCoreDetails = {
   /** Precondition failures for immediate updates. */
@@ -121,7 +167,10 @@ export type PlayCoreDetails = {
   flexibleAllowed?: boolean
 }
 
-/** Android-specific details included in update status and events. */
+/**
+ * Android-specific details included in update status and events.
+ * @public
+ */
 export type AndroidDetails = {
   /** The Android package name. */
   packageName?: string
@@ -133,6 +182,11 @@ export type AndroidDetails = {
  * Details from the Apple App Store lookup.
  *
  * Only present on iOS when a store lookup has been performed.
+ *
+ * These fields are passed through from the App Store API and may
+ * change without notice. Prefer top-level {@link UpdateStatus}
+ * fields for stable access.
+ * @public
  */
 export type IosAppStoreDetails = {
   /** Version string returned by the App Store lookup. */
@@ -159,7 +213,10 @@ export type IosAppStoreDetails = {
   artworkUrl512?: string
 }
 
-/** iOS-specific details included in update status. */
+/**
+ * iOS-specific details included in update status.
+ * @public
+ */
 export type IosDetails = {
   /** The iOS bundle identifier. */
   bundleIdentifier?: string
@@ -176,6 +233,11 @@ export type IosDetails = {
  *
  * Returned by `getUpdateStatus()`, `startImmediateUpdate()`,
  * `startFlexibleUpdate()`, and `completeFlexibleUpdate()`.
+ *
+ * Use `reason` as the primary branch key for handling outcomes.
+ * Check `supported` first, then `capabilities` (what the platform can do),
+ * then `allowed` (what is currently permitted).
+ * @public
  */
 export type UpdateStatus = {
   /** The host platform. */
@@ -206,7 +268,10 @@ export type UpdateStatus = {
   ios?: IosDetails
 }
 
-/** Event emitted by an install-state listener. */
+/**
+ * Event emitted by an install-state listener.
+ * @public
+ */
 export type InstallStateEvent = {
   /** The host platform. */
   platform: Platform
@@ -230,13 +295,19 @@ export type InstallStateEvent = {
   android?: AndroidDetails
 }
 
-/** Android-specific options for update flows. */
+/**
+ * Android-specific options for update flows.
+ * @public
+ */
 export type AndroidUpdateOptions = {
   /** Allow Play Core to delete asset packs to make room for the update. */
   allowAssetPackDeletion?: boolean
 }
 
-/** Options for `getUpdateStatus()`. */
+/**
+ * Options for `getUpdateStatus()`.
+ * @public
+ */
 export type GetUpdateStatusOptions = {
   ios?: {
     /** The App Store ID for iOS store lookups. */
@@ -248,19 +319,28 @@ export type GetUpdateStatusOptions = {
   android?: AndroidUpdateOptions
 }
 
-/** Options for `startImmediateUpdate()`. */
+/**
+ * Options for `startImmediateUpdate()`.
+ * @public
+ */
 export type StartImmediateUpdateOptions = {
   /** Android-specific options. */
   android?: AndroidUpdateOptions
 }
 
-/** Options for `startFlexibleUpdate()`. */
+/**
+ * Options for `startFlexibleUpdate()`.
+ * @public
+ */
 export type StartFlexibleUpdateOptions = {
   /** Android-specific options. */
   android?: AndroidUpdateOptions
 }
 
-/** Options for `openStorePage()`. */
+/**
+ * Options for `openStorePage()`.
+ * @public
+ */
 export type OpenStorePageOptions = {
   ios?: {
     /** The App Store ID (digits-only). Required on iOS. */
@@ -277,6 +357,7 @@ export type OpenStorePageOptions = {
  * - `bridge-error` — React Native bridge communication failure
  * - `native-error` — unexpected error from the native layer
  * - `unexpected` — any other unexpected error
+ * @public
  */
 export type InAppUpdatesErrorCode =
   | 'invalid-input'
@@ -289,6 +370,7 @@ export type InAppUpdatesErrorCode =
  *
  * Invalid input, bridge failures, native failures, and unexpected failures
  * are normalized into this class.
+ * @public
  */
 export class InAppUpdatesError extends Error {
   /** The error code categorizing the failure. */

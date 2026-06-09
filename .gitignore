@@ -90,6 +90,5 @@ android/keystores/debug.keystore
 lib/
 tsconfig.tsbuildinfo
 
-# API Extractor doc model (not committed)
-etc/*.api.json
+# API Extractor temp directory
 temp/

@@ -10,9 +10,14 @@ import type { GetUpdateStatusOptions, UpdateStatus } from './types'
  * Returns the platform capabilities, update availability, install status,
  * and platform-specific details.
  *
+ * Unsupported platforms and unavailable states are returned as typed
+ * results, not thrown errors. Only invalid input, bridge failures, and
+ * unexpected failures throw {@link InAppUpdatesError}.
+ *
  * @param options - Platform-specific options (e.g. iOS App Store ID).
  * @returns The current update status.
- * @throws InAppUpdatesError on native bridge or unexpected errors.
+ * @throws InAppUpdatesError on invalid input, bridge failures, or unexpected errors.
+ * @public
  */
 export async function getUpdateStatus(
   options?: GetUpdateStatusOptions
