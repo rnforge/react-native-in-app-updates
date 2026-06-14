@@ -1,3 +1,19 @@
+## [1.0.1](https://github.com/rnforge/react-native-in-app-updates/compare/v1.0.0...v1.0.1) (2026-06-14)
+
+### 🐛 Bug Fixes
+
+* refresh published package documentation ([aa47817](https://github.com/rnforge/react-native-in-app-updates/commit/aa47817dd8fb45a0247a202cfe97617fa9887a8c))
+
+### 📚 Documentation
+
+* add TSDoc to all public exports ([6c94b3f](https://github.com/rnforge/react-native-in-app-updates/commit/6c94b3f2766b45e666fe0baeffd849387bc356b6))
+* harden public api documentation ([44cbd1c](https://github.com/rnforge/react-native-in-app-updates/commit/44cbd1c8cd062a2e4e89887ab099be23f47e93e8))
+* streamline package readme ([61686f6](https://github.com/rnforge/react-native-in-app-updates/commit/61686f673490dfdd9de9ade73635a6b911076825))
+
+### 🛠️ Other changes
+
+* add API Extractor for public API drift detection ([927893c](https://github.com/rnforge/react-native-in-app-updates/commit/927893c13ec648f66366770eaf63b5feb7d2e253))
+
 ## 1.0.0 (2026-06-07)
 
 ### ✨ Features
