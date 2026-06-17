@@ -12,6 +12,8 @@ Full documentation lives at [rnforge.dev](https://rnforge.dev):
 - [App Integration](https://rnforge.dev/docs/in-app-updates/app-integration)
 - [API Guide](https://rnforge.dev/docs/in-app-updates/api)
 - [Troubleshooting](https://rnforge.dev/docs/in-app-updates/troubleshooting)
+- [LLM docs](https://rnforge.dev/docs/in-app-updates/llms.txt)
+- [Full LLM docs](https://rnforge.dev/docs/in-app-updates/llms-full.txt)
 
 ## Support Matrix
 
