@@ -1,3 +1,10 @@
+## [1.0.2](https://github.com/rnforge/react-native-in-app-updates/compare/v1.0.1...v1.0.2) (2026-07-12)
+
+### 📚 Documentation
+
+* add LLM docs links ([85a9651](https://github.com/rnforge/react-native-in-app-updates/commit/85a9651850514e7f996122f0335de01dfa8fbe9a))
+* add OSS contribution templates ([4917990](https://github.com/rnforge/react-native-in-app-updates/commit/4917990c4ba506764ec22acdf6d02e47da00b8d1))
+
 ## [1.0.1](https://github.com/rnforge/react-native-in-app-updates/compare/v1.0.0...v1.0.1) (2026-06-14)
 
 ### 🐛 Bug Fixes
